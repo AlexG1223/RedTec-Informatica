@@ -13,6 +13,9 @@ config/database.php
 
 # Sistema Operativo y Editores
 .DS_Store
+public/assets/uploads/*
+!public/assets/uploads/**/.gitkeep
+
 Thumbs.db
 .idea/
 .vscode/

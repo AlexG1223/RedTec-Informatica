@@ -7,56 +7,44 @@ use PDO;
 use Throwable;
 
 /**
- * Repositorio para la gestión y consulta de Productos
+ * Repositorio para la gestión de Productos (Público y Panel de Administración)
  */
 class ProductoRepository
 {
     /**
-     * Lista productos activos aplicando filtros opcionales (categoría o texto de búsqueda).
+     * Busca y lista productos activos para la tienda pública con filtros.
      *
-     * @param array $filtros Array asociativo con 'categoria_id' y/o 'buscar'
+     * @param array $filtros ['categoria' => int, 'buscar' => string]
      * @return array
      */
     public function listar(array $filtros = []): array
     {
         try {
             $pdo = Database::connect();
-
-            $sql = "SELECT p.id, p.code, p.name, p.description, p.category_id, p.price, p.stock, p.active, p.updated_at,
-                           c.name AS category_name,
-                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.sort_order ASC, pi.id ASC LIMIT 1) AS primary_image
+            
+            $sql = "SELECT p.*, c.name as category_name,
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     WHERE p.active = 1";
-
+            
             $params = [];
 
-            if (!empty($filtros['categoria_id']) && is_numeric($filtros['categoria_id'])) {
-                $sql .= " AND p.category_id = :categoria_id";
-                $params[':categoria_id'] = (int)$filtros['categoria_id'];
+            if (!empty($filtros['categoria'])) {
+                $sql .= " AND p.category_id = :categoria";
+                $params[':categoria'] = (int)$filtros['categoria'];
             }
 
-            if (!empty($filtros['buscar']) && is_string($filtros['buscar'])) {
-                $search = trim($filtros['buscar']);
-                if ($search !== '') {
-                    $sql .= " AND (p.name LIKE :buscar OR p.code LIKE :buscar)";
-                    $params[':buscar'] = '%' . $search . '%';
-                }
+            if (!empty($filtros['buscar'])) {
+                $sql .= " AND (p.name LIKE :buscar OR p.code LIKE :buscar OR p.description LIKE :buscar)";
+                $params[':buscar'] = '%' . trim($filtros['buscar']) . '%';
             }
 
             $sql .= " ORDER BY p.id DESC";
 
             $stmt = $pdo->prepare($sql);
-
-            foreach ($params as $param => $value) {
-                if (is_int($value)) {
-                    $stmt->bindValue($param, $value, PDO::PARAM_INT);
-                } else {
-                    $stmt->bindValue($param, $value, PDO::PARAM_STR);
-                }
-            }
-
-            $stmt->execute();
+            $stmt->execute($params);
+            
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
             return [];
@@ -64,7 +52,29 @@ class ProductoRepository
     }
 
     /**
-     * Busca un producto activo por su ID, junto con su nombre de categoría e imágenes asociadas.
+     * Devuelve la lista completa de productos para el panel de administración (incluyendo inactivos).
+     *
+     * @return array
+     */
+    public function listarTodos(): array
+    {
+        try {
+            $pdo = Database::connect();
+            $sql = "SELECT p.*, c.name as category_name,
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
+                    FROM products p
+                    LEFT JOIN categories c ON p.category_id = c.id
+                    ORDER BY p.id DESC";
+            
+            $stmt = $pdo->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Busca un producto específico por su ID.
      *
      * @param int $id
      * @return array|null
@@ -73,25 +83,21 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
-
-            $sql = "SELECT p.id, p.code, p.name, p.description, p.category_id, p.price, p.stock, p.active, p.updated_at,
-                           c.name AS category_name
+            $sql = "SELECT p.*, c.name as category_name 
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
-                    WHERE p.id = :id AND p.active = 1
+                    WHERE p.id = :id
                     LIMIT 1";
-
+            
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-
+            $stmt->execute([':id' => $id]);
+            
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
             if (!$product) {
                 return null;
             }
 
-            // Cargar galería de imágenes
+            // Obtener galería de imágenes asociadas
             $product['images'] = $this->listarImagenes($id);
 
             return $product;
@@ -101,7 +107,7 @@ class ProductoRepository
     }
 
     /**
-     * Devuelve la lista de imágenes asociadas a un producto.
+     * Lista todas las imágenes asociadas a un producto.
      *
      * @param int $productoId
      * @return array
@@ -110,19 +116,126 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
-
-            $sql = "SELECT id, image_url, sort_order 
+            $sql = "SELECT id, product_id, image_url, is_primary 
                     FROM product_images 
                     WHERE product_id = :product_id 
-                    ORDER BY sort_order ASC, id ASC";
-
+                    ORDER BY is_primary DESC, id ASC";
+            
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':product_id', $productoId, PDO::PARAM_INT);
-            $stmt->execute();
-
+            $stmt->execute([':product_id' => $productoId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
             return [];
         }
+    }
+
+    /**
+     * Inserta un nuevo producto en la base de datos.
+     *
+     * @param array $data
+     * @return int ID del producto creado
+     */
+    public function crear(array $data): int
+    {
+        $pdo = Database::connect();
+        $sql = "INSERT INTO products (code, name, description, category_id, price, stock, active, created_at, updated_at) 
+                VALUES (:code, :name, :description, :category_id, :price, :stock, 1, NOW(), NOW())";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':code'        => $data['code'],
+            ':name'        => $data['name'],
+            ':description' => $data['description'] ?? null,
+            ':category_id' => (int)$data['category_id'],
+            ':price'       => (float)$data['price'],
+            ':stock'       => (int)$data['stock'],
+        ]);
+
+        return (int)$pdo->lastInsertId();
+    }
+
+    /**
+     * Actualiza la información de un producto existente.
+     *
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function actualizar(int $id, array $data): bool
+    {
+        $pdo = Database::connect();
+        $sql = "UPDATE products 
+                SET code = :code, 
+                    name = :name, 
+                    description = :description, 
+                    category_id = :category_id, 
+                    price = :price, 
+                    stock = :stock, 
+                    updated_at = NOW() 
+                WHERE id = :id";
+        
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':id'          => $id,
+            ':code'        => $data['code'],
+            ':name'        => $data['name'],
+            ':description' => $data['description'] ?? null,
+            ':category_id' => (int)$data['category_id'],
+            ':price'       => (float)$data['price'],
+            ':stock'       => (int)$data['stock'],
+        ]);
+    }
+
+    /**
+     * Alterna el estado activo (1) / inactivo (0) de un producto.
+     *
+     * @param int $id
+     * @param int $activo (0 o 1)
+     * @return bool
+     */
+    public function cambiarEstado(int $id, int $activo): bool
+    {
+        $pdo = Database::connect();
+        $sql = "UPDATE products SET active = :active, updated_at = NOW() WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':id'     => $id,
+            ':active' => $activo ? 1 : 0
+        ]);
+    }
+
+    /**
+     * Agrega una imagen a la galería del producto.
+     *
+     * @param int $productoId
+     * @param string $imageUrl
+     * @param int $isPrimary
+     * @return int ID de la imagen insertada
+     */
+    public function agregarImagen(int $productoId, string $imageUrl, int $isPrimary = 0): int
+    {
+        $pdo = Database::connect();
+        $sql = "INSERT INTO product_images (product_id, image_url, is_primary) VALUES (:product_id, :image_url, :is_primary)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':product_id' => $productoId,
+            ':image_url'  => $imageUrl,
+            ':is_primary' => $isPrimary
+        ]);
+        return (int)$pdo->lastInsertId();
+    }
+
+    /**
+     * Elimina una imagen específica por su ID.
+     *
+     * @param int $imagenId
+     * @return bool
+     */
+    public function eliminarImagen(int $imagenId): bool
+    {
+        $pdo = Database::connect();
+        $sql = "DELETE FROM product_images WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([':id' => $imagenId]);
     }
 }

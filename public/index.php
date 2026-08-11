@@ -1,14 +1,13 @@
 <?php
 
 /**
- * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Detección de Entorno)
+ * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Métodos HTTP)
  */
 
 // Cargar configuración general del sitio (detector de entorno y helper url())
 require_once __DIR__ . '/../config/site.php';
 
 // Autoloader PSR-4 para clases en /src y /shared
-
 spl_autoload_register(function ($class) {
     $prefixes = [
         'RedTec\\Shared\\'               => __DIR__ . '/../shared/',
@@ -18,6 +17,7 @@ spl_autoload_register(function ($class) {
         'RedTec\\Checkout\\'             => __DIR__ . '/../src/Checkout/',
         'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../src/ServiciosTecnicos/',
         'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../src/ServiciosCorporativos/',
+        'RedTec\\Admin\\'                => __DIR__ . '/../src/Admin/',
         'RedTec\\'                       => __DIR__ . '/../src/',
     ];
 
@@ -34,8 +34,14 @@ spl_autoload_register(function ($class) {
     }
 });
 
-// Normalización de URI de la petición
-$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+// Iniciar sesión PHP si aún no está activa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Normalización de URI y Método de la petición
+$requestMethod = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+$requestUri    = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
 // Soporte para despliegue en subdirectorios (ej: /RedTec/public)
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
@@ -45,71 +51,110 @@ if ($scriptDir !== '/' && strpos($requestUri, $scriptDir) === 0) {
 
 $uri = '/' . trim($requestUri, '/');
 
-// Rutas Exactas
-$staticRoutes = [
-    '/'                     => [\RedTec\Home\HomeController::class, 'index'],
-    '/index.php'            => [\RedTec\Home\HomeController::class, 'index'],
-    '/tienda'               => [\RedTec\Productos\CatalogoController::class, 'index'],
-    '/checkout'             => [\RedTec\Checkout\CheckoutController::class, 'index'],
-    '/servicios'            => [\RedTec\ServiciosTecnicos\ServicioController::class, 'index'],
-    '/servicios-corporativos'=> [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index'],
+// Tabla de Rutas [Metodo, Ruta/Patron, [ClaseControlador, MetodoAccion], esRegex (bool)]
+$routes = [
+    // --- RUTAS PÚBLICAS ---
+    ['GET', '/', [\RedTec\Home\HomeController::class, 'index']],
+    ['GET', '/index.php', [\RedTec\Home\HomeController::class, 'index']],
+    ['GET', '/tienda', [\RedTec\Productos\CatalogoController::class, 'index']],
+    ['GET', '/checkout', [\RedTec\Checkout\CheckoutController::class, 'index']],
+    ['GET', '/servicios', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
+    ['GET', '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
+    ['GET', '#^/producto/(\d+)$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
+
+    // --- RUTAS DE AUTENTICACIÓN ADMIN ---
+    ['GET',  '/admin/login', [\RedTec\Admin\AuthController::class, 'loginForm']],
+    ['POST', '/admin/login', [\RedTec\Admin\AuthController::class, 'login']],
+    ['POST', '/admin/logout', [\RedTec\Admin\AuthController::class, 'logout']],
+
+    // --- RUTAS DEL PANEL DE ADMINISTRACIÓN ---
+    ['GET',  '/admin', [\RedTec\Admin\DashboardController::class, 'index']],
+
+    // CRUD Productos
+    ['GET',  '/admin/productos', [\RedTec\Admin\ProductoAdminController::class, 'index']],
+    ['GET',  '/admin/productos/nuevo', [\RedTec\Admin\ProductoAdminController::class, 'crearForm']],
+    ['POST', '/admin/productos', [\RedTec\Admin\ProductoAdminController::class, 'guardar']],
+    ['GET',  '#^/admin/productos/(\d+)/editar$#', [\RedTec\Admin\ProductoAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/productos/(\d+)$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/productos/(\d+)/baja$#', [\RedTec\Admin\ProductoAdminController::class, 'cambiarEstado'], true],
+    ['POST', '#^/admin/productos/(\d+)/imagenes/subir$#', [\RedTec\Admin\ProductoAdminController::class, 'subirImagen'], true],
+    ['POST', '#^/admin/productos/(\d+)/imagenes/(\d+)/eliminar$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminarImagen'], true],
+
+    // CRUD Servicios
+    ['GET',  '/admin/servicios', [\RedTec\Admin\ServicioAdminController::class, 'index']],
+    ['GET',  '/admin/servicios/nuevo', [\RedTec\Admin\ServicioAdminController::class, 'crearForm']],
+    ['POST', '/admin/servicios', [\RedTec\Admin\ServicioAdminController::class, 'guardar']],
+    ['GET',  '#^/admin/servicios/(\d+)/editar$#', [\RedTec\Admin\ServicioAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/servicios/(\d+)$#', [\RedTec\Admin\ServicioAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/servicios/(\d+)/baja$#', [\RedTec\Admin\ServicioAdminController::class, 'cambiarEstado'], true],
+
+    // CRUD Planes Corporativos
+    ['GET',  '/admin/planes', [\RedTec\Admin\ServicioPackageAdminController::class, 'index']],
+    ['GET',  '/admin/planes/nuevo', [\RedTec\Admin\ServicioPackageAdminController::class, 'crearForm']],
+    ['POST', '/admin/planes', [\RedTec\Admin\ServicioPackageAdminController::class, 'guardar']],
+    ['GET',  '#^/admin/planes/(\d+)/editar$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/planes/(\d+)$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/planes/(\d+)/baja$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'cambiarEstado'], true],
 ];
 
-
-
-// Rutas Dinámicas (Patrón Regex => [ClaseControlador, Metodo])
-$dynamicRoutes = [
-    '#^/producto/([0-9]+)$#' => [\RedTec\Productos\ProductoController::class, 'show'],
-];
-
+// Resolución de Rutas
 $matched = false;
 
-// 1. Intentar coincidencia exacta
-if (isset($staticRoutes[$uri])) {
-    $target = $staticRoutes[$uri];
-    $controllerName = $target[0];
-    $methodName     = $target[1];
+foreach ($routes as $route) {
+    $method  = $route[0];
+    $pattern = $route[1];
+    $handler = $route[2];
+    $isRegex = $route[3] ?? false;
 
-    $controller = new $controllerName();
-    $controller->$methodName();
-    $matched = true;
-} else {
-    // 2. Intentar coincidencias dinámicas (Regex)
-    foreach ($dynamicRoutes as $pattern => $target) {
+    if ($method !== $requestMethod) {
+        continue;
+    }
+
+    if ($isRegex) {
         if (preg_match($pattern, $uri, $matches)) {
-            array_shift($matches); // Quitar coincidencia completa
-            $controllerName = $target[0];
-            $methodName     = $target[1];
+            array_shift($matches); // Eliminar la coincidencia completa
+            $controllerClass = $handler[0];
+            $actionMethod    = $handler[1];
 
-            $controller = new $controllerName();
-            call_user_func_array([$controller, $methodName], $matches);
+            $controller = new $controllerClass();
+            call_user_func_array([$controller, $actionMethod], $matches);
+            $matched = true;
+            break;
+        }
+    } else {
+        if ($pattern === $uri) {
+            $controllerClass = $handler[0];
+            $actionMethod    = $handler[1];
+
+            $controller = new $controllerClass();
+            $controller->$actionMethod();
             $matched = true;
             break;
         }
     }
 }
 
-// 3. Si ninguna ruta coincide -> Mostrar Página 404
+// Si la ruta no coincide, mostrar 404
 if (!$matched) {
     http_response_code(404);
-    $pageTitle       = "Página No Encontrada (404) | RedTec Informática";
-    $pageDescription = "La página solicitada no existe o ha sido movida.";
-    $currentPage     = "";
+    $pageTitle       = 'Página no encontrada — RedTec Informática';
+    $pageDescription = 'La página solicitada no existe o ha sido movida.';
+    $currentPage     = '404';
+    $cartCount       = 0;
 
     $content = function() use ($uri) {
         ?>
         <section class="section-padding text-center">
           <div class="container" style="max-width: 600px;">
-            <span style="font-family: var(--font-heading); font-size: 5rem; font-weight: 800; color: var(--color-primary); display: block; line-height: 1;">404</span>
-            <h1 style="margin-top: 1rem; margin-bottom: 1rem;">Página No Encontrada</h1>
-            <p style="margin-bottom: 2rem;">
+            <div style="font-size: 5rem; font-family: var(--font-heading); font-weight: 800; color: var(--color-primary); line-height: 1;">404</div>
+            <h1 style="margin-top: 1rem; margin-bottom: 0.5rem;">Página no encontrada</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: 2rem;">
               Lo sentimos, la ruta <code><?= htmlspecialchars($uri) ?></code> no existe o ha sido removida.
             </p>
             <div style="display: flex; justify-content: center; gap: 1rem;">
               <a href="<?= url('/') ?>" class="btn btn-primary">Volver al Inicio</a>
               <a href="<?= url('/tienda') ?>" class="btn btn-outline">Ir a la Tienda</a>
             </div>
-
           </div>
         </section>
         <?php
