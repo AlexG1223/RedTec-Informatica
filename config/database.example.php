@@ -1,17 +1,17 @@
 <?php
 
 /**
- * RedTec Informática - Configuración Base de Datos (Plantilla de Ejemplo)
+ * RedTec Informática - Configuración Base de Datos (Plantilla para Producción / one.com)
  * 
- * Copia este archivo a 'config/database.php' en este mismo directorio
- * y completa las credenciales según tu entorno (local / staging / producción).
+ * Copia este archivo como 'config/database.php' en tu servidor de hosting (one.com)
+ * e ingresa tus credenciales de base de datos.
  */
 
 return [
-    'host'     => '127.0.0.1',
+    'host'     => 'localhost', // O el host servidor de MySQL de one.com
     'port'     => 3306,
-    'db_name'  => 'redtec_db',
-    'username' => 'tu_usuario_db',
-    'password' => 'tu_contraseña_db',
+    'db_name'  => 'c064ao1q8_redtec',
+    'username' => 'c064ao1q8_redtec',
+    'password' => 'redtec1234',
     'charset'  => 'utf8mb4',
 ];
