@@ -143,12 +143,33 @@ INSERT INTO `categories` (`id`, `name`, `image_url`, `active`) VALUES
 
 
 -- ------------------------------------------------------------------------------
--- Productos de Ejemplo (Para pruebas iniciales)
+-- Productos de Ejemplo (RedTec Atlántida - 12 Productos)
 -- ------------------------------------------------------------------------------
 INSERT INTO `products` (`id`, `code`, `name`, `description`, `category_id`, `price`, `stock`, `active`) VALUES
-(1, 'SW-TP-G108', 'Switch TP-Link 8 Puertos Gigabit', 'Switch no administrable de 8 puertos 10/100/1000 Mbps para redes de alta velocidad.', 1, 45.00, 15, 1),
-(2, 'CAM-HIK-2MP', 'Cámara IP Hikvision 2MP Exterior', 'Cámara Bullet IP Full HD 1080p con visión nocturna IR 30m e intemperie IP67.', 2, 79.00, 8, 1),
-(3, 'TECL-LOG-K120', 'Teclado USB Logitech K120', 'Teclado USB resistente a salpicaduras con teclas de perfil bajo.', 3, 18.00, 25, 1);
+(1, 'NOTE-LEN-V15', 'Notebook Lenovo V15 G3 IAP 15.6" Intel Core i5 8GB 256GB SSD', 'Computadora portátil ideal para trabajo corporativo y estudio. Procesador Intel Core i5 de 12a Gen, pantalla Full HD 15.6" antirreflejo y disco sólido NVMe de alta velocidad.', 1, 690.00, 5, 1),
+(2, 'NOTE-HP-250', 'Notebook HP 250 G8 Celeron N4020 4GB 128GB SSD', 'Notebook económica y liviana para tareas de oficina y navegación. Pantalla de 15.6 pulgadas y teclado numérico incorporado.', 1, 380.00, 0, 1),
+(3, 'MINI-ASUS-D5', 'Mini PC Asus ExpertCenter D500 Core i3 8GB 512GB SSD', 'Equipo compacto de alto rendimiento para escritorios de empresas. Diseño ultra reducido con gran conectividad USB y HDMI.', 1, 520.00, 3, 1),
+(4, 'ROUT-TP-C6', 'Router TP-Link Archer C6 Dual Band AC1200 Gigabit', 'Router inalámbrico de doble banda (2.4 GHz y 5 GHz) con 4 antenas externas de alta ganancia. Tecnología MU-MIMO y puertos Gigabit.', 2, 49.00, 12, 1),
+(5, 'SW-TP-G108', 'Switch TP-Link 8 Puertos Gigabit 10/100/1000 Mbps', 'Switch metálico no administrable de 8 puertos RJ45 Gigabit. Tecnología Plug and Play sin necesidad de configuración.', 2, 35.00, 18, 1),
+(6, 'AP-UBI-U6L', 'Access Point Ubiquiti UniFi U6 Lite Wi-Fi 6', 'Punto de acceso Wi-Fi 6 compacto de alto rendimiento con cobertura empresarial. Gestión centralizada mediante UniFi Network Controller.', 2, 145.00, 4, 1),
+(7, 'CAM-TAPO-C200', 'Cámaras Wi-Fi TP-Link Tapo C200 1080p Visión Nocturna', 'Cámara de seguridad hogar/oficina con movimiento 360 grados, audio bidireccional, visión nocturna infrarroja y alertas al celular.', 3, 39.00, 10, 1),
+(8, 'CAM-HIK-2MP', 'Cámara IP Hikvision 2MP Exterior Full HD IR 30m', 'Cámara Bullet IP apta para exterior con intemperie IP67, resolución 1080p y visión nocturna de hasta 30 metros.', 3, 79.00, 8, 1),
+(9, 'KIT-DVR-HIK4', 'Kit DVR Hikvision 4 Canales + 2 Cámaras Full HD 1080p', 'Kit completo de videovigilancia que incluye DVR de 4 canales, 2 cámaras exterior 1080p, fuentes de alimentación y cables de instalación.', 3, 189.00, 2, 1),
+(10, 'MOUSE-LOG-M170', 'Mouse Inalámbrico Logitech M170 Negro', 'Mouse óptico inalámbrico de 2.4 GHz con receptor USB Nano. Batería de larga duración de hasta 12 meses.', 4, 15.00, 25, 1),
+(11, 'TECL-LOG-K120', 'Teclado USB Logitech K120 Español', 'Teclado USB de perfil bajo con distribución en español latinoamericano. Diseño resistente a salpicaduras.', 4, 18.00, 0, 1),
+(12, 'PAD-RED-ARCH', 'Mouse Pad Gamer Redragon Archelon L', 'Superficie de tela de alta densidad resistente al agua con bordes cosidos y base de goma antideslizante (400x300mm).', 4, 14.00, 15, 1);
+
+-- ------------------------------------------------------------------------------
+-- Imágenes Adicionales de Productos (Galería)
+-- ------------------------------------------------------------------------------
+INSERT INTO `product_images` (`product_id`, `image_url`, `sort_order`) VALUES
+(1, '/assets/img/redtec.jpeg', 1),
+(1, '/assets/img/Logotipo PNG.png', 2),
+(4, '/assets/img/redtec.jpeg', 1),
+(7, '/assets/img/redtec.jpeg', 1),
+(8, '/assets/img/redtec.jpeg', 1),
+(10, '/assets/img/redtec.jpeg', 1);
+
 
 -- ------------------------------------------------------------------------------
 -- Servicios Técnicos de Ejemplo

@@ -1,15 +1,17 @@
 <?php
 
 /**
- * RedTec Informática - Punto de Entrada Principal (Front Controller & Router Mínimo)
+ * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Rutas Dinámicas)
  */
 
-// Autoloader Mínimo PSR-4 para clases en /src y /shared
+// Autoloader PSR-4 para clases en /src y /shared
 spl_autoload_register(function ($class) {
     $prefixes = [
-        'RedTec\\Shared\\' => __DIR__ . '/../shared/',
-        'RedTec\\Home\\'   => __DIR__ . '/../src/Home/',
-        'RedTec\\'         => __DIR__ . '/../src/',
+        'RedTec\\Shared\\'    => __DIR__ . '/../shared/',
+        'RedTec\\Home\\'      => __DIR__ . '/../src/Home/',
+        'RedTec\\Categorias\\'=> __DIR__ . '/../src/Categorias/',
+        'RedTec\\Productos\\' => __DIR__ . '/../src/Productos/',
+        'RedTec\\'            => __DIR__ . '/../src/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {
@@ -36,22 +38,47 @@ if ($scriptDir !== '/' && strpos($requestUri, $scriptDir) === 0) {
 
 $uri = '/' . trim($requestUri, '/');
 
-// Tabla de Rutas de la Aplicación
-$routes = [
+// Rutas Exactas
+$staticRoutes = [
     '/'          => [\RedTec\Home\HomeController::class, 'index'],
     '/index.php' => [\RedTec\Home\HomeController::class, 'index'],
+    '/tienda'    => [\RedTec\Productos\CatalogoController::class, 'index'],
 ];
 
-// Resolución de Ruta
-if (isset($routes[$uri])) {
-    $target = $routes[$uri];
+// Rutas Dinámicas (Patrón Regex => [ClaseControlador, Metodo])
+$dynamicRoutes = [
+    '#^/producto/([0-9]+)$#' => [\RedTec\Productos\ProductoController::class, 'show'],
+];
+
+$matched = false;
+
+// 1. Intentar coincidencia exacta
+if (isset($staticRoutes[$uri])) {
+    $target = $staticRoutes[$uri];
     $controllerName = $target[0];
     $methodName     = $target[1];
 
     $controller = new $controllerName();
     $controller->$methodName();
+    $matched = true;
 } else {
-    // Página Error 404
+    // 2. Intentar coincidencias dinámicas (Regex)
+    foreach ($dynamicRoutes as $pattern => $target) {
+        if (preg_match($pattern, $uri, $matches)) {
+            array_shift($matches); // Quitar coincidencia completa
+            $controllerName = $target[0];
+            $methodName     = $target[1];
+
+            $controller = new $controllerName();
+            call_user_func_array([$controller, $methodName], $matches);
+            $matched = true;
+            break;
+        }
+    }
+}
+
+// 3. Si ninguna ruta coincide -> Mostrar Página 404
+if (!$matched) {
     http_response_code(404);
     $pageTitle       = "Página No Encontrada (404) | RedTec Informática";
     $pageDescription = "La página solicitada no existe o ha sido movida.";
@@ -64,10 +91,11 @@ if (isset($routes[$uri])) {
             <span style="font-family: var(--font-heading); font-size: 5rem; font-weight: 800; color: var(--color-primary); display: block; line-height: 1;">404</span>
             <h1 style="margin-top: 1rem; margin-bottom: 1rem;">Página No Encontrada</h1>
             <p style="margin-bottom: 2rem;">
-              Lo sentimos, la ruta <code><?= htmlspecialchars($uri) ?></code> no existe o aún se encuentra en construcción.
+              Lo sentimos, la ruta <code><?= htmlspecialchars($uri) ?></code> no existe o ha sido removida.
             </p>
             <div style="display: flex; justify-content: center; gap: 1rem;">
               <a href="/index.php" class="btn btn-primary">Volver al Inicio</a>
+              <a href="/tienda" class="btn btn-outline">Ir a la Tienda</a>
             </div>
           </div>
         </section>
