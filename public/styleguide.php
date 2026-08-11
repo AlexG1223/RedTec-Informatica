@@ -9,6 +9,7 @@ $currentPage     = "styleguide";
 $cartCount       = 3;
 
 $content = function() {
+    $sampleImg = url('/assets/img/redtec.jpeg');
 ?>
   <!-- Banner Héroe Styleguide -->
   <section style="background-color: var(--color-dark); color: #FFFFFF; padding: 3rem 0; border-bottom: 4px solid var(--color-primary);">
@@ -183,7 +184,7 @@ $content = function() {
               <span class="badge-stock in-stock">En Stock</span>
             </span>
             <span class="product-card-code">SW-TP-G108</span>
-            <img src="/assets/img/redtec.jpeg" alt="Switch TP-Link 8 Puertos Gigabit">
+            <img src="<?= $sampleImg ?>" alt="Switch TP-Link 8 Puertos Gigabit">
           </div>
           <div class="product-card-body">
             <div class="product-card-category">Redes y Servidores</div>
@@ -211,7 +212,7 @@ $content = function() {
               <span class="badge-stock in-stock">En Stock</span>
             </span>
             <span class="product-card-code">CAM-HIK-2MP</span>
-            <img src="/assets/img/redtec.jpeg" alt="Cámara IP Hikvision 2MP Exterior">
+            <img src="<?= $sampleImg ?>" alt="Cámara IP Hikvision 2MP Exterior">
           </div>
           <div class="product-card-body">
             <div class="product-card-category">Cámaras y Seguridad</div>
@@ -239,7 +240,7 @@ $content = function() {
               <span class="badge-stock out-of-stock">Sin Stock</span>
             </span>
             <span class="product-card-code">TECL-LOG-K120</span>
-            <img src="/assets/img/redtec.jpeg" alt="Teclado USB Logitech K120">
+            <img src="<?= $sampleImg ?>" alt="Teclado USB Logitech K120">
           </div>
           <div class="product-card-body">
             <div class="product-card-category">Periféricos</div>

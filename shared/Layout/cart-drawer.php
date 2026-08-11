@@ -35,7 +35,7 @@
       <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
         ¡Explorá nuestro catálogo de productos y sumá los artículos que necesites!
       </p>
-      <a href="/tienda" class="btn btn-primary btn-sm" onclick="if(window.CartUI) window.CartUI.closeDrawer();">
+      <a href="<?= url('/tienda') ?>" class="btn btn-primary btn-sm" onclick="if(window.CartUI) window.CartUI.closeDrawer();">
         Ver Productos
       </a>
     </div>
@@ -55,13 +55,14 @@
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
-      <a href="/checkout" class="btn btn-primary btn-block btn-lg" onclick="if(window.CartUI) window.CartUI.closeDrawer();">
+      <a href="<?= url('/checkout') ?>" class="btn btn-primary btn-block btn-lg" onclick="if(window.CartUI) window.CartUI.closeDrawer();">
         Finalizar pedido
       </a>
       <button type="button" class="btn btn-outline-dark btn-block btn-sm" onclick="if(window.CartUI) window.CartUI.closeDrawer();">
         Seguir comprando
       </button>
     </div>
+
 
   </div>
 

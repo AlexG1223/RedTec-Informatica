@@ -13,34 +13,34 @@ $cartCount   = $cartCount ?? 0;
   <div class="container header-container">
     
     <!-- Logo Institucional -->
-    <a href="/index.php" class="site-logo" title="RedTec Informática - Inicio">
-      <img src="/assets/img/Logotipo PNG.png" alt="RedTec Informática Logo" width="180" height="48">
+    <a href="<?= url('/') ?>" class="site-logo" title="RedTec Informática - Inicio">
+      <img src="<?= url('/assets/img/Logotipo PNG.png') ?>" alt="RedTec Informática Logo" width="180" height="48">
     </a>
 
     <!-- Navegación Principal -->
     <nav class="site-nav" id="siteNav">
       <ul class="nav-list">
         <li>
-          <a href="/index.php" class="nav-link <?= $currentPage === 'inicio' ? 'active' : '' ?>">Inicio</a>
+          <a href="<?= url('/') ?>" class="nav-link <?= $currentPage === 'inicio' ? 'active' : '' ?>">Inicio</a>
         </li>
         <li>
-          <a href="/productos.php" class="nav-link <?= $currentPage === 'tienda' ? 'active' : '' ?>">Tienda</a>
+          <a href="<?= url('/tienda') ?>" class="nav-link <?= $currentPage === 'tienda' ? 'active' : '' ?>">Tienda</a>
         </li>
         <li>
-          <a href="/servicios-tecnicos.php" class="nav-link <?= $currentPage === 'servicios' ? 'active' : '' ?>">Servicios Técnicos</a>
+          <a href="<?= url('/servicios-tecnicos') ?>" class="nav-link <?= $currentPage === 'servicios' ? 'active' : '' ?>">Servicios Técnicos</a>
         </li>
         <li>
-          <a href="/servicios-corporativos.php" class="nav-link <?= $currentPage === 'corporativos' ? 'active' : '' ?>">Servicios Corporativos</a>
+          <a href="<?= url('/servicios-corporativos') ?>" class="nav-link <?= $currentPage === 'corporativos' ? 'active' : '' ?>">Servicios Corporativos</a>
         </li>
         <li>
-          <a href="/contacto.php" class="nav-link <?= $currentPage === 'contacto' ? 'active' : '' ?>">Contacto</a>
+          <a href="<?= url('/contacto') ?>" class="nav-link <?= $currentPage === 'contacto' ? 'active' : '' ?>">Contacto</a>
         </li>
       </ul>
     </nav>
 
     <!-- Acciones Derecha (Carrito & Menú Mobile) -->
     <div class="header-actions">
-      <a href="/carrito.php" class="cart-trigger" title="Ver Carrito de Compras">
+      <a href="<?= url('/checkout') ?>" class="cart-trigger" title="Ver Carrito de Compras">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="9" cy="21" r="1"></circle>
           <circle cx="20" cy="21" r="1"></circle>

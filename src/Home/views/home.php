@@ -30,11 +30,11 @@ $content = function() use ($categories) {
           Productos, repuestos y soporte técnico para hogares y empresas. Comprá online o visitá nuestro local.
         </p>
         <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-          <a href="/tienda" class="btn btn-primary btn-lg">
+          <a href="<?= url('/tienda') ?>" class="btn btn-primary btn-lg">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Ver catálogo
           </a>
-          <a href="/servicios" class="btn btn-outline btn-lg" style="color: #FFFFFF; border-color: #FFFFFF;">
+          <a href="<?= url('/servicios-tecnicos') ?>" class="btn btn-outline btn-lg" style="color: #FFFFFF; border-color: #FFFFFF;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             Ver servicios
           </a>
@@ -53,7 +53,7 @@ $content = function() use ($categories) {
           <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Explorá nuestra tienda</span>
           <h2 style="margin-bottom: 0;">Categorías Destacadas</h2>
         </div>
-        <a href="/tienda" class="btn btn-outline-dark btn-sm">Ver todas las categorías &rarr;</a>
+        <a href="<?= url('/tienda') ?>" class="btn btn-outline-dark btn-sm">Ver todas las categorías &rarr;</a>
       </div>
 
       <div class="grid grid-4">
@@ -61,9 +61,12 @@ $content = function() use ($categories) {
           <?php 
             $catId   = (int)$category['id'];
             $catName = htmlspecialchars($category['name']);
-            $catImg  = !empty($category['image_url']) ? htmlspecialchars($category['image_url']) : '/assets/img/redtec.jpeg';
+            $rawImg  = !empty($category['image_url']) ? $category['image_url'] : '/assets/img/redtec.jpeg';
+            $catImg  = strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg);
+            $catLink = url('/tienda?categoria=' . $catId);
+            $fallbackImg = url('/assets/img/redtec.jpeg');
           ?>
-          <a href="/tienda?categoria=<?= $catId ?>" class="category-card" style="display: block; text-decoration: none; color: inherit;">
+          <a href="<?= $catLink ?>" class="category-card" style="display: block; text-decoration: none; color: inherit;">
             <div style="background: var(--color-card-bg); border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);"
                  onmouseenter="this.style.transform='translateY(-6px)'; this.style.boxShadow='var(--shadow-lg)'; this.style.borderColor='var(--color-primary)';"
                  onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'; this.style.borderColor='var(--color-border-light)';">
@@ -72,7 +75,7 @@ $content = function() use ($categories) {
                 <img src="<?= $catImg ?>" 
                      alt="<?= $catName ?>" 
                      style="width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-normal);"
-                     onerror="this.src='/assets/img/redtec.jpeg';">
+                     onerror="this.src='<?= $fallbackImg ?>';">
               </div>
 
               <div style="padding: 1.25rem; text-align: center;">
@@ -107,7 +110,7 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Diseño e instalación de sistemas de videovigilancia IP y analógicos de alta definición con monitoreo remoto en smartphone.
           </p>
-          <a href="/servicios" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios-tecnicos#cctv') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
 
         <!-- Servicio 2 -->
@@ -119,7 +122,7 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Implementación de servidores de dominio, sistemas de respaldo automatizado en NAS y virtualización para PyMEs.
           </p>
-          <a href="/servicios" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios-tecnicos#servidores') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
 
         <!-- Servicio 3 -->
@@ -131,12 +134,12 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Cableado UTP Cat6, certificación de puntos de red, armado de racks y despliegue de redes Wi-Fi Mesh de alta cobertura.
           </p>
-          <a href="/servicios" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios-tecnicos#redes') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
       </div>
 
       <div class="text-center" style="margin-top: 2.5rem;">
-        <a href="/servicios" class="btn btn-primary btn-lg">Conocé nuestros servicios</a>
+        <a href="<?= url('/servicios-tecnicos') ?>" class="btn btn-primary btn-lg">Conocé nuestros servicios</a>
       </div>
     </div>
   </section>
@@ -163,7 +166,6 @@ $content = function() use ($categories) {
             Contactar por WhatsApp
           </a>
         </div>
-
       </div>
     </div>
   </section>

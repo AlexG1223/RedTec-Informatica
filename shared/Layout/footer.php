@@ -9,7 +9,7 @@
       
       <!-- Columna 1: Info e Isotipo -->
       <div class="footer-brand">
-        <img src="/assets/img/Logotipo PNG.png" alt="RedTec Informática" width="160" height="42">
+        <img src="<?= url('/assets/img/Logotipo PNG.png') ?>" alt="RedTec Informática" width="160" height="42">
         <p>
           Soluciones integrales de informática en Uruguay. Venta de equipamiento, instalación de infraestructura de red, sistemas de videovigilancia y soporte corporativo especializado.
         </p>
@@ -30,11 +30,11 @@
       <div>
         <h4 class="footer-title">Navegación</h4>
         <div class="footer-links">
-          <a href="/index.php">Inicio</a>
-          <a href="/productos.php">Catálogo de Productos</a>
-          <a href="/servicios-tecnicos.php">Servicios Técnicos</a>
-          <a href="/servicios-corporativos.php">Planes Corporativos</a>
-          <a href="/contacto.php">Contacto</a>
+          <a href="<?= url('/') ?>">Inicio</a>
+          <a href="<?= url('/tienda') ?>">Catálogo de Productos</a>
+          <a href="<?= url('/servicios-tecnicos') ?>">Servicios Técnicos</a>
+          <a href="<?= url('/servicios-corporativos') ?>">Planes Corporativos</a>
+          <a href="<?= url('/contacto') ?>">Contacto</a>
         </div>
       </div>
 
@@ -42,11 +42,11 @@
       <div>
         <h4 class="footer-title">Servicios</h4>
         <div class="footer-links">
-          <a href="/servicios-tecnicos.php#cctv">Cámaras de Seguridad</a>
-          <a href="/servicios-tecnicos.php#redes">Cableado Estructurado</a>
-          <a href="/servicios-tecnicos.php#servidores">Servidores y NAS</a>
-          <a href="/servicios-corporativos.php">Abonos Mensuales PYME</a>
-          <a href="/admin/login.php">Acceso Administración</a>
+          <a href="<?= url('/servicios-tecnicos#cctv') ?>">Cámaras de Seguridad</a>
+          <a href="<?= url('/servicios-tecnicos#redes') ?>">Cableado Estructurado</a>
+          <a href="<?= url('/servicios-tecnicos#servidores') ?>">Servidores y NAS</a>
+          <a href="<?= url('/servicios-corporativos') ?>">Abonos Mensuales PYME</a>
+          <a href="<?= url('/admin/login.php') ?>">Acceso Administración</a>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
         
         <div class="footer-contact-item">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>Montevideo & Interior, Uruguay</span>
+          <span>Atlántida, Canelones, Uruguay</span>
         </div>
 
         <div class="footer-contact-item">
@@ -79,7 +79,7 @@
         &copy; <?= date('Y') ?> <strong>RedTec Informática</strong>. Todos los derechos reservados.
       </div>
       <div>
-        Montevideo, Uruguay
+        Atlántida, Canelones, Uruguay
       </div>
     </div>
   </div>
@@ -91,7 +91,6 @@
    target="_blank" 
    rel="noopener noreferrer" 
    title="Consultar por WhatsApp">
-
   <span class="whatsapp-label">¿Consultas? ¡Chateá con nosotros!</span>
   <div class="whatsapp-icon-btn">
     <svg viewBox="0 0 24 24">

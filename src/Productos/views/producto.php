@@ -18,22 +18,23 @@ $content = function() use ($product) {
     $inStock      = ($pStock > 0);
     $images       = $product['images'] ?? [];
 
-    $mainImg = !empty($images[0]['image_url']) ? htmlspecialchars($images[0]['image_url']) : null;
+    $rawMainImg   = !empty($images[0]['image_url']) ? $images[0]['image_url'] : null;
+    $mainImg      = $rawMainImg ? (strpos($rawMainImg, 'http') === 0 ? htmlspecialchars($rawMainImg) : url($rawMainImg)) : null;
+    $fallbackImg  = url('/assets/img/redtec.jpeg');
     
     // Mensaje pre-armado para consulta por WhatsApp
     $waText = urlencode("Hola RedTec, quiero consultar por el producto {$product['name']} (Código: {$product['code']})");
     $waUrl  = REDTEC_WHATSAPP_LINK . "?text={$waText}";
 ?>
-
   <!-- Migas de Pan / Navegación -->
   <div style="background: #FFFFFF; border-bottom: 1px solid var(--color-border-light); padding: 0.85rem 0;">
     <div class="container" style="font-size: 0.875rem; color: var(--color-text-secondary);">
-      <a href="/index.php" style="color: var(--color-text-secondary);">Inicio</a>
+      <a href="<?= url('/') ?>" style="color: var(--color-text-secondary);">Inicio</a>
       <span style="margin: 0 0.4rem;">&rsaquo;</span>
-      <a href="/tienda" style="color: var(--color-text-secondary);">Tienda</a>
+      <a href="<?= url('/tienda') ?>" style="color: var(--color-text-secondary);">Tienda</a>
       <?php if ($pCatId > 0): ?>
         <span style="margin: 0 0.4rem;">&rsaquo;</span>
-        <a href="/tienda?categoria=<?= $pCatId ?>" style="color: var(--color-text-secondary);"><?= $pCategory ?></a>
+        <a href="<?= url('/tienda?categoria=' . $pCatId) ?>" style="color: var(--color-text-secondary);"><?= $pCategory ?></a>
       <?php endif; ?>
       <span style="margin: 0 0.4rem;">&rsaquo;</span>
       <strong style="color: var(--color-dark);"><?= $pName ?></strong>
@@ -72,7 +73,10 @@ $content = function() use ($product) {
           <?php if (count($images) > 1): ?>
             <div style="display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem;">
               <?php foreach ($images as $idx => $img): ?>
-                <?php $imgUrl = htmlspecialchars($img['image_url']); ?>
+                <?php 
+                  $rawThumb = $img['image_url'];
+                  $imgUrl   = strpos($rawThumb, 'http') === 0 ? htmlspecialchars($rawThumb) : url($rawThumb);
+                ?>
                 <button type="button" 
                         onclick="cambiarImagenPrincipal('<?= $imgUrl ?>')"
                         style="width: 70px; height: 70px; border: 2px solid <?= $idx === 0 ? 'var(--color-primary)' : 'var(--color-border-light)' ?>; border-radius: var(--radius-sm); overflow: hidden; background: #FFFFFF; cursor: pointer; padding: 2px; flex-shrink: 0;"
@@ -89,7 +93,7 @@ $content = function() use ($product) {
         <div style="display: flex; flex-direction: column; height: 100%;">
           
           <div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-            <a href="/tienda?categoria=<?= $pCatId ?>" style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">
+            <a href="<?= url('/tienda?categoria=' . $pCatId) ?>" style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">
               <?= $pCategory ?>
             </a>
             <span style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); background: #F1F3F5; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm);">

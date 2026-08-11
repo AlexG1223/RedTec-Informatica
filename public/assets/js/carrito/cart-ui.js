@@ -118,16 +118,21 @@
 
     renderItems: function(items) {
       const self = this;
+      const baseUrl = window.REDTEC_BASE_URL || '';
+      const fallbackImg = baseUrl + '/assets/img/redtec.jpeg';
       this.itemsContainer.innerHTML = '';
 
       items.forEach(function(item) {
         const itemEl = document.createElement('div');
         itemEl.className = 'cart-item';
 
-        const imgSrc = item.image_url ? item.image_url : '/assets/img/redtec.jpeg';
+        let imgSrc = fallbackImg;
+        if (item.image_url) {
+          imgSrc = item.image_url.indexOf('http') === 0 ? item.image_url : (baseUrl + (item.image_url.startsWith('/') ? '' : '/') + item.image_url);
+        }
 
         itemEl.innerHTML = `
-          <img src="${imgSrc}" alt="${self.escapeHtml(item.name)}" class="cart-item-img" onerror="this.src='/assets/img/redtec.jpeg';">
+          <img src="${imgSrc}" alt="${self.escapeHtml(item.name)}" class="cart-item-img" onerror="this.src='${fallbackImg}';">
           <div class="cart-item-info">
             <div class="cart-item-title">${self.escapeHtml(item.name)}</div>
             <div class="cart-item-price">USD $${parseFloat(item.price).toFixed(2)}</div>
@@ -143,6 +148,7 @@
             </div>
           </div>
         `;
+
 
         // Eventos de botones (- / + / borrar)
         itemEl.querySelector('.qty-minus').addEventListener('click', function() {

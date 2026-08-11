@@ -1,10 +1,14 @@
 <?php
 
 /**
- * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Rutas Dinámicas)
+ * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Detección de Entorno)
  */
 
+// Cargar configuración general del sitio (detector de entorno y helper url())
+require_once __DIR__ . '/../config/site.php';
+
 // Autoloader PSR-4 para clases en /src y /shared
+
 spl_autoload_register(function ($class) {
     $prefixes = [
         'RedTec\\Shared\\'    => __DIR__ . '/../shared/',
@@ -97,9 +101,10 @@ if (!$matched) {
               Lo sentimos, la ruta <code><?= htmlspecialchars($uri) ?></code> no existe o ha sido removida.
             </p>
             <div style="display: flex; justify-content: center; gap: 1rem;">
-              <a href="/index.php" class="btn btn-primary">Volver al Inicio</a>
-              <a href="/tienda" class="btn btn-outline">Ir a la Tienda</a>
+              <a href="<?= url('/') ?>" class="btn btn-primary">Volver al Inicio</a>
+              <a href="<?= url('/tienda') ?>" class="btn btn-outline">Ir a la Tienda</a>
             </div>
+
           </div>
         </section>
         <?php

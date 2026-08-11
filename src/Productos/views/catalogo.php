@@ -10,6 +10,7 @@
  */
 
 $content = function() use ($products, $categories, $categoriaId, $buscar, $activeCategory) {
+    $fallbackImg = url('/assets/img/redtec.jpeg');
 ?>
   <!-- Banner Superior Tienda -->
   <section style="background-color: var(--color-dark); color: #FFFFFF; padding: 2.5rem 0; border-bottom: 4px solid var(--color-primary);">
@@ -32,7 +33,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem;">
         
         <!-- Formulario de Búsqueda -->
-        <form action="/tienda" method="GET" style="display: flex; gap: 0.5rem; flex: 1 1 300px; max-width: 450px;">
+        <form action="<?= url('/tienda') ?>" method="GET" style="display: flex; gap: 0.5rem; flex: 1 1 300px; max-width: 450px;">
           <?php if ($categoriaId > 0): ?>
             <input type="hidden" name="categoria" value="<?= $categoriaId ?>">
           <?php endif; ?>
@@ -63,7 +64,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
         <span style="font-size: 0.85rem; font-weight: 600; color: var(--color-dark); margin-right: 0.5rem;">Categorías:</span>
         
         <!-- Pill 'Todas' -->
-        <a href="/tienda<?= !empty($buscar) ? '?buscar=' . urlencode($buscar) : '' ?>" 
+        <a href="<?= url('/tienda' . (!empty($buscar) ? '?buscar=' . urlencode($buscar) : '')) ?>" 
            class="btn btn-sm <?= $categoriaId === 0 ? 'btn-primary' : 'btn-outline-dark' ?>"
            style="border-radius: var(--radius-full);">
           Todas
@@ -78,9 +79,9 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
             if (!empty($buscar)) {
                 $urlParams['buscar'] = $buscar;
             }
-            $url = '/tienda?' . http_build_query($urlParams);
+            $urlCat = url('/tienda?' . http_build_query($urlParams));
           ?>
-          <a href="<?= $url ?>" 
+          <a href="<?= $urlCat ?>" 
              class="btn btn-sm <?= $isActive ? 'btn-primary' : 'btn-outline-dark' ?>"
              style="border-radius: var(--radius-full);">
             <?= $catName ?>
@@ -102,7 +103,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
         <p style="color: var(--color-text-secondary); margin-bottom: 1.75rem;">
           No hay artículos que coincidan con la búsqueda o la categoría seleccionada. Probá borrando el texto de búsqueda o cambiando los filtros.
         </p>
-        <a href="/tienda" class="btn btn-primary">Restablecer Filtros</a>
+        <a href="<?= url('/tienda') ?>" class="btn btn-primary">Restablecer Filtros</a>
       </div>
 
     <?php else: ?>
@@ -119,7 +120,10 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
             $pPriceFormatted = number_format($pPriceNum, 2, '.', ',');
             $pStock     = (int)$p['stock'];
             $inStock    = ($pStock > 0);
-            $pImg       = !empty($p['primary_image']) ? htmlspecialchars($p['primary_image']) : null;
+            
+            $rawImg     = !empty($p['primary_image']) ? $p['primary_image'] : null;
+            $pImg       = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : null;
+            $productUrl = url('/producto/' . $pId);
           ?>
 
           <div class="product-card">
@@ -154,7 +158,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
               <div class="product-card-category"><?= $pCategory ?></div>
               
               <h3 class="product-card-title">
-                <a href="/producto/<?= $pId ?>"><?= $pName ?></a>
+                <a href="<?= $productUrl ?>"><?= $pName ?></a>
               </h3>
 
               <div class="product-card-price-wrap">
@@ -163,7 +167,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
               </div>
 
               <div class="product-card-actions">
-                <a href="/producto/<?= $pId ?>" class="btn btn-outline btn-sm">Ver Detalle</a>
+                <a href="<?= $productUrl ?>" class="btn btn-outline btn-sm">Ver Detalle</a>
                 
                 <button type="button" 
                         class="btn btn-primary btn-sm" 

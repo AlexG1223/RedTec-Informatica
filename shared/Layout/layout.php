@@ -9,15 +9,14 @@
  * @param callable|string $content Contenido HTML o función anónima que imprime el contenido.
  */
 
+// Cargar configuración general del sitio (detector de entorno y helper url())
+require_once __DIR__ . '/../../config/site.php';
+
 $pageTitle       = $pageTitle ?? 'RedTec Informática - Tienda & Servicios Tecnológicos';
 $pageDescription = $pageDescription ?? 'Venta de productos informáticos, instalación de cámaras de seguridad, servidores, redes y soporte técnico corporativo en Uruguay.';
 $currentPage     = $currentPage ?? '';
 $cartCount       = $cartCount ?? 0;
-
-// Cargar configuración general del sitio (constantes de contacto, etc.)
-require_once __DIR__ . '/../../config/site.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="es-UY">
 <head>
@@ -26,8 +25,11 @@ require_once __DIR__ . '/../../config/site.php';
   <title><?= htmlspecialchars($pageTitle) ?></title>
   <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
   
+  <!-- Base URL adaptativo para JavaScript -->
+  <script>window.REDTEC_BASE_URL = "<?= rtrim(url(), '/') ?>";</script>
+
   <!-- Favicon / Isotipo -->
-  <link rel="icon" type="image/png" href="/assets/img/Iso PNG.png">
+  <link rel="icon" type="image/png" href="<?= url('/assets/img/Iso PNG.png') ?>">
 
   <!-- Google Fonts: Montserrat (Headings) e Inter (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,13 +37,13 @@ require_once __DIR__ . '/../../config/site.php';
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- Hojas de Estilo Base del Sistema de Diseño -->
-  <link rel="stylesheet" href="/assets/css/variables.css">
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="<?= url('/assets/css/variables.css') ?>">
+  <link rel="stylesheet" href="<?= url('/assets/css/base.css') ?>">
+  <link rel="stylesheet" href="<?= url('/assets/css/components.css') ?>">
 
   <!-- Scripts JavaScript del Carrito (Client-side) -->
-  <script src="/assets/js/carrito/cart-service.js" defer></script>
-  <script src="/assets/js/carrito/cart-ui.js" defer></script>
+  <script src="<?= url('/assets/js/carrito/cart-service.js') ?>" defer></script>
+  <script src="<?= url('/assets/js/carrito/cart-ui.js') ?>" defer></script>
 </head>
 <body>
 

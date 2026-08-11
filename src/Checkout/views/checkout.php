@@ -6,7 +6,7 @@
 $content = function() {
 ?>
   <!-- Script específico para armar el mensaje de WhatsApp -->
-  <script src="/assets/js/checkout/whatsapp-message-builder.js" defer></script>
+  <script src="<?= url('/assets/js/checkout/whatsapp-message-builder.js') ?>" defer></script>
 
   <!-- Header Banner Checkout -->
   <section style="background-color: var(--color-dark); color: #FFFFFF; padding: 2.5rem 0; border-bottom: 4px solid var(--color-primary);">
@@ -30,7 +30,7 @@ $content = function() {
       <p style="color: var(--color-text-secondary); margin-bottom: 1.75rem;">
         No hay productos guardados en tu pedido. Para realizar una compra, primero explorá nuestro catálogo y agregá artículos al carrito.
       </p>
-      <a href="/tienda" class="btn btn-primary btn-lg">Volver a la Tienda</a>
+      <a href="<?= url('/tienda') ?>" class="btn btn-primary btn-lg">Volver a la Tienda</a>
     </div>
 
     <!-- CONTENEDOR PRINCIPAL DE CHECKOUT (2 COLUMNAS) -->
@@ -142,6 +142,8 @@ $content = function() {
     const summaryList  = document.getElementById('checkoutSummaryList');
     const summaryTotal = document.getElementById('checkoutSummaryTotal');
     const checkoutForm = document.getElementById('checkoutForm');
+    const baseUrl      = window.REDTEC_BASE_URL || '';
+    const fallbackImg  = baseUrl + '/assets/img/redtec.jpeg';
 
     function renderCheckoutPage() {
       if (!window.CartService) return;
@@ -166,12 +168,16 @@ $content = function() {
           const itemEl = document.createElement('div');
           itemEl.style.cssText = 'display: flex; gap: 1rem; align-items: center; padding-bottom: 0.85rem; border-bottom: 1px dashed var(--color-border-light);';
 
-          const imgSrc  = item.image_url ? item.image_url : '/assets/img/redtec.jpeg';
+          let imgSrc = fallbackImg;
+          if (item.image_url) {
+            imgSrc = item.image_url.indexOf('http') === 0 ? item.image_url : (baseUrl + (item.image_url.startsWith('/') ? '' : '/') + item.image_url);
+          }
+
           const lineSub = (parseFloat(item.price) * parseInt(item.quantity, 10)).toFixed(2);
           const codeStr = item.code ? ` <small style="color: var(--color-text-muted);">(${item.code})</small>` : '';
 
           itemEl.innerHTML = `
-            <img src="${imgSrc}" alt="" style="width: 54px; height: 54px; object-fit: contain; background: #FFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); padding: 2px; flex-shrink: 0;" onerror="this.src='/assets/img/redtec.jpeg';">
+            <img src="${imgSrc}" alt="" style="width: 54px; height: 54px; object-fit: contain; background: #FFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); padding: 2px; flex-shrink: 0;" onerror="this.src='${fallbackImg}';">
             <div style="flex-grow: 1;">
               <div style="font-family: var(--font-heading); font-size: 0.9rem; font-weight: 600; color: var(--color-dark); margin-bottom: 0.2rem;">
                 ${item.name}${codeStr}
