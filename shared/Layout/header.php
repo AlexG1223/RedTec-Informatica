@@ -27,16 +27,14 @@ $cartCount   = $cartCount ?? 0;
           <a href="<?= url('/tienda') ?>" class="nav-link <?= $currentPage === 'tienda' ? 'active' : '' ?>">Tienda</a>
         </li>
         <li>
-          <a href="<?= url('/servicios-tecnicos') ?>" class="nav-link <?= $currentPage === 'servicios' ? 'active' : '' ?>">Servicios Técnicos</a>
-        </li>
-        <li>
-          <a href="<?= url('/servicios-corporativos') ?>" class="nav-link <?= $currentPage === 'corporativos' ? 'active' : '' ?>">Servicios Corporativos</a>
+          <a href="<?= url('/servicios') ?>" class="nav-link <?= ($currentPage === 'servicios' || $currentPage === 'corporativos') ? 'active' : '' ?>">Servicios</a>
         </li>
         <li>
           <a href="<?= url('/contacto') ?>" class="nav-link <?= $currentPage === 'contacto' ? 'active' : '' ?>">Contacto</a>
         </li>
       </ul>
     </nav>
+
 
     <!-- Acciones Derecha (Carrito & Menú Mobile) -->
     <div class="header-actions">

@@ -174,15 +174,18 @@ INSERT INTO `product_images` (`product_id`, `image_url`, `sort_order`) VALUES
 -- ------------------------------------------------------------------------------
 -- Servicios Técnicos de Ejemplo
 -- ------------------------------------------------------------------------------
-INSERT INTO `services` (`name`, `description`, `image_url`, `active`) VALUES
-('Instalación de Cámaras de Seguridad (CCTV)', 'Diseño e instalación de sistemas de videovigilancia IP y analógicas HD para empresas y residencias.', '/assets/img/services/cctv.jpg', 1),
-('Servidores y Almacenamiento NAS', 'Configuración de servidores de archivos, dominios Active Directory y respaldos automatizados.', '/assets/img/services/servers.jpg', 1),
-('Cableado Estructurado y WiFi', 'Instalación de redes LAN Cat6, certificación de puntos y cobertura WiFi corporativa Mesh.', '/assets/img/services/networking.jpg', 1);
+INSERT INTO `services` (`id`, `name`, `description`, `image_url`, `active`) VALUES
+(1, 'Instalación de Cámaras de Seguridad (CCTV)', 'Diseño e instalación de sistemas de videovigilancia IP y analógicas HD para empresas y residencias con monitoreo remoto en el celular.', '/assets/img/redtec.jpeg', 1),
+(2, 'Armado y Configuración de Servidores', 'Implementación de servidores de archivos, Active Directory, virtualización y sistemas de respaldo automatizados en unidades NAS.', NULL, 1),
+(3, 'Redes y Conectividad', 'Cableado estructurado Cat6, certificación de puntos de red, armado de racks y despliegue de redes Wi-Fi empresariales Mesh.', '/assets/img/redtec.jpeg', 1),
+(4, 'Mantenimiento y Soporte Técnico In-Situ', 'Reparación de hardware, mantenimiento preventivo de equipamiento, limpieza técnica y asistencia a domicilio para empresas y particulares.', NULL, 1),
+(5, 'Seguridad Informática y Resguardos', 'Implementación de firewalls de red, antivirus corporativo administrado y planes de copia de seguridad automatizada contra ransomware.', '/assets/img/redtec.jpeg', 1);
 
 -- ------------------------------------------------------------------------------
--- Planes Corporativos de Ejemplo
+-- Planes Corporativos de Ejemplo (precios en NULL para cotización personalizada)
 -- ------------------------------------------------------------------------------
-INSERT INTO `service_packages` (`name`, `description`, `price`, `active`) VALUES
-('Plan Pyme Básica', 'Soporte técnico mensual remoto e in-situ hasta 5 equipamientos. Respuesta prioritaria 24h.', 150.00, 1),
-('Plan Empresa Pro', 'Soporte integral hasta 15 equipos y servidores. Mantenimiento preventivo mensual y monitoreo de red.', 350.00, 1),
-('Plan Corporativo Custom', 'Solución de mantenimiento a medida con personal técnico dedicado y SLA de 4 horas.', NULL, 1);
+INSERT INTO `service_packages` (`id`, `name`, `description`, `price`, `active`) VALUES
+(1, 'Esencial', 'Soporte técnico reactivo remoto y presencial con tiempo de respuesta estándar para pequeñas oficinas y negocios (hasta 5 equipos).', NULL, 1),
+(2, 'Empresarial', 'Soporte prioritario, mantenimiento preventivo mensual, monitoreo de infraestructura y asistencia in-situ para PyMEs (hasta 15 equipos).', NULL, 1),
+(3, 'Premium', 'Soporte prioritario 24/7, servidor y red monitoreados en tiempo real, tiempo de respuesta SLA garantizado y técnico dedicado.', NULL, 1);
+

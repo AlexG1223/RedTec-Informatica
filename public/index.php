@@ -11,12 +11,14 @@ require_once __DIR__ . '/../config/site.php';
 
 spl_autoload_register(function ($class) {
     $prefixes = [
-        'RedTec\\Shared\\'    => __DIR__ . '/../shared/',
-        'RedTec\\Home\\'      => __DIR__ . '/../src/Home/',
-        'RedTec\\Categorias\\'=> __DIR__ . '/../src/Categorias/',
-        'RedTec\\Productos\\' => __DIR__ . '/../src/Productos/',
-        'RedTec\\Checkout\\'  => __DIR__ . '/../src/Checkout/',
-        'RedTec\\'            => __DIR__ . '/../src/',
+        'RedTec\\Shared\\'               => __DIR__ . '/../shared/',
+        'RedTec\\Home\\'                 => __DIR__ . '/../src/Home/',
+        'RedTec\\Categorias\\'           => __DIR__ . '/../src/Categorias/',
+        'RedTec\\Productos\\'            => __DIR__ . '/../src/Productos/',
+        'RedTec\\Checkout\\'             => __DIR__ . '/../src/Checkout/',
+        'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../src/ServiciosTecnicos/',
+        'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../src/ServiciosCorporativos/',
+        'RedTec\\'                       => __DIR__ . '/../src/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {
@@ -45,11 +47,14 @@ $uri = '/' . trim($requestUri, '/');
 
 // Rutas Exactas
 $staticRoutes = [
-    '/'          => [\RedTec\Home\HomeController::class, 'index'],
-    '/index.php' => [\RedTec\Home\HomeController::class, 'index'],
-    '/tienda'    => [\RedTec\Productos\CatalogoController::class, 'index'],
-    '/checkout'  => [\RedTec\Checkout\CheckoutController::class, 'index'],
+    '/'                     => [\RedTec\Home\HomeController::class, 'index'],
+    '/index.php'            => [\RedTec\Home\HomeController::class, 'index'],
+    '/tienda'               => [\RedTec\Productos\CatalogoController::class, 'index'],
+    '/checkout'             => [\RedTec\Checkout\CheckoutController::class, 'index'],
+    '/servicios'            => [\RedTec\ServiciosTecnicos\ServicioController::class, 'index'],
+    '/servicios-corporativos'=> [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index'],
 ];
+
 
 
 // Rutas Dinámicas (Patrón Regex => [ClaseControlador, Metodo])
