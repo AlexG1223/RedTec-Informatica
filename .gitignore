@@ -1,0 +1,22 @@
+# Dependencias
+/vendor/
+/node_modules/
+
+# Entorno y Configuración Local
+.env
+.env.*
+config.local.php
+/config/config.local.php
+
+# Sistema Operativo y Editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs y Temporales
+/logs/
+*.log
+/tmp/
+*.tmp

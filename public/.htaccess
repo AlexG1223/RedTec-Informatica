@@ -1,0 +1,4 @@
+# RedTec Informática - Apache Rewrite Rules
+RewriteEngine On
+
+# Las reglas de reescritura de URLs limpias se definirán en fases posteriores junto con el router.
