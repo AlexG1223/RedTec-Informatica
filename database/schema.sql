@@ -35,8 +35,11 @@ CREATE TABLE `categories` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(100) NOT NULL,
   `image_url` VARCHAR(255) DEFAULT NULL,
-  INDEX `idx_categories_name` (`name`)
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
+  INDEX `idx_categories_name` (`name`),
+  INDEX `idx_categories_active` (`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- ------------------------------------------------------------------------------
 -- Tabla: products (Catálogo de Productos)
@@ -130,12 +133,14 @@ INSERT INTO `admins` (`name`, `email`, `password_hash`, `created_at`) VALUES
 ('Administrador RedTec', 'admin@redtecinformatica.com', '$2y$10$qOTUL3cKfctmUi2ow8si0OmZBpVn5vbLET7Kpac38CgNBowgGrJdu', NOW());
 
 -- ------------------------------------------------------------------------------
--- Categorías de Ejemplo
+-- Categorías de Ejemplo (RedTec Atlántida)
 -- ------------------------------------------------------------------------------
-INSERT INTO `categories` (`id`, `name`, `image_url`) VALUES
-(1, 'Redes y Servidores', '/assets/img/categories/redes-servidores.jpg'),
-(2, 'Cámaras y Seguridad', '/assets/img/categories/camaras-seguridad.jpg'),
-(3, 'Periféricos y Componentes', '/assets/img/categories/perifericos.jpg');
+INSERT INTO `categories` (`id`, `name`, `image_url`, `active`) VALUES
+(1, 'Equipos y Notebooks', '/assets/img/categories/notebooks.jpg', 1),
+(2, 'Redes y Conectividad', '/assets/img/categories/redes.jpg', 1),
+(3, 'Seguridad y Cámaras', '/assets/img/categories/camaras.jpg', 1),
+(4, 'Accesorios', '/assets/img/categories/accesorios.jpg', 1);
+
 
 -- ------------------------------------------------------------------------------
 -- Productos de Ejemplo (Para pruebas iniciales)

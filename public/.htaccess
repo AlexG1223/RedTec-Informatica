@@ -1,4 +1,7 @@
 # RedTec Informática - Apache Rewrite Rules
 RewriteEngine On
 
-# Las reglas de reescritura de URLs limpias se definirán en fases posteriores junto con el router.
+# Si la petición no es un archivo o directorio existente, redirigir a index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
