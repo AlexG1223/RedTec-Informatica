@@ -22,8 +22,9 @@ $content = function() use ($product) {
     
     // Mensaje pre-armado para consulta por WhatsApp
     $waText = urlencode("Hola RedTec, quiero consultar por el producto {$product['name']} (Código: {$product['code']})");
-    $waUrl  = "https://wa.me/59899000000?text={$waText}";
+    $waUrl  = REDTEC_WHATSAPP_LINK . "?text={$waText}";
 ?>
+
   <!-- Migas de Pan / Navegación -->
   <div style="background: #FFFFFF; border-bottom: 1px solid var(--color-border-light); padding: 0.85rem 0;">
     <div class="container" style="font-size: 0.875rem; color: var(--color-text-secondary);">

@@ -13,7 +13,11 @@ $pageTitle       = $pageTitle ?? 'RedTec Informática - Tienda & Servicios Tecno
 $pageDescription = $pageDescription ?? 'Venta de productos informáticos, instalación de cámaras de seguridad, servidores, redes y soporte técnico corporativo en Uruguay.';
 $currentPage     = $currentPage ?? '';
 $cartCount       = $cartCount ?? 0;
+
+// Cargar configuración general del sitio (constantes de contacto, etc.)
+require_once __DIR__ . '/../../config/site.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="es-UY">
 <head>

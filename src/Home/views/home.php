@@ -154,7 +154,7 @@ $content = function() use ($categories) {
           </p>
         </div>
         <div>
-          <a href="https://wa.me/59899000000?text=Hola%20RedTec,%20quisiera%20consultar%20por%20un%20producto%20o%20servicio" 
+          <a href="<?= REDTEC_WHATSAPP_LINK ?>?text=Hola%20RedTec,%20quisiera%20consultar%20por%20un%20producto%20o%20servicio" 
              target="_blank" 
              rel="noopener noreferrer" 
              class="btn btn-primary btn-lg"
@@ -163,6 +163,7 @@ $content = function() use ($categories) {
             Contactar por WhatsApp
           </a>
         </div>
+
       </div>
     </div>
   </section>

@@ -11,6 +11,7 @@ spl_autoload_register(function ($class) {
         'RedTec\\Home\\'      => __DIR__ . '/../src/Home/',
         'RedTec\\Categorias\\'=> __DIR__ . '/../src/Categorias/',
         'RedTec\\Productos\\' => __DIR__ . '/../src/Productos/',
+        'RedTec\\Checkout\\'  => __DIR__ . '/../src/Checkout/',
         'RedTec\\'            => __DIR__ . '/../src/',
     ];
 
@@ -43,7 +44,9 @@ $staticRoutes = [
     '/'          => [\RedTec\Home\HomeController::class, 'index'],
     '/index.php' => [\RedTec\Home\HomeController::class, 'index'],
     '/tienda'    => [\RedTec\Productos\CatalogoController::class, 'index'],
+    '/checkout'  => [\RedTec\Checkout\CheckoutController::class, 'index'],
 ];
+
 
 // Rutas Dinámicas (Patrón Regex => [ClaseControlador, Metodo])
 $dynamicRoutes = [
