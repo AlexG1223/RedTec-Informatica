@@ -12,7 +12,8 @@ $content = function() use ($product) {
     $pCategory    = htmlspecialchars($product['category_name'] ?? 'General');
     $pCatId       = (int)($product['category_id'] ?? 0);
     $pDescription = !empty($product['description']) ? nl2br(htmlspecialchars($product['description'])) : 'Sin descripción disponible para este producto.';
-    $pPrice       = number_format((float)$product['price'], 2, '.', ',');
+    $pPriceNum    = (float)$product['price'];
+    $pPrice       = number_format($pPriceNum, 2, '.', ',');
     $pStock       = (int)$product['stock'];
     $inStock      = ($pStock > 0);
     $images       = $product['images'] ?? [];
@@ -146,7 +147,13 @@ $content = function() use ($product) {
               <button type="button" 
                       class="btn btn-primary btn-lg" 
                       <?= !$inStock ? 'disabled' : '' ?>
-                      onclick="agregarAlCarritoFicha(<?= $pId ?>, '<?= addslashes($pName) ?>')">
+                      data-id="<?= $pId ?>"
+                      data-code="<?= $pCode ?>"
+                      data-name="<?= $pName ?>"
+                      data-price="<?= $pPriceNum ?>"
+                      data-image="<?= $mainImg ?? '' ?>"
+                      data-stock="<?= $pStock ?>"
+                      onclick="agregarAlCarritoFicha(this)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 <?= $inStock ? 'Agregar al carrito' : 'Sin Stock' ?>
               </button>
@@ -180,14 +187,27 @@ $content = function() use ($product) {
     }
   }
 
-  /**
-   * TODO: Carrito de Compras funcional en Fase 5.
-   */
-  function agregarAlCarritoFicha(productoId, productoNombre) {
+  function agregarAlCarritoFicha(btn) {
+    if (!window.CartService || !window.CartUI) return;
+    const ds = btn.dataset;
     const qtyInput = document.getElementById('cantidad');
-    const cantidad = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-    console.log('[Fase 5 - Pendiente] Agregar a Carrito desde Ficha: Producto ID ' + productoId + ' x ' + cantidad);
-    alert('Funcionalidad de Carrito en desarrollo (Fase 5). Agregado: ' + productoNombre + ' (x' + cantidad + ')');
+    const quantity = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+
+    const product = {
+      id: ds.id,
+      code: ds.code,
+      name: ds.name,
+      price: ds.price,
+      image_url: ds.image,
+      stock: parseInt(ds.stock, 10) || 0
+    };
+
+    const res = window.CartService.addItem(product, quantity);
+    if (res.success) {
+      window.CartUI.showToast(res.message, res.capped ? 'warning' : 'success');
+    } else {
+      window.CartUI.showToast(res.message, 'error');
+    }
   }
   </script>
 <?php

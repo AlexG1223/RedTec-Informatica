@@ -34,6 +34,10 @@ $cartCount       = $cartCount ?? 0;
   <link rel="stylesheet" href="/assets/css/variables.css">
   <link rel="stylesheet" href="/assets/css/base.css">
   <link rel="stylesheet" href="/assets/css/components.css">
+
+  <!-- Scripts JavaScript del Carrito (Client-side) -->
+  <script src="/assets/js/carrito/cart-service.js" defer></script>
+  <script src="/assets/js/carrito/cart-ui.js" defer></script>
 </head>
 <body>
 
@@ -53,6 +57,9 @@ $cartCount       = $cartCount ?? 0;
 
   <!-- Footer Institucional & WhatsApp Flotante -->
   <?php include __DIR__ . '/footer.php'; ?>
+
+  <!-- Panel Deslizante del Carrito (Cart Drawer) -->
+  <?php include __DIR__ . '/cart-drawer.php'; ?>
 
 </body>
 </html>

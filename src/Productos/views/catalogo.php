@@ -115,7 +115,8 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
             $pCode      = htmlspecialchars($p['code']);
             $pName      = htmlspecialchars($p['name']);
             $pCategory  = htmlspecialchars($p['category_name'] ?? 'General');
-            $pPrice     = number_format((float)$p['price'], 2, '.', ',');
+            $pPriceNum  = (float)$p['price'];
+            $pPriceFormatted = number_format($pPriceNum, 2, '.', ',');
             $pStock     = (int)$p['stock'];
             $inStock    = ($pStock > 0);
             $pImg       = !empty($p['primary_image']) ? htmlspecialchars($p['primary_image']) : null;
@@ -138,12 +139,10 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
               <!-- Imagen con Placeholder de Seguridad -->
               <?php if ($pImg): ?>
                 <img src="<?= $pImg ?>" alt="<?= $pName ?>" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <!-- Placeholder oculto por defecto, visible si la imagen falla -->
                 <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #F3F4F6; color: var(--color-text-muted); font-size: 0.8rem; font-weight: 600; text-align: center; padding: 1rem;">
                   <span>Sin imagen disponible</span>
                 </div>
               <?php else: ?>
-                <!-- Placeholder directo si es NULL -->
                 <div style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: #F3F4F6; color: var(--color-text-muted); font-size: 0.8rem; font-weight: 600; text-align: center; padding: 1rem; flex-direction: column; gap: 0.5rem;">
                   <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                   <span>Sin imagen disponible</span>
@@ -160,7 +159,7 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
 
               <div class="product-card-price-wrap">
                 <span class="product-card-currency">USD</span>
-                <span class="product-card-price"><?= $pPrice ?></span>
+                <span class="product-card-price"><?= $pPriceFormatted ?></span>
               </div>
 
               <div class="product-card-actions">
@@ -169,7 +168,13 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
                 <button type="button" 
                         class="btn btn-primary btn-sm" 
                         <?= !$inStock ? 'disabled' : '' ?>
-                        onclick="agregarAlCarrito(<?= $pId ?>, '<?= addslashes($pName) ?>')">
+                        data-id="<?= $pId ?>"
+                        data-code="<?= $pCode ?>"
+                        data-name="<?= $pName ?>"
+                        data-price="<?= $pPriceNum ?>"
+                        data-image="<?= $pImg ?? '' ?>"
+                        data-stock="<?= $pStock ?>"
+                        onclick="agregarAlCarritoCat(this)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                   <?= $inStock ? 'Agregar' : 'Agotado' ?>
                 </button>
@@ -185,13 +190,25 @@ $content = function() use ($products, $categories, $categoriaId, $buscar, $activ
   </div>
 
   <script>
-  /**
-   * TODO: Lógica funcional del Carrito de Compras en Fase 5.
-   * Por ahora dejamos el listener listo con log en consola.
-   */
-  function agregarAlCarrito(productoId, productoNombre) {
-    console.log('[Fase 5 - Pendiente] Intentando agregar al carrito: Producto ID ' + productoId + ' (' + productoNombre + ')');
-    alert('Funcionalidad de Carrito en desarrollo (Fase 5). Producto seleccionado ID: ' + productoId);
+  function agregarAlCarritoCat(btn) {
+    if (!window.CartService || !window.CartUI) return;
+    
+    const ds = btn.dataset;
+    const product = {
+      id: ds.id,
+      code: ds.code,
+      name: ds.name,
+      price: ds.price,
+      image_url: ds.image,
+      stock: parseInt(ds.stock, 10) || 0
+    };
+
+    const res = window.CartService.addItem(product, 1);
+    if (res.success) {
+      window.CartUI.showToast(res.message, res.capped ? 'warning' : 'success');
+    } else {
+      window.CartUI.showToast(res.message, 'error');
+    }
   }
   </script>
 <?php
