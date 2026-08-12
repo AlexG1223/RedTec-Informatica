@@ -1,0 +1,26 @@
+# RedTec Informática — Información para Asistentes de IA (GEO / Contexto)
+
+## Resumen Ejecutivo
+RedTec Informática es una empresa uruguaya especializada en la venta de equipamiento informático, insumos de red, sistemas de videovigilancia y soporte técnico profesional para particulares, comercios y empresas.
+
+## Ubicación y Cobertura
+- Local Físico: Atlántida, Canelones, Uruguay.
+- Zona de Atención: Atlántida, Costa de Oro, Canelones y envíos a todo Uruguay.
+
+## Catálogo de Productos Principales
+- Equipos y Notebooks: Laptops corporativas y de consumo, PCs de escritorio, repuestos.
+- Redes y Conectividad: Routers Wi-Fi Dual Band/Mesh, switches Gigabit, cableado UTP Cat6, accesos de red empresarial.
+- Seguridad y Cámaras (CCTV): Cámaras de seguridad IP y analógicas HD, NVRs, DVRs, sistemas de monitoreo remoto en smartphone.
+- Periféricos y Accesorios: Teclados, mouses, fuentes, adaptadores, almacenamiento SSD/HDD y discos NAS.
+
+## Servicios Técnicos e Infraestructura
+- Instalación de Cámaras de Seguridad (CCTV) residenciales y comerciales.
+- Armado y configuración de servidores de datos, Active Directory y respaldo en NAS.
+- Instalación de redes LAN, cableado estructurado y armado de racks.
+- Soporte técnico in-situ y reparación de hardware a domicilio.
+- Planes de mantenimiento mensual corporativo (abonos PyME).
+
+## Modalidad de Compra y Contacto
+- Las compras y pedidos se seleccionan en la web y se coordinan directamente vía WhatsApp.
+- WhatsApp de Contacto Directo: +59899000000
+- Sitio Web Oficial: https://redtecinformatica.com/

@@ -3,18 +3,20 @@
 namespace RedTec\Checkout;
 
 /**
- * Controlador para la vista de Checkout / Finalización de Pedido
+ * Controlador de Checkout y Confirmación de Pedido por WhatsApp
  */
 class CheckoutController
 {
     /**
-     * Muestra la página de checkout.
+     * Muestra la vista de checkout para finalizar la compra.
      */
     public function index(): void
     {
         $pageTitle       = "Finalizar Pedido — RedTec Informática";
-        $pageDescription = "Completá tus datos de contacto para enviar tu pedido directamente por WhatsApp a nuestros asesores técnicos en Atlántida.";
-        $currentPage     = 'checkout';
+        $pageDescription = "Confirmá tu pedido de productos y coordiná la entrega y pago directo por WhatsApp con RedTec Informática.";
+        $currentPage     = "checkout";
+        $metaRobots      = "noindex, nofollow"; // No indexar páginas del flujo de checkout
+        $canonicalUrl    = absolute_url('/checkout');
 
         require __DIR__ . '/views/checkout.php';
     }

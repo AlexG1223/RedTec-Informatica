@@ -3,14 +3,10 @@
  * RedTec Informática - Vista de la Página de Inicio (Home)
  * 
  * @var array $categories Lista de categorías traídas de la BD.
+ * @var array $faqs Preguntas frecuentes para usuarios y buscadores.
  */
 
-$pageTitle       = "RedTec Informática — Productos y servicios de informática en Atlántida";
-$pageDescription = "Tienda online de productos informáticos, instalación de cámaras de seguridad, redes y soporte técnico corporativo en Atlántida y todo Uruguay.";
-$currentPage     = "inicio";
-$cartCount       = 0;
-
-$content = function() use ($categories) {
+$content = function() use ($categories, $faqs) {
 ?>
   <!-- ============================================================================
        1. HERO / SECCIÓN PRINCIPAL DE PRESENTACIÓN
@@ -34,7 +30,7 @@ $content = function() use ($categories) {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Ver catálogo
           </a>
-          <a href="<?= url('/servicios-tecnicos') ?>" class="btn btn-outline btn-lg" style="color: #FFFFFF; border-color: #FFFFFF;">
+          <a href="<?= url('/servicios') ?>" class="btn btn-outline btn-lg" style="color: #FFFFFF; border-color: #FFFFFF;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             Ver servicios
           </a>
@@ -110,7 +106,7 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Diseño e instalación de sistemas de videovigilancia IP y analógicos de alta definición con monitoreo remoto en smartphone.
           </p>
-          <a href="<?= url('/servicios-tecnicos#cctv') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios#cctv') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
 
         <!-- Servicio 2 -->
@@ -122,7 +118,7 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Implementación de servidores de dominio, sistemas de respaldo automatizado en NAS y virtualización para PyMEs.
           </p>
-          <a href="<?= url('/servicios-tecnicos#servidores') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios#servidores') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
 
         <!-- Servicio 3 -->
@@ -134,18 +130,44 @@ $content = function() use ($categories) {
           <p style="font-size: 0.9375rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; flex-grow: 1;">
             Cableado UTP Cat6, certificación de puntos de red, armado de racks y despliegue de redes Wi-Fi Mesh de alta cobertura.
           </p>
-          <a href="<?= url('/servicios-tecnicos#redes') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
+          <a href="<?= url('/servicios#redes') ?>" style="font-weight: 600; font-size: 0.9rem; color: var(--color-primary);">Más información &rarr;</a>
         </div>
       </div>
 
       <div class="text-center" style="margin-top: 2.5rem;">
-        <a href="<?= url('/servicios-tecnicos') ?>" class="btn btn-primary btn-lg">Conocé nuestros servicios</a>
+        <a href="<?= url('/servicios') ?>" class="btn btn-primary btn-lg">Conocé nuestros servicios</a>
       </div>
     </div>
   </section>
 
   <!-- ============================================================================
-       4. FRANJA DE CONTACTO RÁPIDO Y UBICACIÓN
+       4. PREGUNTAS FRECUENTES (FAQ & SEO / GEO)
+       ============================================================================ -->
+  <section class="section-padding">
+    <div class="container" style="max-width: 800px;">
+      <div class="text-center" style="margin-bottom: 3rem;">
+        <span style="font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Preguntas Frecuentes</span>
+        <h2 style="margin-bottom: 0.5rem;">¿Tenés dudas sobre cómo comprar o solicitar un servicio?</h2>
+        <p style="color: var(--color-text-secondary);">Respuestas rápidas a las consultas más habituales de nuestros clientes.</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <?php foreach ($faqs as $faq): ?>
+          <details style="background: #FFFFFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-md); padding: 1.25rem; cursor: pointer; box-shadow: var(--shadow-sm);">
+            <summary style="font-family: var(--font-heading); font-weight: 700; font-size: 1.05rem; color: var(--color-dark); outline: none;">
+              <?= htmlspecialchars($faq['question']) ?>
+            </summary>
+            <p style="font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; margin-top: 0.85rem; margin-bottom: 0;">
+              <?= htmlspecialchars($faq['answer']) ?>
+            </p>
+          </details>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================================
+       5. FRANJA DE CONTACTO RÁPIDO Y UBICACIÓN
        ============================================================================ -->
   <section style="background-color: var(--color-dark); color: #FFFFFF; padding: 3.5rem 0;" class="section-padding">
     <div class="container">

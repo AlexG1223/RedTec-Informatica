@@ -15,7 +15,9 @@ $isoUrl  = url('/assets/img/Iso PNG.png');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso al Panel de Administración — RedTec Informática</title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="<?= $isoUrl ?>">
+
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

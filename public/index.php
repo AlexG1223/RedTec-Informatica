@@ -18,6 +18,7 @@ spl_autoload_register(function ($class) {
         'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../src/ServiciosTecnicos/',
         'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../src/ServiciosCorporativos/',
         'RedTec\\Admin\\'                => __DIR__ . '/../src/Admin/',
+        'RedTec\\SEO\\'                  => __DIR__ . '/../src/SEO/',
         'RedTec\\'                       => __DIR__ . '/../src/',
     ];
 
@@ -53,13 +54,14 @@ $uri = '/' . trim($requestUri, '/');
 
 // Tabla de Rutas [Metodo, Ruta/Patron, [ClaseControlador, MetodoAccion], esRegex (bool)]
 $routes = [
-    // --- RUTAS PÚBLICAS ---
+    // --- RUTAS PÚBLICAS Y SEO ---
     ['GET', '/', [\RedTec\Home\HomeController::class, 'index']],
     ['GET', '/index.php', [\RedTec\Home\HomeController::class, 'index']],
     ['GET', '/tienda', [\RedTec\Productos\CatalogoController::class, 'index']],
     ['GET', '/checkout', [\RedTec\Checkout\CheckoutController::class, 'index']],
     ['GET', '/servicios', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
     ['GET', '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
+    ['GET', '/sitemap.xml', [\RedTec\SEO\SitemapGenerator::class, 'generate']],
     ['GET', '#^/producto/(\d+)$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
 
     // --- RUTAS DE AUTENTICACIÓN ADMIN ---
@@ -151,7 +153,7 @@ foreach ($routes as $route) {
     }
 }
 
-// Si la ruta no coincide, mostrar 404
+// Si la ruta no coincide, enviar código HTTP 404 estricto antes de renderizar
 if (!$matched) {
     http_response_code(404);
     $pageTitle       = 'Página no encontrada — RedTec Informática';

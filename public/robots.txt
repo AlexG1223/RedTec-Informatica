@@ -1,0 +1,7 @@
+# RedTec Informática - Archivo de Directivas de Rastreabilidad (robots.txt)
+User-agent: *
+Disallow: /admin/
+Disallow: /checkout
+
+# Mapa de Sitio XML
+Sitemap: /sitemap.xml

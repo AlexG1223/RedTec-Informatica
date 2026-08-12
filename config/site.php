@@ -1,7 +1,7 @@
 <?php
 
 /**
- * RedTec Informática - Configuración General del Sitio y Detección de Entorno
+ * RedTec Informática - Configuración General del Sitio, Entorno y SEO
  */
 
 // Detección de Entorno (Local vs Producción)
@@ -21,6 +21,11 @@ if (!defined('IS_LOCAL')) {
 // Umbral de Alerta de Stock Bajo para el Panel de Administración
 if (!defined('LOW_STOCK_THRESHOLD')) {
     define('LOW_STOCK_THRESHOLD', 5);
+}
+
+// Verificación de Google Search Console (vacío hasta la fase de publicación/despliegue)
+if (!defined('GOOGLE_SITE_VERIFICATION')) {
+    define('GOOGLE_SITE_VERIFICATION', '');
 }
 
 // Número y Enlace de WhatsApp
@@ -60,5 +65,20 @@ if (!function_exists('url')) {
 
         $cleanPath = '/' . ltrim($path, '/');
         return $basePath . $cleanPath;
+    }
+}
+
+/**
+ * Obtiene la URL absoluta completa (con protocolo y host).
+ * 
+ * @param string $path
+ * @return string
+ */
+if (!function_exists('absolute_url')) {
+    function absolute_url(string $path = ''): string
+    {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $scheme . '://' . $host . url($path);
     }
 }

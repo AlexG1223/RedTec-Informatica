@@ -3,9 +3,10 @@
 namespace RedTec\Productos;
 
 use RedTec\Productos\ProductoRepository;
+use RedTec\SEO\StructuredDataBuilder;
 
 /**
- * Controlador para la Ficha Detallada de Producto
+ * Controlador para la Ficha Individual de Producto
  */
 class ProductoController
 {
@@ -17,62 +18,79 @@ class ProductoController
     }
 
     /**
-     * Muestra la ficha individual de un producto.
+     * Muestra el detalle de un producto específico por su ID.
      *
-     * @param string|int $id ID del producto desde la URL
+     * @param string $id ID del producto recibido desde el router
      */
-    public function show($id): void
+    public function show(string $id): void
     {
-        $productoId = (int)$id;
+        $idNum   = (int)$id;
+        $product = $this->productoRepository->buscarPorId($idNum);
 
-        if ($productoId <= 0) {
-            $this->mostrar404();
+        if (!$product || (empty($product['active']) && empty($_SESSION['admin_id']))) {
+            http_response_code(404);
+            $pageTitle       = 'Producto no encontrado — RedTec Informática';
+            $pageDescription = 'El producto solicitado no existe o ha sido descontinuado.';
+            $currentPage     = '404';
+            $cartCount       = 0;
+
+            $content = function() {
+                ?>
+                <section class="section-padding text-center">
+                  <div class="container" style="max-width: 600px;">
+                    <div style="font-size: 5rem; font-family: var(--font-heading); font-weight: 800; color: var(--color-primary); line-height: 1;">404</div>
+                    <h1 style="margin-top: 1rem; margin-bottom: 0.5rem;">Producto no encontrado</h1>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 2rem;">
+                      Lo sentimos, el producto seleccionado no existe o ha sido descontinuado.
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 1rem;">
+                      <a href="<?= url('/tienda') ?>" class="btn btn-primary">Volver al Catálogo</a>
+                    </div>
+                  </div>
+                </section>
+                <?php
+            };
+
+            require __DIR__ . '/../../shared/Layout/layout.php';
             return;
         }
 
-        $product = $this->productoRepository->buscarPorId($productoId);
+        // Construcción de Breadcrumbs visibles y Schema
+        $breadcrumbItems = [
+            ['name' => 'Inicio', 'url' => '/'],
+            ['name' => 'Tienda', 'url' => '/tienda']
+        ];
 
-        if (!$product) {
-            $this->mostrar404();
-            return;
+        if (!empty($product['category_name']) && !empty($product['category_id'])) {
+            $breadcrumbItems[] = [
+                'name' => $product['category_name'],
+                'url'  => '/tienda?categoria=' . $product['category_id']
+            ];
         }
+
+        $breadcrumbItems[] = [
+            'name' => $product['name'],
+            'url'  => '/producto/' . $product['id']
+        ];
+
+        // Construcción de Datos Estructurados Schema.org
+        $jsonLdData = [
+            StructuredDataBuilder::buildProduct($product),
+            StructuredDataBuilder::buildBreadcrumbList($breadcrumbItems)
+        ];
+
+        // Imagen principal para OpenGraph
+        $rawImg  = !empty($product['images'][0]['image_url']) ? $product['images'][0]['image_url'] : '/assets/img/Logotipo PNG.png';
+        $ogImage = (strpos($rawImg, 'http') === 0) ? $rawImg : absolute_url($rawImg);
 
         $pageTitle       = "{$product['name']} — RedTec Informática";
-        $cleanDesc       = !empty($product['description']) ? strip_tags($product['description']) : "Detalles y especificaciones de {$product['name']}";
-        $pageDescription = mb_strimwidth($cleanDesc, 0, 155, "...");
-        $currentPage     = 'tienda';
+        $pageDescription = !empty($product['description']) ? strip_tags(substr($product['description'], 0, 155)) : "Comprá {$product['name']} al mejor precio en RedTec Informática, Atlántida, Uruguay.";
+        $currentPage     = "tienda";
+        $canonicalUrl    = absolute_url('/producto/' . $product['id']);
+        $ogTitle         = $pageTitle;
+        $ogDescription   = $pageDescription;
+        $ogType          = 'product';
 
         require __DIR__ . '/views/producto.php';
-    }
-
-    /**
-     * Renderiza la página de error 404 cuando un producto no existe o está inactivo.
-     */
-    private function mostrar404(): void
-    {
-        http_response_code(404);
-        $pageTitle       = "Producto No Encontrado (404) | RedTec Informática";
-        $pageDescription = "El producto solicitado no está disponible o no existe.";
-        $currentPage     = "tienda";
-
-        $content = function() {
-            ?>
-            <section class="section-padding text-center">
-              <div class="container" style="max-width: 600px;">
-                <span style="font-family: var(--font-heading); font-size: 5rem; font-weight: 800; color: var(--color-primary); display: block; line-height: 1;">404</span>
-                <h1 style="margin-top: 1rem; margin-bottom: 1rem;">Producto No Encontrado</h1>
-                <p style="margin-bottom: 2rem;">
-                  El producto que buscas no existe o ha sido desactivado del catálogo.
-                </p>
-                <div style="display: flex; justify-content: center; gap: 1rem;">
-                  <a href="/tienda" class="btn btn-primary">Volver al Catálogo</a>
-                  <a href="/index.php" class="btn btn-outline">Ir al Inicio</a>
-                </div>
-              </div>
-            </section>
-            <?php
-        };
-
-        require __DIR__ . '/../../shared/Layout/layout.php';
     }
 }

@@ -24,8 +24,10 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($pageTitle) ?></title>
+  <meta name="robots" content="noindex, nofollow">
   
   <link rel="icon" type="image/png" href="<?= url('/assets/img/Iso PNG.png') ?>">
+
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

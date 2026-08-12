@@ -2,11 +2,12 @@
 
 namespace RedTec\Productos;
 
-use RedTec\Categorias\CategoriaRepository;
 use RedTec\Productos\ProductoRepository;
+use RedTec\Categorias\CategoriaRepository;
+use RedTec\SEO\StructuredDataBuilder;
 
 /**
- * Controlador para la Tienda / Catálogo de Productos
+ * Controlador de la Tienda / Catálogo Público de Productos
  */
 class CatalogoController
 {
@@ -20,38 +21,46 @@ class CatalogoController
     }
 
     /**
-     * Muestra el catálogo de productos con soporte para búsqueda y filtrado por categoría.
+     * Muestra el catálogo de productos con filtros por categoría y búsqueda.
      */
     public function index(): void
     {
-        $categoriaId = isset($_GET['categoria']) && is_numeric($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
-        $buscar      = isset($_GET['buscar']) ? trim((string)$_GET['buscar']) : '';
+        $categoriaId = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
+        $buscar      = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-        // Obtener categorías para la barra de filtros
+        $products   = $this->productoRepository->listar(['categoria' => $categoriaId, 'buscar' => $buscar]);
         $categories = $this->categoriaRepository->listarActivas();
 
-        // Obtener productos filtrados
-        $products = $this->productoRepository->listar([
-            'categoria_id' => $categoriaId,
-            'buscar'       => $buscar,
-        ]);
-
-        // Datos de categoría activa si existe
-        $activeCategory = $categoriaId > 0 ? $this->categoriaRepository->buscarPorId($categoriaId) : null;
-
-        // Configuración de Título y Meta Descripción dinámicos para SEO
-        if ($activeCategory) {
-            $pageTitle       = "{$activeCategory['name']} — Tienda RedTec Informática";
-            $pageDescription = "Catálogo de {$activeCategory['name']} en RedTec Informática Atlántida. Equipos de alta calidad con garantía y envío en Uruguay.";
-        } elseif ($buscar !== '') {
-            $pageTitle       = "Búsqueda: '{$buscar}' — RedTec Informática";
-            $pageDescription = "Resultados de búsqueda para '{$buscar}' en la tienda de productos informáticos RedTec.";
-        } else {
-            $pageTitle       = "Catálogo de Productos — RedTec Informática";
-            $pageDescription = "Tienda online de productos informáticos en Uruguay. Notebooks, redes, cámaras de seguridad y accesorios con envío a todo el país.";
+        $activeCategory = null;
+        if ($categoriaId > 0) {
+            $activeCategory = $this->categoriaRepository->buscarPorId($categoriaId);
         }
 
-        $currentPage = 'tienda';
+        // Construcción de Breadcrumbs
+        $breadcrumbItems = [
+            ['name' => 'Inicio', 'url' => '/'],
+            ['name' => 'Tienda', 'url' => '/tienda']
+        ];
+
+        if ($activeCategory) {
+            $breadcrumbItems[] = [
+                ['name' => $activeCategory['name'], 'url' => '/tienda?categoria=' . $activeCategory['id']]
+            ];
+        }
+
+        $jsonLdData = [
+            StructuredDataBuilder::buildBreadcrumbList($breadcrumbItems)
+        ];
+
+        // Canonicalización: siempre apunta a /tienda sin parámetros para evitar contenido duplicado
+        $canonicalUrl = absolute_url('/tienda');
+
+        $pageTitle = $activeCategory 
+            ? "Catálogo de {$activeCategory['name']} — RedTec Informática" 
+            : "Catálogo de Productos Informáticos — RedTec Informática";
+            
+        $pageDescription = "Explorá nuestro catálogo de equipamiento informático, notebooks, redes, cámaras de seguridad CCTV y repuestos en Atlántida y todo Uruguay.";
+        $currentPage = "tienda";
 
         require __DIR__ . '/views/catalogo.php';
     }
