@@ -74,6 +74,33 @@ class ProductoRepository
     }
 
     /**
+     * Busca un producto por su código (código de barra / SKU).
+     *
+     * @param string $code
+     * @return array|null
+     */
+    public function buscarPorCodigo(string $code): ?array
+    {
+        try {
+            $pdo = Database::connect();
+            $sql = "SELECT p.*, c.name as category_name 
+                    FROM products p
+                    LEFT JOIN categories c ON p.category_id = c.id
+                    WHERE LOWER(TRIM(p.code)) = LOWER(TRIM(:code))
+                    LIMIT 1";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':code' => $code]);
+            
+            $prod = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $prod ?: null;
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+
+    /**
      * Busca un producto específico por su ID.
      *
      * @param int $id

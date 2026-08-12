@@ -8,7 +8,7 @@ use RedTec\Categorias\CategoriaRepository;
 use Throwable;
 
 /**
- * Controlador de Administración de Productos (CRUD y Gestión de Imágenes)
+ * Controlador de Administración de Productos (CRUD, Imágenes, Exportación CSV y Stock AJAX)
  */
 class ProductoAdminController
 {
@@ -199,6 +199,99 @@ class ProductoAdminController
     }
 
     /**
+     * Actualiza el stock de un producto directamente vía AJAX desde el listado.
+     */
+    public function actualizarStockAjax(string $id): void
+    {
+        AdminGuard::check();
+
+        header('Content-Type: application/json');
+
+        $idNum = (int)$id;
+        $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+
+        if (!AdminGuard::verifyCsrf($token)) {
+            echo json_encode(['success' => false, 'message' => 'Token CSRF inválido.']);
+            exit;
+        }
+
+        $stockInput = $_POST['stock'] ?? null;
+        if ($stockInput === null || !is_numeric($stockInput) || (int)$stockInput < 0) {
+            echo json_encode(['success' => false, 'message' => 'Stock inválido.']);
+            exit;
+        }
+
+        $newStock = (int)$stockInput;
+        $producto = $this->productoRepository->buscarPorId($idNum);
+
+        if (!$producto) {
+            echo json_encode(['success' => false, 'message' => 'Producto no encontrado.']);
+            exit;
+        }
+
+        try {
+            $this->productoRepository->actualizar($idNum, [
+                'code'        => $producto['code'],
+                'name'        => $producto['name'],
+                'description' => $producto['description'],
+                'category_id' => $producto['category_id'],
+                'price'       => $producto['price'],
+                'stock'       => $newStock,
+            ]);
+
+            $isLowStock = ($newStock <= LOW_STOCK_THRESHOLD);
+
+            echo json_encode([
+                'success'      => true,
+                'message'      => 'Stock actualizado.',
+                'stock'        => $newStock,
+                'is_low_stock' => $isLowStock
+            ]);
+            exit;
+        } catch (Throwable $e) {
+            echo json_encode(['success' => false, 'message' => 'Error en la base de datos.']);
+            exit;
+        }
+    }
+
+    /**
+     * Exporta la totalidad del catálogo actual a un archivo CSV descargable.
+     */
+    public function exportarCsv(): void
+    {
+        AdminGuard::check();
+
+        $productos = $this->productoRepository->listarTodos();
+
+        $filename = 'catalogo_redtec_' . date('Y-m-d') . '.csv';
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+        // BOM UTF-8 para compatibilidad nativa con MS Excel
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        // Cabecera CSV
+        fputcsv($output, ['code', 'name', 'description', 'category', 'price', 'stock', 'active']);
+
+        foreach ($productos as $p) {
+            fputcsv($output, [
+                $p['code'],
+                $p['name'],
+                $p['description'] ?? '',
+                $p['category_name'] ?? '',
+                number_format((float)$p['price'], 2, '.', ''),
+                (int)$p['stock'],
+                $p['active'] ? '1' : '0'
+            ]);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    /**
      * Procesa la subida de una nueva imagen para la galería del producto.
      */
     public function subirImagen(string $id): void
@@ -220,7 +313,7 @@ class ProductoAdminController
         }
 
         $file     = $_FILES['imagen'];
-        $maxSize  = 5 * 1024 * 1024; // 5 MB
+        $maxSize  = 5 * 1024 * 1024;
         $allowed  = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
         $finfo    = finfo_open(FILEINFO_MIME_TYPE);
@@ -233,7 +326,6 @@ class ProductoAdminController
             exit;
         }
 
-        // Extensión segura
         $extensions = [
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',

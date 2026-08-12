@@ -70,13 +70,30 @@ $routes = [
     // --- RUTAS DEL PANEL DE ADMINISTRACIÓN ---
     ['GET',  '/admin', [\RedTec\Admin\DashboardController::class, 'index']],
 
+    // CRUD Categorías
+    ['GET',  '/admin/categorias', [\RedTec\Admin\CategoriaAdminController::class, 'index']],
+    ['GET',  '/admin/categorias/nuevo', [\RedTec\Admin\CategoriaAdminController::class, 'crearForm']],
+    ['POST', '/admin/categorias', [\RedTec\Admin\CategoriaAdminController::class, 'guardar']],
+    ['GET',  '#^/admin/categorias/(\d+)/editar$#', [\RedTec\Admin\CategoriaAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/categorias/(\d+)$#', [\RedTec\Admin\CategoriaAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/categorias/(\d+)/eliminar$#', [\RedTec\Admin\CategoriaAdminController::class, 'eliminar'], true],
+
+    // Importación Masiva CSV
+    ['GET',  '/admin/importar', [\RedTec\Admin\ImportAdminController::class, 'index']],
+    ['GET',  '/admin/importar/plantilla', [\RedTec\Admin\ImportAdminController::class, 'plantilla']],
+    ['POST', '/admin/importar/previsualizar', [\RedTec\Admin\ImportAdminController::class, 'previsualizar']],
+    ['POST', '/admin/importar/confirmar', [\RedTec\Admin\ImportAdminController::class, 'confirmar']],
+    ['GET',  '/admin/importar/historial', [\RedTec\Admin\ImportAdminController::class, 'historial']],
+
     // CRUD Productos
     ['GET',  '/admin/productos', [\RedTec\Admin\ProductoAdminController::class, 'index']],
+    ['GET',  '/admin/productos/exportar', [\RedTec\Admin\ProductoAdminController::class, 'exportarCsv']],
     ['GET',  '/admin/productos/nuevo', [\RedTec\Admin\ProductoAdminController::class, 'crearForm']],
     ['POST', '/admin/productos', [\RedTec\Admin\ProductoAdminController::class, 'guardar']],
     ['GET',  '#^/admin/productos/(\d+)/editar$#', [\RedTec\Admin\ProductoAdminController::class, 'editarForm'], true],
     ['POST', '#^/admin/productos/(\d+)$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizar'], true],
     ['POST', '#^/admin/productos/(\d+)/baja$#', [\RedTec\Admin\ProductoAdminController::class, 'cambiarEstado'], true],
+    ['POST', '#^/admin/productos/(\d+)/stock$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizarStockAjax'], true],
     ['POST', '#^/admin/productos/(\d+)/imagenes/subir$#', [\RedTec\Admin\ProductoAdminController::class, 'subirImagen'], true],
     ['POST', '#^/admin/productos/(\d+)/imagenes/(\d+)/eliminar$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminarImagen'], true],
 

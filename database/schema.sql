@@ -6,8 +6,10 @@
 
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `import_logs`;
 DROP TABLE IF EXISTS `gestioo_sync_logs`;
 DROP TABLE IF EXISTS `service_packages`;
+
 DROP TABLE IF EXISTS `services`;
 DROP TABLE IF EXISTS `product_images`;
 DROP TABLE IF EXISTS `products`;
@@ -103,20 +105,22 @@ CREATE TABLE `service_packages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------------------------
--- Tabla: gestioo_sync_logs (Historial de Sincronización Gestioo)
+-- Tabla: import_logs (Historial de Importaciones Masivas de Catálogo CSV)
+-- NOTA: Reemplaza la antigua gestioo_sync_logs tras confirmarse que no habrá
+-- integración vía API Gestioo. Se utiliza para auditar cargas masivas desde el panel.
 -- ------------------------------------------------------------------------------
-CREATE TABLE `gestioo_sync_logs` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `total_processed` INT NOT NULL DEFAULT 0,
-  `total_updated` INT NOT NULL DEFAULT 0,
-  `total_failed` INT NOT NULL DEFAULT 0,
-  `synced_by` INT DEFAULT NULL,
-  `synced_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT `fk_gestioo_sync_logs_admins` 
-    FOREIGN KEY (`synced_by`) REFERENCES `admins` (`id`) 
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  INDEX `idx_gestioo_sync_logs_synced_at` (`synced_at`),
-  INDEX `idx_gestioo_sync_logs_synced_by` (`synced_by`)
+CREATE TABLE `import_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) NOT NULL,
+  `total_processed` int(11) NOT NULL DEFAULT 0,
+  `total_created` int(11) NOT NULL DEFAULT 0,
+  `total_updated` int(11) NOT NULL DEFAULT 0,
+  `total_failed` int(11) NOT NULL DEFAULT 0,
+  `imported_by` int(11) NOT NULL,
+  `imported_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_import_logs_admin` (`imported_by`),
+  CONSTRAINT `fk_import_logs_admin` FOREIGN KEY (`imported_by`) REFERENCES `admins` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==============================================================================

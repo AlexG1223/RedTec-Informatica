@@ -232,14 +232,20 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
           </a>
         </li>
 
-        <!-- Ítem Sincronización Gestioo (Próximamente) -->
-        <li class="sidebar-item" style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 1rem;">
-          <a href="#" class="sidebar-link disabled" title="Disponible en Fase 9 (Integración Gestioo)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            Sync Gestioo
-            <span class="sidebar-badge-soon">Próximamente</span>
+        <li class="sidebar-item">
+          <a href="<?= url('/admin/categorias') ?>" class="sidebar-link <?= $activeMenu === 'categorias' ? 'active' : '' ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            Categorías
           </a>
         </li>
+
+        <li class="sidebar-item">
+          <a href="<?= url('/admin/importar') ?>" class="sidebar-link <?= $activeMenu === 'importar' ? 'active' : '' ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Importar Catálogo
+          </a>
+        </li>
+
 
       </ul>
     </nav>

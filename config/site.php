@@ -18,6 +18,11 @@ if (!defined('IS_LOCAL')) {
     define('APP_ENV', IS_LOCAL ? 'local' : 'production');
 }
 
+// Umbral de Alerta de Stock Bajo para el Panel de Administración
+if (!defined('LOW_STOCK_THRESHOLD')) {
+    define('LOW_STOCK_THRESHOLD', 5);
+}
+
 // Número y Enlace de WhatsApp
 if (!defined('REDTEC_WHATSAPP_NUMBER')) {
     define('REDTEC_WHATSAPP_NUMBER', '59899000000'); // TODO: reemplazar por el número real de RedTec
