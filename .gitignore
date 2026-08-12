@@ -1,28 +1,22 @@
-# Dependencias
-/vendor/
-/node_modules/
-
-# Entorno y Configuración Local
-.env
-.env.*
-config.local.php
-/config/config.local.php
-/config/database.php
+# Archivos de entorno y configuración sensible local
 config/database.php
+.env
+.env.local
 
+# Logs del sistema
+logs/*.log
 
-# Sistema Operativo y Editores
+# Subidas temporales del usuario (manteniendo carpetas vacías con .gitkeep)
+public/assets/uploads/productos/*
+!public/assets/uploads/productos/.gitkeep
+public/assets/uploads/servicios/*
+!public/assets/uploads/servicios/.gitkeep
+public/assets/uploads/categorias/*
+!public/assets/uploads/categorias/.gitkeep
+
+# IDEs y SO
 .DS_Store
-public/assets/uploads/*
-!public/assets/uploads/**/.gitkeep
-
 Thumbs.db
 .idea/
 .vscode/
 *.swp
-
-# Logs y Temporales
-/logs/
-*.log
-/tmp/
-*.tmp

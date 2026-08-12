@@ -1,7 +1,7 @@
 <?php
 
 /**
- * RedTec Informática - Configuración General del Sitio, Entorno y SEO
+ * RedTec Informática - Configuración General del Sitio, Entorno y Manejo de Errores
  */
 
 // Detección de Entorno (Local vs Producción)
@@ -16,6 +16,24 @@ if (!defined('IS_LOCAL')) {
     );
     define('IS_LOCAL', $isLocal);
     define('APP_ENV', IS_LOCAL ? 'local' : 'production');
+}
+
+// Configuración de Manejo de Errores según Entorno
+if (IS_LOCAL) {
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', '0');
+    ini_set('display_startup_errors', '0');
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+    ini_set('log_errors', '1');
+    
+    $logDir = __DIR__ . '/../logs';
+    if (!is_dir($logDir)) {
+        @mkdir($logDir, 0755, true);
+    }
+    ini_set('error_log', $logDir . '/php_error.log');
 }
 
 // Umbral de Alerta de Stock Bajo para el Panel de Administración

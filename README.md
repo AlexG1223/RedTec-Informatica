@@ -1,67 +1,84 @@
-# RedTec Informática - Plataforma Web & eCommerce
+# RedTec Informática — E-Commerce & Portal de Servicios Tecnológicos
 
-Sitio web oficial y tienda online para **RedTec Informática** (Uruguay). El proyecto combina una tienda de productos informáticos con carrito y checkout vía WhatsApp, junto con secciones institucionales para servicios técnicos y servicios corporativos.
+Sitio web institucional, e-commerce de productos informáticos, catálogo de servicios técnicos/corporativos y panel de administración personalizado desarrollado para **RedTec Informática** (Atlántida, Canelones, Uruguay).
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🚀 Características Principales
 
-- **Frontend:** HTML5, Vanilla CSS, JavaScript (ES6+)
-- **Backend:** PHP 8.0+ (Screaming Architecture, sin dependencias CLI en producción)
-- **Base de Datos:** MySQL
-- **Hosting Target:** Hosting compartido one.com (Plan Beginner, sin acceso SSH, 1 base de datos)
+- **Tienda Pública & Catálogo**: Búsqueda en tiempo real y filtrado por categorías.
+- **Carrito de Compras Frontend**: Persistencia local en `localStorage` con panel deslizante (`CartDrawer`) sin requerir registro de usuario.
+- **Checkout directo a WhatsApp**: Conversión del carrito a mensaje formateado para coordinación de pago y entrega en Uruguay.
+- **Servicios Técnicos & Planes Corporativos**: Fichas institucionales con botón de consulta directa por WhatsApp.
+- **Panel de Administración (`/admin`)**:
+  - Autenticación segura con bcrypt y protección CSRF.
+  - CRUD completo de productos con galería de imágenes y baja lógica.
+  - CRUD de categorías con prevención de borrado con productos vinculados.
+  - **Ajuste rápido de stock en línea** (vía AJAX) con alertas visuales de **stock bajo** (`LOW_STOCK_THRESHOLD = 5`).
+  - **Importación masiva de productos vía CSV** con previsualización de cambios y log de auditoría.
+  - **Exportación de catálogo a CSV** compatible con MS Excel.
+- **SEO & GEO (Generative Engine Optimization)**:
+  - Metadatos canónicos, OpenGraph y Twitter Cards.
+  - Datos estructurados JSON-LD Schema.org (`LocalBusiness`, `Product`, `BreadcrumbList`, `FAQPage`).
+  - Generación dinámica de `sitemap.xml`, `robots.txt` y `llms.txt` para asistentes de IA.
+
+---
+
+## ⚠️ IMPORTANTE: Credenciales de Desarrollo & Producción
+
+El esquema inicial de la base de datos incorpora un usuario administrador de prueba para desarrollo local:
+
+- **Email por defecto**: `admin@redtecinformatica.com`
+- **Contraseña por defecto**: `Admin2026!`
+
+> 🔴 **ATENCIÓN SEGURIDAD ANTES DE PUBLICAR EN PRODUCCIÓN**:
+> Antes de considerar el sitio en producción, **debés cambiar la contraseña de este usuario administrador desde la base de datos o crear un usuario nuevo y desactivar/eliminar el usuario de prueba**. NUNCA dejes las credenciales por defecto activas en el servidor público.
 
 ---
 
 ## 📁 Estructura del Proyecto (Screaming Architecture)
 
-La aplicación está organizada por **dominios de negocio** para mantener alta cohesión y facilitar el mantenimiento.
-
-```text
-/RedTec
-│
-├── /public                     # Document root del hosting (única carpeta pública)
-│   ├── index.php               # Punto de entrada principal de la aplicación
-│   ├── .htaccess               # Configuración de Apache (mod_rewrite, URLs limpias)
-│   └── /assets                 # Recurso estáticos públicos
-│       ├── /css                # Hojas de estilo CSS
-│       ├── /js                 # Scripts JavaScript del cliente
-│       └── /img                # Imágenes, logos y recursos gráficos
-│
-├── /src                        # Código de negocio organizado por dominios
-│   ├── /Productos              # Catálogo, fichas de producto, filtros y búsquedas
-│   ├── /Categorias             # Gestión e interfaz de categorías de productos
-│   ├── /ServiciosTecnicos      # Sección e interacción para servicios técnicos (cámaras, redes, servidores)
-│   ├── /ServiciosCorporativos  # Sección e interacción para planes de soporte mensual a empresas
-│   ├── /Carrito                # Gestión del carrito de compras (estado cliente/sesión)
-│   ├── /Checkout               # Resumen de pedido y generación de mensaje para WhatsApp
-│   ├── /Gestioo                # Módulo de integración y sincronización con ERP Gestioo
-│   ├── /SEO                    # Metadatos, sitemap, Schema.org y utilidades GEO Uruguay
-│   └── /Admin                  # Panel de administración (autenticación y CRUDs)
-│
-├── /config                     # Configuración global de la aplicación (entorno, DB, constantes)
-├── /database                   # Esquemas SQL, migraciones y datos iniciales
-└── /shared                     # Conexión a BD (PDO), helpers globales, middleware y vistas compartidas
 ```
-
-### 🧩 Descripción de Módulos (`/src`)
-
-- **`/Productos`**: Manejo de catálogo de productos, listados, vista detallada (ficha), filtros por atributos y precios.
-- **`/Categorias`**: Lógica de navegación por categorías y subcategorías de productos.
-- **`/ServiciosTecnicos`**: Presentación de servicios informáticos (redes, servidores, cámaras de seguridad) y formulario de contacto/cotización.
-- **`/ServiciosCorporativos`**: Landing y planes de abonos de soporte técnico mensual para PYMES y empresas.
-- **`/Carrito`**: Control del carrito de compra, almacenamiento de items seleccionados y cálculo de totales.
-- **`/Checkout`**: Preparación del resumen final de compra y redirección a WhatsApp del vendedor con el pedido formateado.
-- **`/Gestioo`**: Sincronización de stock y catálogo de productos con la API del ERP Gestioo.
-- **`/SEO`**: Generación de etiquetas META dinámicas, Open Graph, microdatos de Schema.org y optimizaciones GEO para Uruguay.
-- **`/Admin`**: Panel de control administrativo protegido con autenticación para gestión de productos, categorías, contenidos y configuraciones.
+RedTec/
+├── .htaccess                   # Protección raíz y redirección a /public
+├── .gitignore                  # Exclusión de credenciales y logs
+├── README.md                   # Documentación principal
+├── DEPLOY.md                   # Guía paso a paso para despliegue en one.com
+├── config/
+│   ├── database.example.php    # Plantilla de conexión a BD
+│   └── site.php                # Configuración de entorno y constantes globales
+├── database/
+│   └── schema.sql              # Esquema SQL e inserción inicial
+├── logs/                       # Logs de errores (fuera de web root)
+├── public/                     # ÚNICO DIRECTORIO ACCESIBLE VÍA HTTP
+│   ├── .htaccess               # Router, caché de 1 mes y forzado HTTPS/sin-www
+│   ├── index.php               # Front Controller
+│   ├── robots.txt              # Directivas para buscadores
+│   ├── llms.txt                # Contexto para asistentes de IA (GEO)
+│   ├── sitemap.xml             # Mapa de sitio generado por PHP
+│   └── assets/                 # CSS, JS e imágenes
+└── src/                        # Lógica de dominio PHP
+    ├── Admin/                  # Panel de administración, Auth y CRUDs
+    ├── Categorias/             # Repositorio de categorías
+    ├── Checkout/               # Lógica de checkout
+    ├── Home/                   # Vista principal de inicio
+    ├── Productos/              # Repositorio y catálogo de productos
+    ├── SEO/                    # Generadores de Schema.org y Sitemap
+    ├── ServiciosCorporativos/  # Repositorio de planes PyME
+    └── ServiciosTecnicos/      # Repositorio de servicios técnicos
+```
 
 ---
 
-## 🌿 Estrategia de Ramas (Git Workflow)
+## 🛠️ Requisitos e Instalación Local
 
-El proyecto utiliza un flujo de trabajo basado en entornos de despliegue:
+- **PHP**: 8.0 o superior (extensiones `pdo`, `pdo_mysql`, `fileinfo`, `mbstring`).
+- **MySQL / MariaDB**: 10.4 o superior.
+- **Servidor Web**: Apache con `mod_rewrite` habilitado (XAMPP / WAMP).
 
-- **`develop`**: Rama principal de desarrollo. Todo el código nuevo y las características se integran aquí durante el trabajo diario. **(Rama por defecto)**.
-- **`staging`**: Réplica de producción para pruebas y validación final por parte del cliente o equipo de QA. Se actualiza realizando merge desde `develop`.
-- **`production`**: Refleja exactamente la versión desplegada en el hosting de one.com. Solo recibe merge desde `staging` tras la aprobación final.
+### Pasos de Instalación Local:
+
+1. Clonar el repositorio en tu servidor local (`c:\xampp\htdocs\RedTec`).
+2. Crear la base de datos `c064ao1q8_redtec` e importar `database/schema.sql`.
+3. Copiar `config/database.example.php` a `config/database.php` y ajustar tus credenciales de MySQL.
+4. Abrir la aplicación en el navegador: `http://localhost/RedTec/public/`.

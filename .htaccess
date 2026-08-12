@@ -1,10 +1,15 @@
-# RedTec Informática - Configuración Apache en la Raíz del Proyecto
-# Redirige automáticamente todo el tráfico hacia la carpeta /public/ de forma transparente
+# RedTec Informática - Protección de Raíz y Redirección a /public
 
 <IfModule mod_rewrite.c>
-    RewriteEngine On
+  RewriteEngine On
 
-    # Si la petición no empieza con /public/, redirigir internamente a public/
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteRule ^(.*)$ public/$1 [L]
+  # Redireccionar todas las peticiones a la carpeta /public
+  RewriteCond %{REQUEST_URI} !^/public/
+  RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+# Bloquear acceso directo a carpetas sensibles del sistema
+<FilesMatch "^\.">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
