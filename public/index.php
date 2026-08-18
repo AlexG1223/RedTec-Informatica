@@ -53,6 +53,11 @@ if ($scriptDir !== '/' && strpos($requestUri, $scriptDir) === 0) {
 
 $uri = '/' . trim($requestUri, '/');
 
+// Liberar bloqueo de archivo de sesión para peticiones GET públicas (previene delays de I/O lock en hosting compartido)
+if ($requestMethod === 'GET' && strpos($uri, '/admin') !== 0 && session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
+}
+
 // Tabla de Rutas [Metodo, Ruta/Patron, [ClaseControlador, MetodoAccion], esRegex (bool)]
 $routes = [
     // --- RUTAS PÚBLICAS Y SEO ---

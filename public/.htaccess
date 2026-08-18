@@ -16,7 +16,12 @@
   RewriteRule ^ index.php [QSA,L]
 </IfModule>
 
-# 3. Caché de Assets Estáticos para Hosting (sin CDN en one.com)
+# 3. Compresión GZIP (mod_deflate) para acelerar transferencia de HTML, CSS y JS
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# 4. Caché de Assets Estáticos para Hosting (sin CDN en one.com)
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresDefault "access plus 1 month"
@@ -35,4 +40,5 @@
   <FilesMatch "\.(ico|jpe?g|png|gif|webp|css|js|woff2)$">
     Header set Cache-Control "max-age=2592000, public"
   </FilesMatch>
+  Header set Connection "keep-alive"
 </IfModule>
