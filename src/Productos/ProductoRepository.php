@@ -40,7 +40,7 @@ class ProductoRepository
                 $params[':buscar'] = '%' . trim($filtros['buscar']) . '%';
             }
 
-            $sql .= " ORDER BY p.id DESC";
+            $sql .= " ORDER BY p.name ASC, p.id DESC";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
@@ -64,7 +64,7 @@ class ProductoRepository
                            (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
-                    ORDER BY p.id DESC";
+                    ORDER BY p.name ASC, p.id DESC";
             
             $stmt = $pdo->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
