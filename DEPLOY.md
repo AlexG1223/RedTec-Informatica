@@ -62,7 +62,7 @@ return [
 
 4. Editá `config/site.php` y verificá que el número de WhatsApp de producción esté configurado:
 ```php
-define('REDTEC_WHATSAPP_NUMBER', '59899XXXXXX');
+define('REDTEC_WHATSAPP_NUMBER', '59891633699');
 ```
 
 ---
@@ -91,6 +91,6 @@ Si one.com no permite modificar el Document Root, el proyecto ya incluye un arch
 
 1. Navegá por las secciones públicas: Inicio, Tienda, Servicios y Checkout.
 2. Verificá que la URL forzada sea `https://redtecinformatica.com/` (sin `www` y con `https://`).
-3. Comprobá el funcionamiento del carrito y el envío del pedido formateado a WhatsApp.
+3. Comprobá el funcionamiento del carrito y el envío del pedido formateado a WhatsApp (`+598 91 633 699`).
 4. Probá ingresar a `https://redtecinformatica.com/sitemap.xml` para validar la generación del mapa de sitio.
 5. Ingresá al panel `/admin` y probá realizar un ajuste rápido de stock y una importación CSV de prueba.

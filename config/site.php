@@ -46,9 +46,9 @@ if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
 }
 
-// Número y Enlace de WhatsApp
+// Número y Enlace de WhatsApp Centralizado de RedTec Informática
 if (!defined('REDTEC_WHATSAPP_NUMBER')) {
-    define('REDTEC_WHATSAPP_NUMBER', '59899000000'); // TODO: reemplazar por el número real de RedTec
+    define('REDTEC_WHATSAPP_NUMBER', '59891633699');
 }
 
 if (!defined('REDTEC_WHATSAPP_LINK')) {
