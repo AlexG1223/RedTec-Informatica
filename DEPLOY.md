@@ -62,7 +62,8 @@ return [
 
 4. Editá `config/site.php` y verificá que el número de WhatsApp de producción esté configurado:
 ```php
-define('REDTEC_WHATSAPP_NUMBER', '59899XXXXXX');
+define('REDTEC_WHATSAPP_NUMBER', '59891633699');
+
 ```
 
 ---
