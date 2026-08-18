@@ -41,7 +41,7 @@ if (!defined('LOW_STOCK_THRESHOLD')) {
     define('LOW_STOCK_THRESHOLD', 5);
 }
 
-// Verificación de Google Search Console (vacío hasta la fase de publicación/despliegue)
+// Verificación de Google Search Console
 if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
 }
@@ -57,8 +57,8 @@ if (!defined('REDTEC_WHATSAPP_LINK')) {
 
 /**
  * Función helper global para generar URLs adaptativas.
- * Funciona automáticamente tanto en servidor local (con subdirectorios como /RedTec/public/)
- * como en producción sobre el hosting compartido de one.com (en la raíz /).
+ * Funciona automáticamente en servidor local (XAMPP con subdirectorios /RedTec/public/)
+ * y en producción sobre one.com (tanto si el Document Root apunta a / o a /public).
  * 
  * @param string $path Ruta relativa comenzando con / (ej: '/assets/css/base.css', '/tienda')
  * @return string URL adaptada al entorno.
@@ -70,7 +70,11 @@ if (!function_exists('url')) {
 
         if ($basePath === null) {
             $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-            if ($scriptDir === '/' || $scriptDir === '.' || $scriptDir === '\\') {
+            
+            // En servidores de producción con dominio propio (ej: redtecinformatica.com),
+            // si $scriptDir es '/', '', '.' o '/public', la base relativa es ''
+            // para evitar generar rutas erróneas como /public/assets/... que producen 404.
+            if ($scriptDir === '/' || $scriptDir === '' || $scriptDir === '.' || $scriptDir === '\\' || $scriptDir === '/public') {
                 $basePath = '';
             } else {
                 $basePath = rtrim($scriptDir, '/');

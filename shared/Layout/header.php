@@ -33,7 +33,7 @@ $headerCategories = [
 
       <!-- Buscador Integrado estilo DK Computers -->
       <form action="<?= url('/tienda') ?>" method="GET" class="header-search-form" role="search">
-        <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="header-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         <input type="text" 
