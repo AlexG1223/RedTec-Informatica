@@ -1,109 +1,83 @@
 <?php
 /**
- * RedTec Informática - Vista de Dashboard del Panel de Administración
+ * RedTec Informática - Vista Principal del Dashboard (Panel Admin)
  * 
- * @var array $stats Estadísticas con contadores del sistema
+ * @var int $totalProductos Cantidad de productos activos
+ * @var int $totalCategorias Cantidad de categorías
+ * @var int $totalServicios Cantidad de servicios técnicos
+ * @var int $totalPlanes Cantidad de planes corporativos
  */
 
-$content = function() use ($stats) {
+$content = function() use ($totalProductos, $totalCategorias, $totalServicios, $totalPlanes) {
 ?>
-  <!-- TARJETAS RESUMEN DE ESTADÍSTICAS -->
+  <div style="margin-bottom: 2rem;">
+    <h2 style="margin-bottom: 0.25rem; color: var(--color-dark); font-weight: 800;">Bienvenido al Panel de Control</h2>
+    <p style="color: var(--color-text-secondary); margin-bottom: 0;">
+      Resumen general del catálogo y accesos rápidos a las herramientas de gestión.
+    </p>
+  </div>
+
+  <!-- TARJETAS DE ESTADÍSTICAS -->
   <div class="grid grid-4" style="gap: 1.5rem; margin-bottom: 2.5rem;">
     
-    <!-- Card Productos -->
     <div class="admin-card" style="border-left: 4px solid var(--color-primary);">
-      <div style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Productos en Tienda</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--color-dark); margin: 0.35rem 0;">
-        <?= $stats['activos_productos'] ?> <span style="font-size: 1rem; font-weight: 500; color: var(--color-text-muted);">/ <?= $stats['total_productos'] ?></span>
+      <div style="font-size: 0.8rem; font-weight: 800; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Productos Activos</div>
+      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
+        <?= (int)$totalProductos ?>
       </div>
-      <a href="<?= url('/admin/productos') ?>" style="font-size: 0.85rem; color: var(--color-primary); font-weight: 600; text-decoration: none;">
-        Gestionar catálogo &rarr;
-      </a>
+      <a href="<?= url('/admin/productos') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar productos &rarr;</a>
     </div>
 
-    <!-- Card Servicios -->
-    <div class="admin-card" style="border-left: 4px solid #10B981;">
-      <div style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Servicios Técnicos</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--color-dark); margin: 0.35rem 0;">
-        <?= $stats['activos_servicios'] ?> <span style="font-size: 1rem; font-weight: 500; color: var(--color-text-muted);">/ <?= $stats['total_servicios'] ?></span>
+    <div class="admin-card" style="border-left: 4px solid #0D9488;">
+      <div style="font-size: 0.8rem; font-weight: 800; color: #0D9488; text-transform: uppercase; letter-spacing: 0.05em;">Categorías</div>
+      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
+        <?= (int)$totalCategorias ?>
       </div>
-      <a href="<?= url('/admin/servicios') ?>" style="font-size: 0.85rem; color: #10B981; font-weight: 600; text-decoration: none;">
-        Gestionar servicios &rarr;
-      </a>
+      <a href="<?= url('/admin/categorias') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar categorías &rarr;</a>
     </div>
 
-    <!-- Card Planes -->
     <div class="admin-card" style="border-left: 4px solid #3B82F6;">
-      <div style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Planes Corporativos</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--color-dark); margin: 0.35rem 0;">
-        <?= $stats['activos_planes'] ?> <span style="font-size: 1rem; font-weight: 500; color: var(--color-text-muted);">/ <?= $stats['total_planes'] ?></span>
+      <div style="font-size: 0.8rem; font-weight: 800; color: #3B82F6; text-transform: uppercase; letter-spacing: 0.05em;">Servicios Técnicos</div>
+      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
+        <?= (int)$totalServicios ?>
       </div>
-      <a href="<?= url('/admin/planes') ?>" style="font-size: 0.85rem; color: #3B82F6; font-weight: 600; text-decoration: none;">
-        Gestionar planes &rarr;
-      </a>
+      <a href="<?= url('/admin/servicios') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar servicios &rarr;</a>
     </div>
 
-    <!-- Card Categorías -->
     <div class="admin-card" style="border-left: 4px solid #8B5CF6;">
-      <div style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Categorías Activas</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--color-dark); margin: 0.35rem 0;">
-        <?= $stats['total_categorias'] ?>
+      <div style="font-size: 0.8rem; font-weight: 800; color: #8B5CF6; text-transform: uppercase; letter-spacing: 0.05em;">Planes PyME</div>
+      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
+        <?= (int)$totalPlanes ?>
       </div>
-      <span style="font-size: 0.85rem; color: var(--color-text-muted);">Categorías en catálogo</span>
+      <a href="<?= url('/admin/planes') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar planes &rarr;</a>
     </div>
 
   </div>
 
-  <!-- SECCIÓN DE ACCESOS RÁPIDOS Y MÓDULOS -->
-  <div class="grid grid-3" style="gap: 2rem;">
-    
-    <!-- Módulo Productos -->
-    <div class="admin-card">
-      <div style="width: 44px; height: 44px; background: var(--color-primary-light); color: var(--color-primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      </div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Catálogo de Productos</h3>
-      <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
-        Creá, editá y gestioná productos del catálogo online, asignación de precios, stock e imágenes de galería.
-      </p>
-      <div style="display: flex; gap: 0.75rem;">
-        <a href="<?= url('/admin/productos') ?>" class="btn btn-outline-dark btn-sm">Ver Productos</a>
-        <a href="<?= url('/admin/productos/nuevo') ?>" class="btn btn-primary btn-sm">+ Nuevo Producto</a>
-      </div>
-    </div>
+  <!-- TARJETAS DE ACCESOS RÁPIDOS -->
+  <div class="admin-card">
+    <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.2rem; color: var(--color-dark);">
+      Acciones Rápidas
+    </h3>
 
-    <!-- Módulo Servicios -->
-    <div class="admin-card">
-      <div style="width: 44px; height: 44px; background: #D1FAE5; color: #10B981; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      </div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Servicios Técnicos</h3>
-      <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
-        Administrá los servicios de infraestructura (CCTV, Servidores, Redes) y su presencia institucional en la web.
-      </p>
-      <div style="display: flex; gap: 0.75rem;">
-        <a href="<?= url('/admin/servicios') ?>" class="btn btn-outline-dark btn-sm">Ver Servicios</a>
-        <a href="<?= url('/admin/servicios/nuevo') ?>" class="btn btn-primary btn-sm" style="background-color: #10B981; border-color: #10B981;">+ Nuevo Servicio</a>
-      </div>
-    </div>
+    <div class="grid grid-3" style="gap: 1.25rem;">
+      <a href="<?= url('/admin/productos/nuevo') ?>" class="btn btn-outline-dark" style="padding: 1.25rem; justify-content: flex-start; text-align: left;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>+ Nuevo Producto</span>
+      </a>
 
-    <!-- Módulo Planes Corporativos -->
-    <div class="admin-card">
-      <div style="width: 44px; height: 44px; background: #DBEAFE; color: #3B82F6; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-      </div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Planes Corporativos</h3>
-      <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">
-        Gestioná los abonos mensuales de soporte PyME, sus descripciones y precios de cotización.
-      </p>
-      <div style="display: flex; gap: 0.75rem;">
-        <a href="<?= url('/admin/planes') ?>" class="btn btn-outline-dark btn-sm">Ver Planes</a>
-        <a href="<?= url('/admin/planes/nuevo') ?>" class="btn btn-primary btn-sm" style="background-color: #3B82F6; border-color: #3B82F6;">+ Nuevo Plan</a>
-      </div>
-    </div>
+      <a href="<?= url('/admin/importar') ?>" class="btn btn-outline-dark" style="padding: 1.25rem; justify-content: flex-start; text-align: left;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Importación Masiva (CSV)</span>
+      </a>
 
+      <a href="<?= url('/admin/productos/exportar') ?>" class="btn btn-outline-dark" style="padding: 1.25rem; justify-content: flex-start; text-align: left;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Exportar Catálogo CSV</span>
+      </a>
+    </div>
   </div>
 <?php
 };
 
-require __DIR__ . '/../../shared/Layout/admin-layout.php';
+require __DIR__ . '/../../../shared/Layout/admin-layout.php';

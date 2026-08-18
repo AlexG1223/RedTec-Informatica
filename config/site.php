@@ -41,18 +41,14 @@ if (!defined('LOW_STOCK_THRESHOLD')) {
     define('LOW_STOCK_THRESHOLD', 5);
 }
 
-// Verificación de Google Search Console
+// Verificación de Google Search Console (vacío hasta la fase de publicación/despliegue)
 if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
 }
 
-// Número y Enlace de WhatsApp Centralizado (+598 91 633 699)
+// Número y Enlace de WhatsApp
 if (!defined('REDTEC_WHATSAPP_NUMBER')) {
-    define('REDTEC_WHATSAPP_NUMBER', '59891633699');
-}
-
-if (!defined('REDTEC_WHATSAPP_DISPLAY')) {
-    define('REDTEC_WHATSAPP_DISPLAY', '+598 91 633 699');
+    define('REDTEC_WHATSAPP_NUMBER', '59899000000'); // TODO: reemplazar por el número real de RedTec
 }
 
 if (!defined('REDTEC_WHATSAPP_LINK')) {

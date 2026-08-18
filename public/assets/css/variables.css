@@ -1,6 +1,7 @@
 /**
  * RedTec Informática - Sistema de Diseño
  * Fuente Única de Verdad: Variables CSS (Custom Properties)
+ * Refinado de Marca inspirado en estética DK Computers
  */
 
 :root {
@@ -9,22 +10,29 @@
   --color-primary-hover: #C53337;
   --color-primary-active: #A82529;
   --color-primary-light: #FCEBEB;
+  --color-primary-glow: rgba(227, 69, 73, 0.25);
   
   --color-dark: #1F130F;
   --color-dark-surface: #2B1C17;
   --color-dark-hover: #38251F;
+  --color-dark-deep: #160D0A;
+  
+  --color-accent-teal: #0D9488;
+  --color-accent-teal-dark: #0F766E;
+  --color-accent-teal-light: #CCFBF1;
   
   --color-bg: #F8F9FA;
   --color-card-bg: #FFFFFF;
   
   --color-text-main: #222222;
-  --color-text-secondary: #666666;
+  --color-text-secondary: #555555;
   --color-text-muted: #888888;
   --color-text-on-dark: #F3F3F3;
   --color-text-on-primary: #FFFFFF;
   
   --color-border-metallic: #B0B0B0;
   --color-border-light: #E2E2E2;
+  --color-border-dark: #38251F;
   
   /* Estados de Stock y Feedback */
   --color-stock-in: #28A745;
@@ -44,6 +52,7 @@
   --fw-semibold: 600;
   --fw-bold: 700;
   --fw-extrabold: 800;
+  --fw-black: 900;
   
   /* --- Espaciados Base --- */
   --spacing-xs: 0.25rem;  /* 4px */
@@ -65,16 +74,16 @@
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 12px 28px rgba(227, 69, 73, 0.15);
-  --shadow-dark: 0 8px 24px rgba(31, 19, 15, 0.25);
+  --shadow-hover: 0 12px 28px rgba(227, 69, 73, 0.18);
+  --shadow-dark: 0 10px 30px rgba(31, 19, 15, 0.35);
   
   /* --- Layout & Contenedores --- */
-  --container-max: 1240px;
+  --container-max: 1280px;
   --container-padding: 1.25rem;
   
   /* --- Transiciones --- */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s ease;
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   
   /* --- Z-Index --- */

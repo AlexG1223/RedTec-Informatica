@@ -1,13 +1,15 @@
 <?php
 /**
- * RedTec Informática - Vista de Login del Panel de Administración
+ * RedTec Informática - Vista de Autenticación / Login al Panel de Administración
  * 
- * @var string|null $error Mensaje de error de autenticación si existe.
- * @var string $csrfToken Token CSRF de seguridad.
+ * @var string|null $error Mensaje de error si la validación falla.
+ * @var string $csrfToken Token CSRF para el formulario.
  */
 
-$logoUrl = url('/assets/img/Logotipo PNG.png');
-$isoUrl  = url('/assets/img/Iso PNG.png');
+$error    = $error ?? null;
+$csrfToken = $csrfToken ?? \RedTec\Admin\AdminGuard::csrfToken();
+$logoUrl  = url('/assets/img/Logotipo PNG.png');
+$isoUrl   = url('/assets/img/Iso PNG.png');
 ?>
 <!DOCTYPE html>
 <html lang="es-UY">
@@ -18,56 +20,57 @@ $isoUrl  = url('/assets/img/Iso PNG.png');
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="<?= $isoUrl ?>">
 
-  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-  
+
   <link rel="stylesheet" href="<?= url('/assets/css/variables.css') ?>">
   <link rel="stylesheet" href="<?= url('/assets/css/base.css') ?>">
-  
+  <link rel="stylesheet" href="<?= url('/assets/css/components.css') ?>">
+
   <style>
     body {
-      background-color: var(--color-dark);
+      background: linear-gradient(135deg, var(--color-dark) 0%, #2A1712 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
-      color: #FFFFFF;
     }
-    
+
     .login-card {
-      background: #2B1C17;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      background: #FFFFFF;
       width: 100%;
       max-width: 420px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
       padding: 2.5rem;
       border-top: 4px solid var(--color-primary);
     }
-    
-    .login-header {
+
+    .login-brand {
       text-align: center;
       margin-bottom: 2rem;
     }
 
-    .login-header img {
-      max-width: 170px;
-      height: auto;
-      margin-bottom: 1rem;
+    .login-brand img {
+      height: 52px;
+      width: auto;
+      margin: 0 auto 1rem auto;
+      object-fit: contain;
     }
 
-    .login-header h1 {
-      font-size: 1.25rem;
-      color: #FFFFFF;
+    .login-brand h1 {
+      font-size: 1.3rem;
+      color: var(--color-dark);
       margin-bottom: 0.25rem;
+      font-weight: 800;
     }
 
-    .login-header p {
+    .login-brand p {
       font-size: 0.85rem;
-      color: #B0B0B0;
+      color: var(--color-text-secondary);
       margin-bottom: 0;
     }
 
@@ -79,118 +82,92 @@ $isoUrl  = url('/assets/img/Iso PNG.png');
       display: block;
       font-family: var(--font-heading);
       font-size: 0.85rem;
-      font-weight: 600;
-      color: #D2D2D2;
-      margin-bottom: 0.4rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: 0.35rem;
     }
 
-    .form-control {
+    .form-group input {
       width: 100%;
       padding: 0.75rem 1rem;
-      background-color: #1F130F;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid var(--color-border-metallic);
       border-radius: var(--radius-md);
-      color: #FFFFFF;
       font-family: var(--font-body);
       font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
+      transition: border-color var(--transition-fast);
     }
 
-    .form-control:focus {
+    .form-group input:focus {
+      outline: none;
       border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-glow);
     }
 
     .alert-error {
-      background-color: rgba(227, 69, 73, 0.15);
-      border: 1px solid var(--color-primary);
-      color: #FF8E91;
+      background-color: #FEE2E2;
+      color: #991B1B;
       padding: 0.75rem 1rem;
       border-radius: var(--radius-md);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
+      font-weight: 600;
       margin-bottom: 1.5rem;
+      border: 1px solid #FCA5A5;
       text-align: center;
-    }
-
-    .btn-login {
-      width: 100%;
-      padding: 0.85rem;
-      background-color: var(--color-primary);
-      color: #FFFFFF;
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: var(--font-heading);
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn-login:hover {
-      background-color: var(--color-primary-hover);
-    }
-
-    .login-footer {
-      margin-top: 1.75rem;
-      text-align: center;
-      font-size: 0.8rem;
-      color: #888888;
-    }
-
-    .login-footer a {
-      color: var(--color-primary);
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="login-card">
-    
-    <div class="login-header">
-      <img src="<?= $logoUrl ?>" alt="RedTec Informática Logo">
-      <h1>Panel de Administración</h1>
-      <p>Ingrese sus credenciales de acceso</p>
-    </div>
-
-    <?php if (!empty($error)): ?>
-      <div class="alert-error">
-        <?= htmlspecialchars($error) ?>
-      </div>
-    <?php endif; ?>
-
-    <form action="<?= url('/admin/login') ?>" method="POST">
-      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
-
-      <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" 
-               id="email" 
-               name="email" 
-               placeholder="admin@redtecinformatica.com" 
-               required 
-               autofocus 
-               class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" 
-               id="password" 
-               name="password" 
-               placeholder="••••••••" 
-               required 
-               class="form-control">
-      </div>
-
-      <button type="submit" class="btn-login">Ingresar al Panel</button>
-    </form>
-
-    <div class="login-footer">
-      &copy; <?= date('Y') ?> <strong>RedTec Informática</strong> &bull; <a href="<?= url('/') ?>">Volver al sitio público</a>
-    </div>
-
+<div class="login-card">
+  
+  <div class="login-brand">
+    <img src="<?= $logoUrl ?>" alt="RedTec Informática">
+    <h1>Panel de Administración</h1>
+    <p>Ingresá tus credenciales para gestionar el sitio</p>
   </div>
+
+  <?php if ($error): ?>
+    <div class="alert-error">
+      <?= htmlspecialchars($error) ?>
+    </div>
+  <?php endif; ?>
+
+  <form action="<?= url('/admin/login') ?>" method="POST">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+
+    <div class="form-group">
+      <label for="email">Correo Electrónico</label>
+      <input type="email" 
+             id="email" 
+             name="email" 
+             required 
+             placeholder="admin@redtecinformatica.com" 
+             value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+             autocomplete="email">
+    </div>
+
+    <div class="form-group" style="margin-bottom: 1.75rem;">
+      <label for="password">Contraseña</label>
+      <input type="password" 
+             id="password" 
+             name="password" 
+             required 
+             placeholder="••••••••" 
+             autocomplete="current-password">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
+      Iniciar Sesión
+    </button>
+  </form>
+
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <a href="<?= url('/') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); text-decoration: none;">
+      &larr; Volver al sitio público
+    </a>
+  </div>
+
+</div>
 
 </body>
 </html>

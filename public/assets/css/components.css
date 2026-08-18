@@ -1,6 +1,6 @@
 /**
  * RedTec Informática - Componentes Reutilizables
- * Botones, Cards de Producto, Badges, WhatsApp Flotante y Formularios
+ * Estilo Inspirado en DK Computers: Hero Banner, Cards de Overlay, Product Cards v2, Forms y Admin
  */
 
 /* ==============================================================================
@@ -13,9 +13,9 @@
   gap: var(--spacing-sm);
   font-family: var(--font-heading);
   font-size: 0.9375rem;
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-bold);
   line-height: 1.4;
-  padding: 0.625rem 1.25rem;
+  padding: 0.65rem 1.35rem;
   border-radius: var(--radius-md);
   border: 2px solid transparent;
   cursor: pointer;
@@ -28,6 +28,8 @@
               color var(--transition-fast), 
               box-shadow var(--transition-fast), 
               transform var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .btn:active {
@@ -35,7 +37,7 @@
 }
 
 .btn:focus-visible {
-  outline: 3px solid rgba(227, 69, 73, 0.35);
+  outline: 3px solid var(--color-primary-glow);
   outline-offset: 2px;
 }
 
@@ -44,14 +46,15 @@
   background-color: var(--color-primary);
   color: var(--color-text-on-primary);
   border-color: var(--color-primary);
-  box-shadow: 0 4px 10px rgba(227, 69, 73, 0.25);
+  box-shadow: 0 4px 12px rgba(227, 69, 73, 0.3);
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
   color: var(--color-text-on-primary);
-  box-shadow: 0 6px 14px rgba(227, 69, 73, 0.35);
+  box-shadow: 0 6px 18px rgba(227, 69, 73, 0.45);
+  transform: translateY(-2px);
 }
 
 /* Botón Secundario / Oscuro */
@@ -65,6 +68,7 @@
   background-color: var(--color-dark-hover);
   border-color: var(--color-dark-hover);
   color: var(--color-text-on-dark);
+  transform: translateY(-2px);
 }
 
 /* Botón Outline Primario */
@@ -77,6 +81,7 @@
 .btn-outline:hover {
   background-color: var(--color-primary);
   color: var(--color-text-on-primary);
+  transform: translateY(-2px);
 }
 
 /* Botón Outline Oscuro */
@@ -89,17 +94,18 @@
 .btn-outline-dark:hover {
   background-color: var(--color-dark);
   color: var(--color-text-on-dark);
+  transform: translateY(-2px);
 }
 
 /* Tamaños de Botones */
 .btn-sm {
-  padding: 0.4rem 0.85rem;
+  padding: 0.45rem 0.95rem;
   font-size: 0.8125rem;
   border-radius: var(--radius-sm);
 }
 
 .btn-lg {
-  padding: 0.85rem 1.75rem;
+  padding: 0.9rem 1.85rem;
   font-size: 1.05rem;
   border-radius: var(--radius-md);
 }
@@ -163,7 +169,160 @@
 
 
 /* ==============================================================================
-   3. CARD DE PRODUCTO (.product-card)
+   3. HERO BANNER ESTILO DK COMPUTERS (.hero-banner-dk)
+   ============================================================================== */
+.hero-banner-dk {
+  background: linear-gradient(135deg, #1A100C 0%, #2A1712 50%, #0F2A28 100%);
+  color: #FFFFFF;
+  padding: 4.5rem 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid var(--color-primary);
+}
+
+.hero-banner-dk::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.25) 0%, rgba(227, 69, 73, 0.1) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-spotlight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: var(--fw-extrabold);
+  color: #5EEAD4;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: rgba(13, 148, 136, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(94, 234, 212, 0.3);
+}
+
+.hero-title-dk {
+  color: #FFFFFF;
+  font-size: clamp(2.2rem, 4.8vw, 3.5rem);
+  font-weight: var(--fw-black);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.hero-title-highlight {
+  color: var(--color-primary);
+  background: linear-gradient(135deg, #E34549 0%, #FF7679 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle-dk {
+  color: #E2E8F0;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 680px;
+}
+
+
+/* ==============================================================================
+   4. TARJETAS DE CATEGORÍA CON OVERLAY OSCURO (.category-overlay-card)
+   ============================================================================== */
+.category-overlay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.category-overlay-card {
+  position: relative;
+  height: 220px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+  background-color: var(--color-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.category-overlay-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+  filter: contrast(1.1) brightness(0.9);
+}
+
+.category-overlay-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(15, 10, 8, 0.95) 0%, rgba(15, 10, 8, 0.3) 60%, transparent 100%);
+  z-index: 2;
+}
+
+.category-overlay-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+}
+
+.category-overlay-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: var(--fw-black);
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.category-overlay-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.category-overlay-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+  border-color: var(--color-primary);
+}
+
+.category-overlay-card:hover .category-overlay-bg {
+  transform: scale(1.08);
+  opacity: 0.75;
+}
+
+
+/* ==============================================================================
+   5. CARD DE PRODUCTO (.product-card-v2)
    ============================================================================== */
 .product-card {
   background-color: var(--color-card-bg);
@@ -181,9 +340,9 @@
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-border-metallic);
+  border-color: var(--color-primary);
 }
 
 .product-card-img-wrap {
@@ -210,7 +369,7 @@
 }
 
 .product-card:hover .product-card-img-wrap img {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
 .product-card-badge {
@@ -227,9 +386,10 @@
   font-size: 0.7rem;
   font-weight: var(--fw-semibold);
   color: var(--color-text-muted);
-  background: rgba(248, 249, 250, 0.9);
-  padding: 0.15rem 0.4rem;
+  background: rgba(248, 249, 250, 0.95);
+  padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-light);
   z-index: 2;
 }
 
@@ -242,17 +402,17 @@
 
 .product-card-category {
   font-size: 0.75rem;
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: var(--color-primary);
   margin-bottom: var(--spacing-xs);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .product-card-title {
   font-family: var(--font-heading);
   font-size: 1.05rem;
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-bold);
   color: var(--color-dark);
   margin-bottom: var(--spacing-sm);
   line-height: 1.35;
@@ -290,8 +450,8 @@
 
 .product-card-price {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: var(--fw-bold);
+  font-size: 1.45rem;
+  font-weight: var(--fw-extrabold);
   color: var(--color-primary);
 }
 
@@ -303,7 +463,7 @@
 
 
 /* ==============================================================================
-   4. BOTÓN FLOTANTE DE WHATSAPP (.whatsapp-float)
+   6. BOTÓN FLOTANTE DE WHATSAPP (.whatsapp-float)
    ============================================================================== */
 .whatsapp-float {
   position: fixed;
@@ -325,7 +485,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
   transition: transform var(--transition-bounce), 
               background-color var(--transition-fast), 
               box-shadow var(--transition-fast);
@@ -340,7 +500,7 @@
 .whatsapp-float:hover .whatsapp-icon-btn {
   background-color: var(--color-whatsapp-hover);
   transform: scale(1.1) rotate(6deg);
-  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.6);
+  box-shadow: 0 6px 26px rgba(37, 211, 102, 0.65);
 }
 
 .whatsapp-label {
@@ -366,49 +526,51 @@
 
 
 /* ==============================================================================
-   5. CONTADOR DE CARRITO (HEADER BADGE)
+   7. CONTADOR DE CARRITO (HEADER BADGE)
    ============================================================================== */
 .cart-trigger {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
   background-color: var(--color-dark-surface);
   color: var(--color-text-on-dark);
   transition: background-color var(--transition-fast), color var(--transition-fast);
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 .cart-trigger:hover {
   background-color: var(--color-primary);
+  border-color: var(--color-primary);
   color: #FFFFFF;
 }
 
 .cart-badge {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -5px;
+  right: -5px;
   background-color: var(--color-primary);
   color: #FFFFFF;
   font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: var(--fw-bold);
-  min-width: 20px;
-  height: 20px;
+  font-size: 0.72rem;
+  font-weight: var(--fw-extrabold);
+  min-width: 22px;
+  height: 22px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
   border: 2px solid var(--color-dark);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 
 /* ==============================================================================
-   6. PANEL / DRAWER DEL CARRITO (.cart-drawer)
+   8. PANEL / DRAWER DEL CARRITO (.cart-drawer)
    ============================================================================== */
 .cart-drawer-backdrop {
   position: fixed;
@@ -416,8 +578,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(31, 19, 15, 0.6);
-  backdrop-filter: blur(3px);
+  background-color: rgba(22, 13, 10, 0.65);
+  backdrop-filter: blur(4px);
   z-index: var(--z-modal-backdrop);
   opacity: 0;
   visibility: hidden;
@@ -619,8 +781,8 @@
 
 .cart-summary-total {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: var(--fw-bold);
+  font-size: 1.45rem;
+  font-weight: var(--fw-extrabold);
   color: var(--color-primary);
 }
 
@@ -628,7 +790,7 @@
   font-size: 0.8rem;
   color: var(--color-text-secondary);
   background: var(--color-primary-light);
-  padding: 0.6rem 0.85rem;
+  padding: 0.65rem 0.85rem;
   border-radius: var(--radius-sm);
   margin-bottom: var(--spacing-md);
   border-left: 3px solid var(--color-primary);
@@ -637,7 +799,36 @@
 
 
 /* ==============================================================================
-   7. TOAST NOTIFICATIONS (.redtec-toast)
+   9. COMPONENTES DEL PANEL DE ADMINISTRACIÓN (.admin-card, .admin-table)
+   ============================================================================== */
+.admin-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 2px solid var(--color-bg);
+}
+
+.admin-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: var(--fw-bold);
+  color: var(--color-dark);
+  margin-bottom: 0;
+}
+
+
+/* ==============================================================================
+   10. TOAST NOTIFICATIONS (.redtec-toast)
    ============================================================================== */
 .redtec-toast-container {
   position: fixed;
@@ -681,88 +872,3 @@
 .redtec-toast.error {
   border-left-color: var(--color-stock-out);
 }
-
-
-/* ==============================================================================
-   8. TARJETAS DE CATEGORÍA VISUAL CON OVERLAY (ESTILO DK COMPUTERS ADAPTADO A REDTEC)
-   ============================================================================== */
-.category-dk-overlay-card {
-  position: relative;
-  display: block;
-  height: 220px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  text-decoration: none;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
-}
-
-.category-dk-overlay-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(227, 69, 73, 0.35);
-  border-color: var(--color-primary);
-}
-
-.category-dk-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.4s ease;
-}
-
-.category-dk-overlay-card:hover .category-dk-bg {
-  transform: scale(1.06);
-}
-
-.category-dk-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(31, 19, 15, 0.25) 0%, rgba(31, 19, 15, 0.85) 75%, rgba(23, 14, 12, 0.95) 100%);
-  transition: background 0.3s ease;
-}
-
-.category-dk-overlay-card:hover .category-dk-gradient {
-  background: linear-gradient(180deg, rgba(31, 19, 15, 0.1) 0%, rgba(31, 19, 15, 0.75) 60%, rgba(227, 69, 73, 0.9) 100%);
-}
-
-.category-dk-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1.5rem;
-}
-
-.category-dk-title {
-  font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
-  font-weight: 800;
-  color: #FFFFFF;
-  line-height: 1.1;
-  margin-bottom: 0.35rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
-}
-
-.category-dk-link {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.9;
-}
-
-@media (min-width: 992px) {
-  .grid-hero-promo {
-    grid-template-columns: 1.1fr 0.9fr !important;
-  }
-}
-
-
