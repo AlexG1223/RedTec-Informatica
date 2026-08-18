@@ -15,6 +15,7 @@ spl_autoload_register(function ($class) {
         'RedTec\\Categorias\\'           => __DIR__ . '/../src/Categorias/',
         'RedTec\\Productos\\'            => __DIR__ . '/../src/Productos/',
         'RedTec\\Checkout\\'             => __DIR__ . '/../src/Checkout/',
+        'RedTec\\Contacto\\'             => __DIR__ . '/../src/Contacto/',
         'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../src/ServiciosTecnicos/',
         'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../src/ServiciosCorporativos/',
         'RedTec\\Admin\\'                => __DIR__ . '/../src/Admin/',
@@ -55,14 +56,17 @@ $uri = '/' . trim($requestUri, '/');
 // Tabla de Rutas [Metodo, Ruta/Patron, [ClaseControlador, MetodoAccion], esRegex (bool)]
 $routes = [
     // --- RUTAS PÚBLICAS Y SEO ---
-    ['GET', '/', [\RedTec\Home\HomeController::class, 'index']],
-    ['GET', '/index.php', [\RedTec\Home\HomeController::class, 'index']],
-    ['GET', '/tienda', [\RedTec\Productos\CatalogoController::class, 'index']],
-    ['GET', '/checkout', [\RedTec\Checkout\CheckoutController::class, 'index']],
-    ['GET', '/servicios', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
-    ['GET', '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
-    ['GET', '/sitemap.xml', [\RedTec\SEO\SitemapGenerator::class, 'generate']],
-    ['GET', '#^/producto/(\d+)$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
+    ['GET',  '/', [\RedTec\Home\HomeController::class, 'index']],
+    ['GET',  '/index.php', [\RedTec\Home\HomeController::class, 'index']],
+    ['GET',  '/tienda', [\RedTec\Productos\CatalogoController::class, 'index']],
+    ['GET',  '/checkout', [\RedTec\Checkout\CheckoutController::class, 'index']],
+    ['GET',  '/contacto', [\RedTec\Contacto\ContactoController::class, 'index']],
+    ['POST', '/contacto', [\RedTec\Contacto\ContactoController::class, 'enviar']],
+    ['GET',  '/servicios', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
+    ['GET',  '/servicios-tecnicos', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
+    ['GET',  '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
+    ['GET',  '/sitemap.xml', [\RedTec\SEO\SitemapGenerator::class, 'generate']],
+    ['GET',  '#^/producto/(\d+)$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
 
     // --- RUTAS DE AUTENTICACIÓN ADMIN ---
     ['GET',  '/admin/login', [\RedTec\Admin\AuthController::class, 'loginForm']],
