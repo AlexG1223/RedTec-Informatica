@@ -7,14 +7,14 @@ use PDOException;
 use Exception;
 
 /**
- * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton Autodetect)
+ * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton Autodetect & Failsafe)
  */
 class Database
 {
     private static ?PDO $instance = null;
 
     /**
-     * Devuelve la instancia única de conexión PDO probando automáticamente las variantes de host y socket de one.com.
+     * Devuelve la instancia única de conexión PDO probando automáticamente las variantes de host y credenciales.
      *
      * @return PDO
      * @throws Exception Si no existe la configuración o falla la conexión.
@@ -25,23 +25,33 @@ class Database
             return self::$instance;
         }
 
-        $configFile = __DIR__ . '/../config/database.php';
+        $configFile  = __DIR__ . '/../config/database.php';
+        $exampleFile = __DIR__ . '/../config/database.example.php';
 
-        if (!file_exists($configFile)) {
+        if (file_exists($configFile)) {
+            $config = require $configFile;
+        } elseif (file_exists($exampleFile)) {
+            $config = require $exampleFile;
+        } else {
             throw new Exception(
-                "Error de Configuración: No se encontró el archivo 'config/database.php'. " .
-                "Por favor copia 'config/database.example.php' como 'config/database.php' en la carpeta /config/ de tu servidor e ingresa tus credenciales."
+                "Error de Configuración: No se encontró el archivo 'config/database.php' ni 'config/database.example.php'."
             );
         }
 
-        $config = require $configFile;
-
-        $configuredHost = trim($config['host'] ?? 'localhost');
+        $configuredHost = trim($config['host'] ?? 'redtecinformatica.com.mysql');
         $port           = (int)($config['port'] ?? 3306);
-        $dbName         = trim($config['db_name'] ?? '');
-        $user           = trim($config['username'] ?? '');
-        $pass           = $config['password'] ?? '';
+        $dbName         = trim($config['db_name'] ?? 'c064ao1q8_redtec');
+        $user           = trim($config['username'] ?? 'c064ao1q8_redtec');
+        $pass           = $config['password'] ?? 'redtec1234';
         $charset        = $config['charset'] ?? 'utf8mb4';
+
+        // En servidor de producción, si el usuario es 'root' o está vacío, usar automáticamente el usuario de one.com
+        if (!IS_LOCAL && ($user === 'root' || empty($user))) {
+            $user = 'c064ao1q8_redtec';
+            if (empty($pass)) {
+                $pass = 'redtec1234';
+            }
+        }
 
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -53,22 +63,22 @@ class Database
         // Construcción de lista inteligente de DSNs a probar secuencialmente
         $dsnCandidates = [];
 
-        // 1. Host configurado en database.php (sin puerto si es localhost para forzar Unix Socket)
+        // 1. Dominio .mysql de one.com (ej: redtecinformatica.com.mysql)
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $domain = preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']);
+            $domain = explode(':', $domain)[0];
+            $dsnCandidates[] = "mysql:host={$domain}.mysql;dbname={$dbName};charset={$charset}";
+        }
+
+        // 2. Host configurado en database.php
         if (strtolower($configuredHost) === 'localhost') {
             $dsnCandidates[] = "mysql:host=localhost;dbname={$dbName};charset={$charset}";
         } else {
             $dsnCandidates[] = "mysql:host={$configuredHost};port={$port};dbname={$dbName};charset={$charset}";
         }
 
-        // 2. Localhost Socket Unix Estándar
+        // 3. Localhost Socket Unix Estándar
         $dsnCandidates[] = "mysql:host=localhost;dbname={$dbName};charset={$charset}";
-
-        // 3. Dominio .mysql de one.com (ej: redtecinformatica.com.mysql)
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $domain = preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']);
-            $domain = explode(':', $domain)[0];
-            $dsnCandidates[] = "mysql:host={$domain}.mysql;dbname={$dbName};charset={$charset}";
-        }
 
         // 4. IP Loopback TCP 127.0.0.1
         $dsnCandidates[] = "mysql:host=127.0.0.1;port={$port};dbname={$dbName};charset={$charset}";
@@ -76,7 +86,6 @@ class Database
         // 5. Rutas explícitas de sockets Unix de Linux hosting
         $dsnCandidates[] = "mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname={$dbName};charset={$charset}";
         $dsnCandidates[] = "mysql:unix_socket=/tmp/mysql.sock;dbname={$dbName};charset={$charset}";
-        $dsnCandidates[] = "mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname={$dbName};charset={$charset}";
 
         $lastException = null;
 
@@ -93,7 +102,7 @@ class Database
         }
 
         $errorMsg = $lastException ? $lastException->getMessage() : "No se pudo establecer conexión con MySQL.";
-        throw new Exception("Error al conectar a MySQL: " . $errorMsg, 500);
+        throw new Exception("Error al conectar a MySQL con usuario '{$user}': " . $errorMsg, 500);
     }
 
     /**
