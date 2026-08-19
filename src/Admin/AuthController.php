@@ -81,7 +81,7 @@ class AuthController
                 exit;
             }
         } catch (Throwable $e) {
-            $_SESSION['login_error'] = 'Error al conectar con la base de datos.';
+            $_SESSION['login_error'] = 'Error de BD: ' . $e->getMessage();
             header('Location: ' . url('/admin/login'));
             exit;
         }
