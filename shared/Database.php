@@ -7,14 +7,14 @@ use PDOException;
 use Exception;
 
 /**
- * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton Optimizada)
+ * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton)
  */
 class Database
 {
     private static ?PDO $instance = null;
 
     /**
-     * Devuelve la instancia única de conexión PDO con conexiones persistentes.
+     * Devuelve la instancia única de conexión PDO.
      *
      * @return PDO
      * @throws Exception Si no existe la configuración o falla la conexión.
@@ -33,17 +33,12 @@ class Database
 
             $config = require $configFile;
 
-            $host    = $config['host'] ?? '127.0.0.1';
+            $host    = $config['host'] ?? 'localhost';
             $port    = $config['port'] ?? 3306;
             $dbName  = $config['db_name'] ?? '';
             $user    = $config['username'] ?? '';
             $pass    = $config['password'] ?? '';
             $charset = $config['charset'] ?? 'utf8mb4';
-
-            // Si el host es 'localhost', forzar '127.0.0.1' para evitar la demora de resolución IPv6 (::1 timeout en Linux shared hostings)
-            if (strtolower($host) === 'localhost') {
-                $host = '127.0.0.1';
-            }
 
             $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset={$charset}";
 
@@ -51,20 +46,24 @@ class Database
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
-                PDO::ATTR_PERSISTENT         => true, // Reutilización de pool de conexiones para eliminar handshake por petición
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset} COLLATE utf8mb4_unicode_ci"
             ];
 
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
-                // Si la conexión persistente falla en algún hosting, intentar sin ATTR_PERSISTENT
-                try {
-                    unset($options[PDO::ATTR_PERSISTENT]);
-                    self::$instance = new PDO($dsn, $user, $pass, $options);
-                } catch (PDOException $ex) {
-                    throw new Exception("Error al conectar a la base de datos MySQL: " . $ex->getMessage(), (int)$ex->getCode(), $ex);
+                // Si el host configurado es localhost y falla, intentar con 127.0.0.1 como fallback secundario
+                if ($host === 'localhost') {
+                    try {
+                        $dsnFallback = "mysql:host=127.0.0.1;port={$port};dbname={$dbName};charset={$charset}";
+                        self::$instance = new PDO($dsnFallback, $user, $pass, $options);
+                        return self::$instance;
+                    } catch (PDOException $ex) {
+                        // Pasar al error original si ambos fallan
+                    }
                 }
+                
+                throw new Exception("Error al conectar a la base de datos MySQL: " . $e->getMessage(), (int)$e->getCode(), $e);
             }
         }
 
