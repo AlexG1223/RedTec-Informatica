@@ -7,14 +7,14 @@ use PDOException;
 use Exception;
 
 /**
- * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton)
+ * RedTec Informática - Capa de Conexión a Base de Datos (PDO Singleton Robustecida)
  */
 class Database
 {
     private static ?PDO $instance = null;
 
     /**
-     * Devuelve la instancia única de conexión PDO.
+     * Devuelve la instancia única de conexión PDO con soporte para Unix Sockets y TCP fallbacks.
      *
      * @return PDO
      * @throws Exception Si no existe la configuración o falla la conexión.
@@ -40,7 +40,12 @@ class Database
             $pass    = $config['password'] ?? '';
             $charset = $config['charset'] ?? 'utf8mb4';
 
-            $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset={$charset}";
+            // Para 'localhost' en Linux shared hosting (one.com), omitir port en DSN para usar Unix Socket nativo
+            if (strtolower($host) === 'localhost') {
+                $dsn = "mysql:host=localhost;dbname={$dbName};charset={$charset}";
+            } else {
+                $dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset={$charset}";
+            }
 
             $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -52,17 +57,23 @@ class Database
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
-                // Si el host configurado es localhost y falla, intentar con 127.0.0.1 como fallback secundario
-                if ($host === 'localhost') {
+                // Fallbacks secuenciales para entornos de hosting compartido con sockets personalizados
+                $fallbackDsns = [
+                    "mysql:host=localhost;port={$port};dbname={$dbName};charset={$charset}",
+                    "mysql:host=127.0.0.1;port={$port};dbname={$dbName};charset={$charset}",
+                    "mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname={$dbName};charset={$charset}",
+                    "mysql:unix_socket=/tmp/mysql.sock;dbname={$dbName};charset={$charset}",
+                ];
+
+                foreach ($fallbackDsns as $fbDsn) {
                     try {
-                        $dsnFallback = "mysql:host=127.0.0.1;port={$port};dbname={$dbName};charset={$charset}";
-                        self::$instance = new PDO($dsnFallback, $user, $pass, $options);
+                        self::$instance = new PDO($fbDsn, $user, $pass, $options);
                         return self::$instance;
                     } catch (PDOException $ex) {
-                        // Pasar al error original si ambos fallan
+                        continue;
                     }
                 }
-                
+
                 throw new Exception("Error al conectar a la base de datos MySQL: " . $e->getMessage(), (int)$e->getCode(), $e);
             }
         }
