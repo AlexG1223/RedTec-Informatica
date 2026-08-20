@@ -89,4 +89,4 @@ $content = function() use ($csrfToken) {
 <?php
 };
 
-require __DIR__ . '/../../../shared/Layout/admin-layout.php';
+require REDTEC_SHARED_DIR . '/Layout/admin-layout.php';

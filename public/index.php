@@ -219,7 +219,7 @@ if (!$matched) {
         <?php
     };
 
-    require __DIR__ . '/../private/shared/Layout/layout.php';
+    require REDTEC_SHARED_DIR . '/Layout/layout.php';
 }
 
 // Vaciar buffer de salida acumulado

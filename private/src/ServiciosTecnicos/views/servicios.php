@@ -80,4 +80,4 @@ $content = function() use ($servicios) {
 <?php
 };
 
-require __DIR__ . '/../../../shared/Layout/layout.php';
+require REDTEC_SHARED_DIR . '/Layout/layout.php';

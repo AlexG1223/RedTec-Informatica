@@ -1,8 +1,17 @@
 <?php
 
 /**
- * RedTec Informática - Configuración General del Sitio, Entorno y Manejo de Errores (Producción)
+ * RedTec Informática - Configuración General del Sitio, Entorno y Rutas Absolutas (Producción)
  */
+
+// Definición de Rutas Absolutas a la Carpeta Privada y Componentes Compartidos
+if (!defined('REDTEC_PRIVATE_DIR')) {
+    define('REDTEC_PRIVATE_DIR', dirname(__DIR__));
+}
+
+if (!defined('REDTEC_SHARED_DIR')) {
+    define('REDTEC_SHARED_DIR', REDTEC_PRIVATE_DIR . '/shared');
+}
 
 // Detección de Entorno
 if (!defined('IS_LOCAL')) {
@@ -23,7 +32,7 @@ if (IS_LOCAL) {
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
     ini_set('log_errors', '1');
     
-    $logDir = __DIR__ . '/../logs';
+    $logDir = REDTEC_PRIVATE_DIR . '/logs';
     if (!is_dir($logDir)) {
         @mkdir($logDir, 0755, true);
     }
