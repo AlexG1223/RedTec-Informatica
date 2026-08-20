@@ -34,6 +34,7 @@ class CategoriaRepository
 
     /**
      * Devuelve todas las categorías con el conteo de productos asociados para el panel de administración.
+     * Compatible con ONLY_FULL_GROUP_BY de MySQL 5.7 y 8.0+.
      *
      * @return array
      */
@@ -41,10 +42,9 @@ class CategoriaRepository
     {
         try {
             $pdo = Database::connect();
-            $sql = "SELECT c.*, COUNT(p.id) as total_products 
+            $sql = "SELECT c.*, 
+                           (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as total_products 
                     FROM categories c 
-                    LEFT JOIN products p ON c.id = p.category_id 
-                    GROUP BY c.id 
                     ORDER BY c.id ASC";
             
             $stmt = $pdo->query($sql);

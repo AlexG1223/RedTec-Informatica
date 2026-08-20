@@ -4,6 +4,9 @@
  * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Métodos HTTP)
  */
 
+// Iniciar Buffer de Salida para prevenir "Headers Already Sent" en redirecciones PHP
+ob_start();
+
 // Cargar configuración general del sitio (detector de entorno y helper url())
 require_once __DIR__ . '/../config/site.php';
 
@@ -144,8 +147,20 @@ foreach ($routes as $route) {
             $controllerClass = $handler[0];
             $actionMethod    = $handler[1];
 
-            $controller = new $controllerClass();
-            call_user_func_array([$controller, $actionMethod], $matches);
+            try {
+                $controller = new $controllerClass();
+                call_user_func_array([$controller, $actionMethod], $matches);
+            } catch (\Throwable $e) {
+                error_log("Controller Error [{$uri}]: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+                if (IS_LOCAL) {
+                    echo "<h1>Error en Controlador</h1><pre>" . htmlspecialchars($e->getMessage() . "\n" . $e->getTraceAsString()) . "</pre>";
+                } else {
+                    $_SESSION['flash_error'] = 'Ocurrió un error al procesar la solicitud: ' . $e->getMessage();
+                    header('Location: ' . url('/admin'));
+                    exit;
+                }
+            }
+
             $matched = true;
             break;
         }
@@ -154,8 +169,24 @@ foreach ($routes as $route) {
             $controllerClass = $handler[0];
             $actionMethod    = $handler[1];
 
-            $controller = new $controllerClass();
-            $controller->$actionMethod();
+            try {
+                $controller = new $controllerClass();
+                $controller->$actionMethod();
+            } catch (\Throwable $e) {
+                error_log("Controller Error [{$uri}]: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());
+                if (IS_LOCAL) {
+                    echo "<h1>Error en Controlador</h1><pre>" . htmlspecialchars($e->getMessage() . "\n" . $e->getTraceAsString()) . "</pre>";
+                } else {
+                    if (strpos($uri, '/admin') === 0 && $uri !== '/admin/login') {
+                        $_SESSION['flash_error'] = 'Error al procesar la solicitud: ' . $e->getMessage();
+                        header('Location: ' . url('/admin/login'));
+                        exit;
+                    }
+                    http_response_code(500);
+                    echo "<div style='padding:3rem; font-family:sans-serif; text-align:center;'><h2>Error del servidor</h2><p>Ocurrió un problema temporal. Por favor reintente en unos minutos.</p></div>";
+                }
+            }
+
             $matched = true;
             break;
         }
@@ -190,3 +221,6 @@ if (!$matched) {
 
     require __DIR__ . '/../shared/Layout/layout.php';
 }
+
+// Vaciar buffer de salida acumulado
+ob_end_flush();
