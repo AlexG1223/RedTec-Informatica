@@ -21,11 +21,6 @@ $content = function() use ($productos, $csrfToken) {
     </div>
     
     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-      <a href="<?= url('/admin/productos/exportar') ?>" class="btn btn-outline-dark btn-sm" title="Descargar catálogo completo en formato CSV">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar Catálogo (.CSV)
-      </a>
-      
       <a href="<?= url('/admin/productos/nuevo') ?>" class="btn btn-primary">
         + Nuevo Producto
       </a>
