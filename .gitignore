@@ -1,9 +1,11 @@
-# Archivos de entorno y configuración sensible local
+# Archivos de entorno y configuración sensible local (Ruta Privada)
+private/config/database.php
 config/database.php
 .env
 .env.local
 
 # Logs del sistema
+private/logs/*.log
 logs/*.log
 
 # Subidas temporales del usuario (manteniendo carpetas vacías con .gitkeep)

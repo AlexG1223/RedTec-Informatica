@@ -3,12 +3,15 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Redireccionar todas las peticiones a la carpeta /public
+  # Bloquear acceso directo a la carpeta privada
+  RewriteRule ^private/ - [F,L]
+
+  # Redireccionar todas las demás peticiones a la carpeta /public
   RewriteCond %{REQUEST_URI} !^/public/
   RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
-# Bloquear acceso directo a carpetas sensibles del sistema
+# Bloquear acceso directo a archivos ocultos y sensibles
 <FilesMatch "^\.">
   Order allow,deny
   Deny from all

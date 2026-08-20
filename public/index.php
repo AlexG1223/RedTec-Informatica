@@ -1,29 +1,29 @@
 <?php
 
 /**
- * RedTec Informática - Punto de Entrada Principal (Front Controller & Router con Métodos HTTP)
+ * RedTec Informática - Punto de Entrada Principal (Front Controller & Router en /public)
  */
 
 // Iniciar Buffer de Salida para prevenir "Headers Already Sent" en redirecciones PHP
 ob_start();
 
-// Cargar configuración general del sitio (detector de entorno y helper url())
-require_once __DIR__ . '/../config/site.php';
+// Cargar configuración general del sitio desde la carpeta privada
+require_once __DIR__ . '/../private/config/site.php';
 
-// Autoloader PSR-4 para clases en /src y /shared
+// Autoloader PSR-4 para clases internas en /private/src y /private/shared
 spl_autoload_register(function ($class) {
     $prefixes = [
-        'RedTec\\Shared\\'               => __DIR__ . '/../shared/',
-        'RedTec\\Home\\'                 => __DIR__ . '/../src/Home/',
-        'RedTec\\Categorias\\'           => __DIR__ . '/../src/Categorias/',
-        'RedTec\\Productos\\'            => __DIR__ . '/../src/Productos/',
-        'RedTec\\Checkout\\'             => __DIR__ . '/../src/Checkout/',
-        'RedTec\\Contacto\\'             => __DIR__ . '/../src/Contacto/',
-        'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../src/ServiciosTecnicos/',
-        'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../src/ServiciosCorporativos/',
-        'RedTec\\Admin\\'                => __DIR__ . '/../src/Admin/',
-        'RedTec\\SEO\\'                  => __DIR__ . '/../src/SEO/',
-        'RedTec\\'                       => __DIR__ . '/../src/',
+        'RedTec\\Shared\\'               => __DIR__ . '/../private/shared/',
+        'RedTec\\Home\\'                 => __DIR__ . '/../private/src/Home/',
+        'RedTec\\Categorias\\'           => __DIR__ . '/../private/src/Categorias/',
+        'RedTec\\Productos\\'            => __DIR__ . '/../private/src/Productos/',
+        'RedTec\\Checkout\\'             => __DIR__ . '/../private/src/Checkout/',
+        'RedTec\\Contacto\\'             => __DIR__ . '/../private/src/Contacto/',
+        'RedTec\\ServiciosTecnicos\\'   => __DIR__ . '/../private/src/ServiciosTecnicos/',
+        'RedTec\\ServiciosCorporativos\\' => __DIR__ . '/../private/src/ServiciosCorporativos/',
+        'RedTec\\Admin\\'                => __DIR__ . '/../private/src/Admin/',
+        'RedTec\\SEO\\'                  => __DIR__ . '/../private/src/SEO/',
+        'RedTec\\'                       => __DIR__ . '/../private/src/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {
@@ -56,7 +56,7 @@ if ($scriptDir !== '/' && strpos($requestUri, $scriptDir) === 0) {
 
 $uri = '/' . trim($requestUri, '/');
 
-// Liberar bloqueo de archivo de sesión para peticiones GET públicas (previene delays de I/O lock en hosting compartido)
+// Liberar bloqueo de archivo de sesión para peticiones GET públicas
 if ($requestMethod === 'GET' && strpos($uri, '/admin') !== 0 && session_status() === PHP_SESSION_ACTIVE) {
     session_write_close();
 }
@@ -143,7 +143,7 @@ foreach ($routes as $route) {
 
     if ($isRegex) {
         if (preg_match($pattern, $uri, $matches)) {
-            array_shift($matches); // Eliminar la coincidencia completa
+            array_shift($matches);
             $controllerClass = $handler[0];
             $actionMethod    = $handler[1];
 
@@ -193,7 +193,7 @@ foreach ($routes as $route) {
     }
 }
 
-// Si la ruta no coincide, enviar código HTTP 404 estricto antes de renderizar
+// Si la ruta no coincide, enviar código HTTP 404
 if (!$matched) {
     http_response_code(404);
     $pageTitle       = 'Página no encontrada — RedTec Informática';
@@ -219,7 +219,7 @@ if (!$matched) {
         <?php
     };
 
-    require __DIR__ . '/../shared/Layout/layout.php';
+    require __DIR__ . '/../private/shared/Layout/layout.php';
 }
 
 // Vaciar buffer de salida acumulado
