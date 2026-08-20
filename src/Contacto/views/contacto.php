@@ -1,9 +1,11 @@
 <?php
 /**
- * RedTec Informática - Vista de la Página de Contacto
+ * RedTec Informática - Vista de la Página de Contacto con Mapa Interactivo de Atlántida
  */
 
 $content = function() {
+    $googleMapsLink = "https://www.google.com/maps/place/RedTec+Inform%C3%A1tica/@-34.7751434,-55.7631209,15.64z/data=!4m6!3m5!1s0x959ff42bd91771af:0x7e7339dbaf53099!8m2!3d-34.774475!4d-55.7614383";
+    $embedMapUrl    = "https://maps.google.com/maps?q=-34.774475,-55.7614383&hl=es&z=16&output=embed";
 ?>
   <!-- CABECERA -->
   <div style="background-color: var(--color-dark); color: #FFFFFF; padding: 3rem 0; border-bottom: 3px solid var(--color-primary);">
@@ -22,7 +24,7 @@ $content = function() {
   <section class="section-padding">
     <div class="container">
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;" class="grid-contact-layout">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-bottom: 3rem;" class="grid-contact-layout">
         
         <!-- FORMULARIO DE CONSULTA -->
         <div style="background: #FFFFFF; padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-sm);">
@@ -105,6 +107,25 @@ $content = function() {
 
         </div>
 
+      </div>
+
+      <!-- MAPA INTERACTIVO EMBEBIDO DE REDTEC INFORMÁTICA -->
+      <div class="location-map-card">
+        <div class="map-info-side">
+          <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--color-dark);">¿Cómo llegar a RedTec?</h3>
+          <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            Estamos ubicados en Atlántida, Canelones. Hacé clic en el mapa para iniciar la navegación GPS con Google Maps.
+          </p>
+          <a href="<?= $googleMapsLink ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-block">
+            Abrir en Google Maps GPS &rarr;
+          </a>
+        </div>
+        <div class="map-iframe-wrap">
+          <iframe src="<?= $embedMapUrl ?>" 
+                  title="Ubicación de RedTec Informática en Google Maps" 
+                  loading="lazy" 
+                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
       </div>
 
     </div>
