@@ -1,24 +1,18 @@
 <?php
 
 /**
- * RedTec Informática - Configuración General del Sitio, Entorno y Manejo de Errores
+ * RedTec Informática - Configuración General del Sitio, Entorno y Manejo de Errores (Producción)
  */
 
-// Detección de Entorno (Local vs Producción)
+// Detección de Entorno
 if (!defined('IS_LOCAL')) {
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $isLocal = (
-        strpos($host, 'localhost') !== false ||
-        strpos($host, '127.0.0.1') !== false ||
-        strpos($host, '::1') !== false ||
-        substr($host, -6) === '.local' ||
-        substr($host, -5) === '.test'
-    );
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $isLocal = (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false);
     define('IS_LOCAL', $isLocal);
     define('APP_ENV', IS_LOCAL ? 'local' : 'production');
 }
 
-// Configuración de Manejo de Errores según Entorno
+// Configuración de Manejo de Errores (Producción)
 if (IS_LOCAL) {
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
@@ -36,12 +30,12 @@ if (IS_LOCAL) {
     ini_set('error_log', $logDir . '/php_error.log');
 }
 
-// Umbral de Alerta de Stock Bajo para el Panel de Administración
+// Umbral de Alerta de Stock Bajo
 if (!defined('LOW_STOCK_THRESHOLD')) {
     define('LOW_STOCK_THRESHOLD', 5);
 }
 
-// Verificación de Google Search Console
+// Google Search Console
 if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
 }
@@ -56,37 +50,18 @@ if (!defined('REDTEC_WHATSAPP_LINK')) {
 }
 
 /**
- * Función helper global para generar URLs adaptativas.
- * Funciona automáticamente en servidor local (XAMPP con subdirectorios /RedTec/public/)
- * y en producción sobre one.com (tanto si el Document Root apunta a / o a /public).
+ * Helper global ultra-rápido para generar URLs relativas limpias.
  * 
- * @param string $path Ruta relativa comenzando con / (ej: '/assets/css/base.css', '/tienda')
- * @return string URL adaptada al entorno.
+ * @param string $path Ruta relativa (ej: '/assets/css/base.css', '/tienda')
+ * @return string URL adaptada sin sobrecarga de runtime.
  */
 if (!function_exists('url')) {
     function url(string $path = ''): string
     {
-        static $basePath = null;
-
-        if ($basePath === null) {
-            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-            
-            // En servidores de producción con dominio propio (ej: redtecinformatica.com),
-            // si $scriptDir es '/', '', '.' o '/public', la base relativa es ''
-            // para evitar generar rutas erróneas como /public/assets/... que producen 404.
-            if ($scriptDir === '/' || $scriptDir === '' || $scriptDir === '.' || $scriptDir === '\\' || $scriptDir === '/public') {
-                $basePath = '';
-            } else {
-                $basePath = rtrim($scriptDir, '/');
-            }
-        }
-
         if ($path === '' || $path === '/') {
-            return $basePath === '' ? '/' : $basePath . '/';
+            return '/';
         }
-
-        $cleanPath = '/' . ltrim($path, '/');
-        return $basePath . $cleanPath;
+        return '/' . ltrim($path, '/');
     }
 }
 
@@ -100,7 +75,7 @@ if (!function_exists('absolute_url')) {
     function absolute_url(string $path = ''): string
     {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $host   = $_SERVER['HTTP_HOST'] ?? 'redtecinformatica.com';
         return $scheme . '://' . $host . url($path);
     }
 }
