@@ -129,7 +129,7 @@ $content = function() use ($products, $categories, $activeCategory, $buscar) {
 
                     <div class="product-card-price-wrap">
                       <div>
-                        <span class="product-card-currency">USD</span>
+                        <span class="product-card-currency">$</span>
                         <span class="product-card-price">$<?= $pPrice ?></span>
                       </div>
                       <?php if ($inStock): ?>

@@ -47,7 +47,7 @@ $content = function() use ($planes, $csrfToken) {
                 $pId      = (int)$p['id'];
                 $pName    = htmlspecialchars($p['name']);
                 $pDesc    = htmlspecialchars(substr($p['description'] ?? '', 0, 90)) . (strlen($p['description'] ?? '') > 90 ? '...' : '');
-                $pPrice   = (!empty($p['price']) && (float)$p['price'] > 0) ? 'USD $' . number_format((float)$p['price'], 2, '.', ',') : '<em style="color: var(--color-text-muted);">Consultar</em>';
+                $pPrice   = (!empty($p['price']) && (float)$p['price'] > 0) ? '$ ' . number_format((float)$p['price'], 2, '.', ',') : '<em style="color: var(--color-text-muted);">Consultar</em>';
                 $isActive = (bool)$p['active'];
               ?>
               <tr style="border-bottom: 1px solid var(--color-border-light); <?= !$isActive ? 'background-color: #F9FAFB; opacity: 0.7;' : '' ?>">

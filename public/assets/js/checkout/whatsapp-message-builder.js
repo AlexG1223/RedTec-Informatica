@@ -20,10 +20,10 @@
       cartItems.forEach(function(item) {
         const itemSubtotal = (parseFloat(item.price) * parseInt(item.quantity, 10)).toFixed(2);
         const itemCode = item.code ? ` (${item.code})` : '';
-        msg += `• ${item.quantity}x ${item.name}${itemCode} — USD $${parseFloat(item.price).toFixed(2)} c/u = USD $${itemSubtotal}\n`;
+        msg += `• ${item.quantity}x ${item.name}${itemCode} — $${parseFloat(item.price).toFixed(2)} c/u = $${itemSubtotal}\n`;
       });
 
-      msg += `\n*Total Estimado: USD $${parseFloat(subtotal).toFixed(2)}*\n\n`;
+      msg += `\n*Total Estimado: $${parseFloat(subtotal).toFixed(2)}*\n\n`;
       msg += "📋 *Datos del Comprador:*\n";
       msg += `• *Nombre:* ${customerData.name}\n`;
       msg += `• *Teléfono:* ${customerData.phone}\n`;

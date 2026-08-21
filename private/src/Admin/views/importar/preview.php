@@ -73,7 +73,7 @@ $content = function() use ($summary, $rows, $fileName, $csrfToken) {
             <th style="padding: 0.85rem 1rem;">Código</th>
             <th style="padding: 0.85rem 1rem;">Nombre del Producto</th>
             <th style="padding: 0.85rem 1rem;">Categoría</th>
-            <th style="padding: 0.85rem 1rem; text-align: right;">Precio (USD)</th>
+            <th style="padding: 0.85rem 1rem; text-align: right;">Precio ($)</th>
             <th style="padding: 0.85rem 1rem; text-align: center;">Stock</th>
             <th style="padding: 0.85rem 1rem;">Observaciones / Errores</th>
           </tr>

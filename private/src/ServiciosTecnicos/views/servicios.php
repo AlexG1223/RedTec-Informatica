@@ -36,7 +36,7 @@ $content = function() use ($servicios) {
             <?php 
               $sTitle = htmlspecialchars($s['title']);
               $sDesc  = nl2br(htmlspecialchars($s['description']));
-              $sPrice = !empty($s['price']) ? 'USD $' . number_format((float)$s['price'], 2, '.', ',') : 'Consultar Presupuesto';
+              $sPrice = !empty($s['price']) ? '$ ' . number_format((float)$s['price'], 2, '.', ',') : 'Consultar Presupuesto';
               $rawImg = !empty($s['image_url']) ? $s['image_url'] : null;
               $sImg   = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : $fallbackImg;
               $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode("Hola RedTec, quisiera consultar por el servicio: " . $s['title']);

@@ -85,7 +85,7 @@ $content = function() use ($product) {
           <div style="background: var(--color-bg); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-light); margin-bottom: 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
             <div>
               <span style="font-size: 0.85rem; color: var(--color-text-muted); display: block;">Precio al contado / transferencia:</span>
-              <span style="font-size: 0.9rem; font-weight: 800; color: var(--color-text-secondary); margin-right: 0.25rem;">USD</span>
+              <span style="font-size: 0.9rem; font-weight: 800; color: var(--color-text-secondary); margin-right: 0.25rem;">$</span>
               <span style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-primary); line-height: 1;">
                 $<?= $pPrice ?>
               </span>

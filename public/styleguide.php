@@ -192,7 +192,7 @@ $content = function() {
               <a href="#">Switch TP-Link 8 Puertos Gigabit 10/100/1000 Mbps</a>
             </h3>
             <div class="product-card-price-wrap">
-              <span class="product-card-currency">USD</span>
+              <span class="product-card-currency">$</span>
               <span class="product-card-price">45.00</span>
             </div>
             <div class="product-card-actions">
@@ -220,7 +220,7 @@ $content = function() {
               <a href="#">Cámara IP Hikvision 2MP Exterior Full HD IR 30m</a>
             </h3>
             <div class="product-card-price-wrap">
-              <span class="product-card-currency">USD</span>
+              <span class="product-card-currency">$</span>
               <span class="product-card-price">79.00</span>
             </div>
             <div class="product-card-actions">
@@ -248,7 +248,7 @@ $content = function() {
               <a href="#">Teclado USB Logitech K120 Español</a>
             </h3>
             <div class="product-card-price-wrap">
-              <span class="product-card-currency">USD</span>
+              <span class="product-card-currency">$</span>
               <span class="product-card-price">18.00</span>
             </div>
             <div class="product-card-actions">

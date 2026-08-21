@@ -72,7 +72,7 @@ $content = function() use ($csrfToken) {
         <li><code>name</code> <strong>(Obligatorio)</strong>: Nombre o título del producto.</li>
         <li><code>description</code>: Descripción detallada o especificaciones.</li>
         <li><code>category</code>: Nombre de la categoría. Si no existe, se creará automáticamente.</li>
-        <li><code>price</code>: Precio en USD (ej: <code>49.90</code>).</li>
+        <li><code>price</code>: Precio en pesos ($) (ej: <code>1000.00</code>).</li>
         <li><code>stock</code>: Cantidad disponible (ej: <code>15</code>).</li>
       </ul>
 

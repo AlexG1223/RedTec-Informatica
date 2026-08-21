@@ -84,10 +84,10 @@ $content = function() use ($producto, $categorias, $isEdit, $formTitle, $actionU
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-          <!-- Precio USD -->
+          <!-- Precio $ -->
           <div>
             <label for="price" style="display: block; font-family: var(--font-heading); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">
-              Precio (USD $) <span style="color: var(--color-primary);">*</span>
+              Precio ($) <span style="color: var(--color-primary);">*</span>
             </label>
             <input type="number" 
                    step="0.01" 

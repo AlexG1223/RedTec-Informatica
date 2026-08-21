@@ -104,7 +104,7 @@ $content = function() {
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; font-weight: 800; color: var(--color-dark);">
               <span>Total Estimado:</span>
               <span style="color: var(--color-primary); font-family: var(--font-heading); font-size: 1.5rem;">
-                USD $<span id="checkoutTotalAmount">0.00</span>
+                $ <span id="checkoutTotalAmount">0.00</span>
               </span>
             </div>
           </div>

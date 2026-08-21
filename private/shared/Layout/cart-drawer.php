@@ -51,7 +51,7 @@
 
     <div class="cart-summary-row">
       <span style="font-weight: 600; color: var(--color-dark);">Subtotal estimado:</span>
-      <span class="cart-summary-total">USD $<span id="cartDrawerSubtotal">0.00</span></span>
+      <span class="cart-summary-total">$ <span id="cartDrawerSubtotal">0.00</span></span>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">

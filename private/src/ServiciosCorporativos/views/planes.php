@@ -35,7 +35,7 @@ $content = function() use ($planes) {
             <?php 
               $pTitle = htmlspecialchars($p['name']);
               $pDesc  = nl2br(htmlspecialchars($p['description']));
-              $pPrice = !empty($p['price']) ? 'USD $' . number_format((float)$p['price'], 2, '.', ',') . ' / mes' : 'Consultar';
+              $pPrice = !empty($p['price']) ? '$ ' . number_format((float)$p['price'], 2, '.', ',') . ' / mes' : 'Consultar';
               $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode("Hola RedTec, quisiera consultar por el plan corporativo: " . $p['name']);
             ?>
             <div style="background: #FFFFFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; position: relative; transition: transform var(--transition-normal), box-shadow var(--transition-normal);"

@@ -86,7 +86,7 @@ class StructuredDataBuilder
             'offers'      => [
                 '@type'         => 'Offer',
                 'url'           => $prodUrl,
-                'priceCurrency' => 'USD',
+                'priceCurrency' => 'UYU',
                 'price'         => $prodPrice,
                 'availability'  => $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                 'itemCondition' => 'https://schema.org/NewCondition',

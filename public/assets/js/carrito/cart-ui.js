@@ -172,7 +172,7 @@
           <img src="${imgSrc}" alt="${self.escapeHtml(item.name)}" class="cart-item-img" onerror="this.src='${fallbackImg}';">
           <div class="cart-item-info">
             <div class="cart-item-title">${self.escapeHtml(item.name)}</div>
-            <div class="cart-item-price">USD $${parseFloat(item.price).toFixed(2)}</div>
+            <div class="cart-item-price">$${parseFloat(item.price).toFixed(2)}</div>
             <div class="cart-item-controls">
               <div class="cart-qty-wrapper">
                 <button type="button" class="cart-qty-btn qty-minus" data-id="${item.id}">-</button>

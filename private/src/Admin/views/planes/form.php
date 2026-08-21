@@ -40,10 +40,10 @@ $content = function() use ($plan, $isEdit, $formTitle, $actionUrl, $csrfToken) {
                style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--color-border-metallic); border-radius: var(--radius-md); font-family: var(--font-body);">
       </div>
 
-      <!-- Precio Mensual USD -->
+      <!-- Precio Mensual $ -->
       <div style="margin-bottom: 1.25rem;">
         <label for="price" style="display: block; font-family: var(--font-heading); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.35rem;">
-          Precio Estimado en USD ($)
+          Precio Estimado ($)
         </label>
         <input type="number" 
                step="0.01" 
