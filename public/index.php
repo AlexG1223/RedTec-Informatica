@@ -79,6 +79,7 @@ $routes = [
     // --- RUTAS DE AUTENTICACIÓN ADMIN ---
     ['GET',  '/admin/login', [\RedTec\Admin\AuthController::class, 'loginForm']],
     ['POST', '/admin/login', [\RedTec\Admin\AuthController::class, 'login']],
+    ['GET',  '/admin/logout', [\RedTec\Admin\AuthController::class, 'logout']],
     ['POST', '/admin/logout', [\RedTec\Admin\AuthController::class, 'logout']],
 
     // --- RUTAS DEL PANEL DE ADMINISTRACIÓN ---
