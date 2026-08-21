@@ -92,7 +92,8 @@ class ProductoAdminController
             header('Location: ' . url('/admin/productos/' . $newId . '/editar'));
             exit;
         } catch (Throwable $e) {
-            $_SESSION['flash_error'] = 'Error al guardar el producto en la base de datos.';
+            error_log("Error al guardar producto: " . $e->getMessage());
+            $_SESSION['flash_error'] = 'Error al guardar el producto en la base de datos: ' . $e->getMessage();
             header('Location: ' . url('/admin/productos/nuevo'));
             exit;
         }

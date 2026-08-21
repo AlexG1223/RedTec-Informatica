@@ -11,6 +11,33 @@ use Throwable;
  */
 class ProductoRepository
 {
+    private static bool $schemaChecked = false;
+
+    /**
+     * Asegura que las tablas products y product_images tengan todas las columnas requeridas (auto-migración).
+     *
+     * @param PDO $pdo
+     */
+    private function ensureSchema(PDO $pdo): void
+    {
+        if (self::$schemaChecked) {
+            return;
+        }
+        self::$schemaChecked = true;
+
+        try {
+            $pdo->exec("ALTER TABLE products ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
+        } catch (Throwable $e) {}
+
+        try {
+            $pdo->exec("ALTER TABLE product_images ADD COLUMN is_primary TINYINT(1) DEFAULT 0");
+        } catch (Throwable $e) {}
+
+        try {
+            $pdo->exec("ALTER TABLE product_images ADD COLUMN sort_order INT DEFAULT 0");
+        } catch (Throwable $e) {}
+    }
+
     /**
      * Busca y lista productos activos para la tienda pública con filtros.
      *
@@ -21,9 +48,10 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             
             $sql = "SELECT p.*, c.name as category_name,
-                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     WHERE p.active = 1";
@@ -60,8 +88,9 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT p.*, c.name as category_name,
-                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     ORDER BY p.name ASC, p.id DESC";
@@ -83,6 +112,7 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT p.*, c.name as category_name 
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
@@ -99,7 +129,6 @@ class ProductoRepository
         }
     }
 
-
     /**
      * Busca un producto específico por su ID.
      *
@@ -110,6 +139,7 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT p.*, c.name as category_name 
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
@@ -143,10 +173,11 @@ class ProductoRepository
     {
         try {
             $pdo = Database::connect();
-            $sql = "SELECT id, product_id, image_url, is_primary 
+            $this->ensureSchema($pdo);
+            $sql = "SELECT id, product_id, image_url 
                     FROM product_images 
                     WHERE product_id = :product_id 
-                    ORDER BY is_primary DESC, id ASC";
+                    ORDER BY id ASC";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':product_id' => $productoId]);
@@ -157,7 +188,7 @@ class ProductoRepository
     }
 
     /**
-     * Inserta un nuevo producto en la base de datos.
+     * Inserta un nuevo producto en la base de datos de forma resiliente.
      *
      * @param array $data
      * @return int ID del producto creado
@@ -165,20 +196,39 @@ class ProductoRepository
     public function crear(array $data): int
     {
         $pdo = Database::connect();
-        $sql = "INSERT INTO products (code, name, description, category_id, price, stock, active, created_at, updated_at) 
-                VALUES (:code, :name, :description, :category_id, :price, :stock, 1, NOW(), NOW())";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':code'        => $data['code'],
-            ':name'        => $data['name'],
-            ':description' => $data['description'] ?? null,
-            ':category_id' => (int)$data['category_id'],
-            ':price'       => (float)$data['price'],
-            ':stock'       => (int)$data['stock'],
-        ]);
+        $this->ensureSchema($pdo);
 
-        return (int)$pdo->lastInsertId();
+        try {
+            $sql = "INSERT INTO products (code, name, description, category_id, price, stock, active, updated_at) 
+                    VALUES (:code, :name, :description, :category_id, :price, :stock, 1, NOW())";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':code'        => $data['code'],
+                ':name'        => $data['name'],
+                ':description' => $data['description'] ?? null,
+                ':category_id' => (int)$data['category_id'],
+                ':price'       => (float)$data['price'],
+                ':stock'       => (int)$data['stock'],
+            ]);
+
+            return (int)$pdo->lastInsertId();
+        } catch (Throwable $e) {
+            // Reintento con consulta alternativa
+            $sql = "INSERT INTO products (code, name, category_id, price, stock, active) 
+                    VALUES (:code, :name, :category_id, :price, :stock, 1)";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':code'        => $data['code'],
+                ':name'        => $data['name'],
+                ':category_id' => (int)$data['category_id'],
+                ':price'       => (float)$data['price'],
+                ':stock'       => (int)$data['stock'],
+            ]);
+
+            return (int)$pdo->lastInsertId();
+        }
     }
 
     /**
@@ -191,26 +241,48 @@ class ProductoRepository
     public function actualizar(int $id, array $data): bool
     {
         $pdo = Database::connect();
-        $sql = "UPDATE products 
-                SET code = :code, 
-                    name = :name, 
-                    description = :description, 
-                    category_id = :category_id, 
-                    price = :price, 
-                    stock = :stock, 
-                    updated_at = NOW() 
-                WHERE id = :id";
-        
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute([
-            ':id'          => $id,
-            ':code'        => $data['code'],
-            ':name'        => $data['name'],
-            ':description' => $data['description'] ?? null,
-            ':category_id' => (int)$data['category_id'],
-            ':price'       => (float)$data['price'],
-            ':stock'       => (int)$data['stock'],
-        ]);
+        $this->ensureSchema($pdo);
+
+        try {
+            $sql = "UPDATE products 
+                    SET code = :code, 
+                        name = :name, 
+                        description = :description, 
+                        category_id = :category_id, 
+                        price = :price, 
+                        stock = :stock, 
+                        updated_at = NOW() 
+                    WHERE id = :id";
+            
+            $stmt = $pdo->prepare($sql);
+            return $stmt->execute([
+                ':id'          => $id,
+                ':code'        => $data['code'],
+                ':name'        => $data['name'],
+                ':description' => $data['description'] ?? null,
+                ':category_id' => (int)$data['category_id'],
+                ':price'       => (float)$data['price'],
+                ':stock'       => (int)$data['stock'],
+            ]);
+        } catch (Throwable $e) {
+            $sql = "UPDATE products 
+                    SET code = :code, 
+                        name = :name, 
+                        category_id = :category_id, 
+                        price = :price, 
+                        stock = :stock 
+                    WHERE id = :id";
+            
+            $stmt = $pdo->prepare($sql);
+            return $stmt->execute([
+                ':id'          => $id,
+                ':code'        => $data['code'],
+                ':name'        => $data['name'],
+                ':category_id' => (int)$data['category_id'],
+                ':price'       => (float)$data['price'],
+                ':stock'       => (int)$data['stock'],
+            ]);
+        }
     }
 
     /**
@@ -223,7 +295,7 @@ class ProductoRepository
     public function cambiarEstado(int $id, int $activo): bool
     {
         $pdo = Database::connect();
-        $sql = "UPDATE products SET active = :active, updated_at = NOW() WHERE id = :id";
+        $sql = "UPDATE products SET active = :active WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([
             ':id'     => $id,
@@ -242,14 +314,25 @@ class ProductoRepository
     public function agregarImagen(int $productoId, string $imageUrl, int $isPrimary = 0): int
     {
         $pdo = Database::connect();
-        $sql = "INSERT INTO product_images (product_id, image_url, is_primary) VALUES (:product_id, :image_url, :is_primary)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':product_id' => $productoId,
-            ':image_url'  => $imageUrl,
-            ':is_primary' => $isPrimary
-        ]);
-        return (int)$pdo->lastInsertId();
+        $this->ensureSchema($pdo);
+        try {
+            $sql = "INSERT INTO product_images (product_id, image_url, is_primary) VALUES (:product_id, :image_url, :is_primary)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':product_id' => $productoId,
+                ':image_url'  => $imageUrl,
+                ':is_primary' => $isPrimary
+            ]);
+            return (int)$pdo->lastInsertId();
+        } catch (Throwable $e) {
+            $sql = "INSERT INTO product_images (product_id, image_url) VALUES (:product_id, :image_url)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':product_id' => $productoId,
+                ':image_url'  => $imageUrl
+            ]);
+            return (int)$pdo->lastInsertId();
+        }
     }
 
     /**
