@@ -378,4 +378,56 @@ class ProductoAdminController
         header('Location: ' . url("/admin/productos/{$idNum}/editar"));
         exit;
     }
+
+    /**
+     * Elimina permanentemente un producto.
+     */
+    public function eliminar(string $id): void
+    {
+        AdminGuard::check();
+
+        $idNum = (int)$id;
+
+        if (!AdminGuard::verifyCsrf($_POST['csrf_token'] ?? null)) {
+            $_SESSION['flash_error'] = 'Token CSRF inválido.';
+            header('Location: ' . url('/admin/productos'));
+            exit;
+        }
+
+        $producto = $this->productoRepository->buscarPorId($idNum);
+        if ($producto) {
+            $deleted = $this->productoRepository->eliminar($idNum);
+            if ($deleted) {
+                $_SESSION['flash_success'] = "Producto '{$producto['name']}' eliminado permanentemente.";
+            } else {
+                $_SESSION['flash_error'] = "No se pudo eliminar el producto.";
+            }
+        }
+
+        header('Location: ' . url('/admin/productos'));
+        exit;
+    }
+
+    /**
+     * Establece una imagen como la principal de la galería del producto.
+     */
+    public function marcarPrincipal(string $id, string $imageId): void
+    {
+        AdminGuard::check();
+
+        $idNum      = (int)$id;
+        $imageIdNum = (int)$imageId;
+
+        if (!AdminGuard::verifyCsrf($_POST['csrf_token'] ?? null)) {
+            $_SESSION['flash_error'] = 'Token CSRF inválido.';
+            header('Location: ' . url("/admin/productos/{$idNum}/editar"));
+            exit;
+        }
+
+        $this->productoRepository->marcarImagenPrincipal($idNum, $imageIdNum);
+
+        $_SESSION['flash_success'] = 'Imagen principal asignada correctamente.';
+        header('Location: ' . url("/admin/productos/{$idNum}/editar"));
+        exit;
+    }
 }

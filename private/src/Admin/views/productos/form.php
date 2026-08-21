@@ -173,22 +173,41 @@ $content = function() use ($producto, $categorias, $isEdit, $formTitle, $actionU
               Este producto aún no tiene imágenes asociadas.
             </p>
           <?php else: ?>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem;">
               <?php foreach ($images as $img): ?>
                 <?php 
-                  $imgId  = (int)$img['id'];
-                  $rawPath = $img['image_url'];
-                  $imgSrc = strpos($rawPath, 'http') === 0 ? htmlspecialchars($rawPath) : url($rawPath);
+                  $imgId     = (int)$img['id'];
+                  $isPrimary = !empty($img['is_primary']);
+                  $rawPath   = $img['image_url'];
+                  $imgSrc    = strpos($rawPath, 'http') === 0 ? htmlspecialchars($rawPath) : url($rawPath);
                 ?>
-                <div style="background: #FFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); overflow: hidden; position: relative;">
-                  <img src="<?= $imgSrc ?>" alt="" style="width: 100%; height: 90px; object-fit: contain; padding: 4px;" onerror="this.src='<?= $fallbackImg ?>';">
+                <div style="background: #FFF; border: 2px solid <?= $isPrimary ? 'var(--color-primary)' : 'var(--color-border-light)' ?>; border-radius: var(--radius-sm); overflow: hidden; position: relative; display: flex; flex-direction: column;">
                   
-                  <form action="<?= url('/admin/productos/' . $producto['id'] . '/imagenes/' . $imgId . '/eliminar') ?>" method="POST" onsubmit="return confirm('¿Eliminar esta imagen?');">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
-                    <button type="submit" style="width: 100%; background: #EF4444; color: #FFF; border: none; padding: 0.25rem; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                      Eliminar
-                    </button>
-                  </form>
+                  <?php if ($isPrimary): ?>
+                    <span style="position: absolute; top: 4px; left: 4px; background: var(--color-primary); color: #FFF; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: var(--radius-sm); z-index: 2; box-shadow: var(--shadow-sm);">
+                      ★ Principal
+                    </span>
+                  <?php endif; ?>
+
+                  <img src="<?= $imgSrc ?>" alt="" style="width: 100%; height: 95px; object-fit: contain; padding: 4px; background: #FFF;" onerror="this.src='<?= $fallbackImg ?>';">
+                  
+                  <div style="margin-top: auto; display: flex; flex-direction: column;">
+                    <?php if (!$isPrimary): ?>
+                      <form action="<?= url('/admin/productos/' . $producto['id'] . '/imagenes/' . $imgId . '/principal') ?>" method="POST" style="margin: 0;">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                        <button type="submit" style="width: 100%; background: var(--color-dark); color: #FFF; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 0.35rem 0.25rem; font-size: 0.72rem; font-weight: 700; cursor: pointer;" title="Establecer como imagen principal del producto">
+                          ★ Marcar Principal
+                        </button>
+                      </form>
+                    <?php endif; ?>
+
+                    <form action="<?= url('/admin/productos/' . $producto['id'] . '/imagenes/' . $imgId . '/eliminar') ?>" method="POST" onsubmit="return confirm('¿Eliminar esta imagen de la galería?');" style="margin: 0;">
+                      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                      <button type="submit" style="width: 100%; background: #EF4444; color: #FFF; border: none; padding: 0.35rem 0.25rem; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+                        Eliminar
+                      </button>
+                    </form>
+                  </div>
                 </div>
               <?php endforeach; ?>
             </div>

@@ -120,7 +120,7 @@ $content = function() use ($productos, $csrfToken) {
                     <form action="<?= url('/admin/productos/' . $pId . '/baja') ?>" method="POST" style="display: inline;" onsubmit="return confirm('¿Confirmás <?= $isActive ? 'dar de baja' : 'reactivar' ?> este producto?');">
                       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
                       <?php if ($isActive): ?>
-                        <button type="submit" class="btn btn-sm" style="background: #EF4444; color: #FFF; border: none;" title="Dar de baja">
+                        <button type="submit" class="btn btn-sm" style="background: #F59E0B; color: #FFF; border: none;" title="Dar de baja">
                           Dar de Baja
                         </button>
                       <?php else: ?>
@@ -128,6 +128,14 @@ $content = function() use ($productos, $csrfToken) {
                           Reactivar
                         </button>
                       <?php endif; ?>
+                    </form>
+
+                    <!-- Formulario de Eliminación Permanente -->
+                    <form action="<?= url('/admin/productos/' . $pId . '/eliminar') ?>" method="POST" style="display: inline;" onsubmit="return confirm('¿Confirmás ELIMINAR PERMANENTEMENTE el producto <?= $pName ?>? Esta acción no se puede deshacer.');">
+                      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+                      <button type="submit" class="btn btn-sm" style="background: #EF4444; color: #FFF; border: none;" title="Eliminar permanentemente">
+                        Eliminar
+                      </button>
                     </form>
                   </div>
                 </td>

@@ -348,4 +348,65 @@ class ProductoRepository
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([':id' => $imagenId]);
     }
+
+    /**
+     * Marca una imagen específica como la principal del producto.
+     *
+     * @param int $productoId
+     * @param int $imagenId
+     * @return bool
+     */
+    public function marcarImagenPrincipal(int $productoId, int $imagenId): bool
+    {
+        $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
+        try {
+            // 1. Desmarcar todas las imágenes del producto
+            $pdo->prepare("UPDATE product_images SET is_primary = 0 WHERE product_id = :product_id")
+                ->execute([':product_id' => $productoId]);
+
+            // 2. Marcar la imagen seleccionada como principal
+            $stmt = $pdo->prepare("UPDATE product_images SET is_primary = 1 WHERE id = :id AND product_id = :product_id");
+            return $stmt->execute([':id' => $imagenId, ':product_id' => $productoId]);
+        } catch (Throwable $e) {
+            error_log("Error al marcar imagen principal ID {$imagenId}: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Elimina un producto de forma permanente junto a sus imágenes asociadas.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function eliminar(int $id): bool
+    {
+        $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
+        try {
+            // 1. Eliminar archivos de la galería del disco
+            $imagenes = $this->listarImagenes($id);
+            $webRoot  = REDTEC_PRIVATE_DIR . '/../public';
+            foreach ($imagenes as $img) {
+                $rawPath = $img['image_url'] ?? '';
+                if ($rawPath && strpos($rawPath, 'http') !== 0) {
+                    $file = $webRoot . '/' . ltrim($rawPath, '/');
+                    if (file_exists($file)) {
+                        @unlink($file);
+                    }
+                }
+            }
+
+            // 2. Eliminar registros de la base de datos
+            $pdo->prepare("DELETE FROM product_images WHERE product_id = :id")->execute([':id' => $id]);
+            $stmt = $pdo->prepare("DELETE FROM products WHERE id = :id");
+            return $stmt->execute([':id' => $id]);
+        } catch (Throwable $e) {
+            error_log("Error al eliminar producto ID {$id}: " . $e->getMessage());
+            return false;
+        }
+    }
 }
