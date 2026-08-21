@@ -10,15 +10,6 @@ $currentPage = $currentPage ?? '';
 $cartCount   = $cartCount ?? 0;
 $logoUrl     = url('/assets/img/Logotipo PNG.png');
 
-// Obtener categorías para la barra horizontal de navegación (o fallbacks con íconos)
-$headerCategories = [
-    ['name' => 'Notebooks', 'url' => url('/tienda?categoria=1'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="12" rx="2"/><path d="M2 20h20"/></svg>'],
-    ['name' => 'Equipos & PCs', 'url' => url('/tienda?categoria=1'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>'],
-    ['name' => 'Redes & Wi-Fi', 'url' => url('/tienda?categoria=2'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>'],
-    ['name' => 'Cámaras & CCTV', 'url' => url('/tienda?categoria=3'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'],
-    ['name' => 'Accesorios', 'url' => url('/tienda?categoria=4'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01"/><path d="M10 12h.01"/><path d="M14 12h.01"/><path d="M18 12h.01"/></svg>'],
-    ['name' => 'Servicios Técnicos', 'url' => url('/servicios'), 'icon' => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>'],
-];
 ?>
 <header class="site-header">
   
@@ -119,21 +110,63 @@ $headerCategories = [
     </div>
   </div>
 
-  <!-- BARRA HORIZONTAL SECUNDARIA DE CATEGORÍAS (ESTILO DK COMPUTERS) -->
-  <div class="nav-categories-bar">
-    <div class="container">
-      <ul class="nav-categories-list">
-        <?php foreach ($headerCategories as $hCat): ?>
-          <li>
-            <a href="<?= $hCat['url'] ?>" class="nav-category-item">
-              <span class="nav-category-icon"><?= $hCat['icon'] ?></span>
-              <span><?= htmlspecialchars($hCat['name']) ?></span>
-            </a>
-          </li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-  </div>
+  <!-- BARRA HORIZONTAL SECUNDARIA DE CATEGORÍAS (SOLO EN SECCIÓN TIENDA) -->
+  <?php if ($currentPage === 'tienda'): ?>
+    <?php
+      $headerCategoriesList = [];
+      try {
+          $catRepo = new \RedTec\Categorias\CategoriaRepository();
+          $dbCategories = $catRepo->listarActivas();
+          foreach ($dbCategories as $c) {
+              $catId   = (int)$c['id'];
+              $catName = htmlspecialchars($c['name']);
+              $catUrl  = url('/tienda?categoria=' . $catId);
+              
+              $rawImg = !empty($c['image_url']) ? $c['image_url'] : null;
+              if (!$rawImg) {
+                  $lower = mb_strtolower($c['name'], 'UTF-8');
+                  if (strpos($lower, 'notebook') !== false || strpos($lower, 'equipo') !== false || strpos($lower, 'pc') !== false) {
+                      $rawImg = '/assets/img/categories/notebooks.jpg';
+                  } elseif (strpos($lower, 'red') !== false || strpos($lower, 'wifi') !== false || strpos($lower, 'wi-fi') !== false) {
+                      $rawImg = '/assets/img/categories/redes.jpg';
+                  } elseif (strpos($lower, 'cámara') !== false || strpos($lower, 'camara') !== false || strpos($lower, 'cctv') !== false || strpos($lower, 'seguridad') !== false) {
+                      $rawImg = '/assets/img/categories/camaras.jpg';
+                  } elseif (strpos($lower, 'accesorio') !== false) {
+                      $rawImg = '/assets/img/categories/accesorios.jpg';
+                  } else {
+                      $rawImg = '/assets/img/redtec.jpeg';
+                  }
+              }
+              $imgUrl = strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg);
+
+              $headerCategoriesList[] = [
+                  'id'    => $catId,
+                  'name'  => $catName,
+                  'url'   => $catUrl,
+                  'image' => $imgUrl
+              ];
+          }
+      } catch (Throwable $e) {
+          $headerCategoriesList = [];
+      }
+    ?>
+    <?php if (!empty($headerCategoriesList)): ?>
+      <div class="nav-categories-bar">
+        <div class="container">
+          <ul class="nav-categories-list">
+            <?php foreach ($headerCategoriesList as $hCat): ?>
+              <li>
+                <a href="<?= $hCat['url'] ?>" class="nav-category-item" style="display: flex; align-items: center; gap: 0.5rem;">
+                  <img src="<?= $hCat['image'] ?>" alt="<?= $hCat['name'] ?>" style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);" onerror="this.style.display='none';">
+                  <span><?= $hCat['name'] ?></span>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      </div>
+    <?php endif; ?>
+  <?php endif; ?>
 
 </header>
 
