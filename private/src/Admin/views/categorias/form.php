@@ -15,7 +15,12 @@ $actionUrl = $isEdit ? url('/admin/categorias/' . $categoria['id']) : url('/admi
 $content = function() use ($categoria, $isEdit, $formTitle, $actionUrl, $csrfToken) {
     $fallbackImg = url('/assets/img/redtec.jpeg');
     $rawImg      = !empty($categoria['image_url']) ? $categoria['image_url'] : null;
-    $cImg        = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : null;
+    $webRoot     = REDTEC_PRIVATE_DIR . '/../public';
+    if ($rawImg && strpos($rawImg, 'http') !== 0 && !file_exists($webRoot . '/' . ltrim($rawImg, '/'))) {
+        $cImg = $fallbackImg;
+    } else {
+        $cImg = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : null;
+    }
 ?>
   <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
     <div>
