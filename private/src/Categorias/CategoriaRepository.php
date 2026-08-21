@@ -12,7 +12,7 @@ use Throwable;
 class CategoriaRepository
 {
     /**
-     * Devuelve la lista de categorías activas para los selectores y la web pública.
+     * Devuelve la lista de todas las categorías registradas en la base de datos para selectores y la tienda.
      *
      * @return array
      */
@@ -22,7 +22,6 @@ class CategoriaRepository
             $pdo = Database::connect();
             $sql = "SELECT id, name, description, image_url, active 
                     FROM categories 
-                    WHERE active = 1 
                     ORDER BY name ASC";
             
             $stmt = $pdo->query($sql);
@@ -114,7 +113,7 @@ class CategoriaRepository
     }
 
     /**
-     * Inserta una nueva categoría.
+     * Inserta una nueva categoría en la base de datos.
      *
      * @param array $data
      * @return int ID de la categoría creada
@@ -134,7 +133,7 @@ class CategoriaRepository
     }
 
     /**
-     * Actualiza una categoría existente.
+     * Actualiza una categoría existente en la base de datos.
      *
      * @param int $id
      * @param array $data

@@ -74,7 +74,7 @@ $routes = [
     ['GET',  '/servicios-tecnicos', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
     ['GET',  '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
     ['GET',  '/sitemap.xml', [\RedTec\SEO\SitemapGenerator::class, 'generate']],
-    ['GET',  '#^/producto/(\d+)$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
+    ['GET',  '#^/producto/(\d+)/?$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
 
     // --- RUTAS DE AUTENTICACIÓN ADMIN ---
     ['GET',  '/admin/login', [\RedTec\Admin\AuthController::class, 'loginForm']],
@@ -88,9 +88,9 @@ $routes = [
     ['GET',  '/admin/categorias', [\RedTec\Admin\CategoriaAdminController::class, 'index']],
     ['GET',  '/admin/categorias/nuevo', [\RedTec\Admin\CategoriaAdminController::class, 'crearForm']],
     ['POST', '/admin/categorias', [\RedTec\Admin\CategoriaAdminController::class, 'guardar']],
-    ['GET',  '#^/admin/categorias/(\d+)/editar$#', [\RedTec\Admin\CategoriaAdminController::class, 'editarForm'], true],
-    ['POST', '#^/admin/categorias/(\d+)$#', [\RedTec\Admin\CategoriaAdminController::class, 'actualizar'], true],
-    ['POST', '#^/admin/categorias/(\d+)/eliminar$#', [\RedTec\Admin\CategoriaAdminController::class, 'eliminar'], true],
+    ['GET',  '#^/admin/categorias/(\d+)/editar/?$#', [\RedTec\Admin\CategoriaAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/categorias/(\d+)/?$#', [\RedTec\Admin\CategoriaAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/categorias/(\d+)/eliminar/?$#', [\RedTec\Admin\CategoriaAdminController::class, 'eliminar'], true],
 
     // Importación Masiva CSV
     ['GET',  '/admin/importar', [\RedTec\Admin\ImportAdminController::class, 'index']],
@@ -104,28 +104,28 @@ $routes = [
     ['GET',  '/admin/productos/exportar', [\RedTec\Admin\ProductoAdminController::class, 'exportarCsv']],
     ['GET',  '/admin/productos/nuevo', [\RedTec\Admin\ProductoAdminController::class, 'crearForm']],
     ['POST', '/admin/productos', [\RedTec\Admin\ProductoAdminController::class, 'guardar']],
-    ['GET',  '#^/admin/productos/(\d+)/editar$#', [\RedTec\Admin\ProductoAdminController::class, 'editarForm'], true],
-    ['POST', '#^/admin/productos/(\d+)$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizar'], true],
-    ['POST', '#^/admin/productos/(\d+)/baja$#', [\RedTec\Admin\ProductoAdminController::class, 'cambiarEstado'], true],
-    ['POST', '#^/admin/productos/(\d+)/stock$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizarStockAjax'], true],
-    ['POST', '#^/admin/productos/(\d+)/imagenes/subir$#', [\RedTec\Admin\ProductoAdminController::class, 'subirImagen'], true],
-    ['POST', '#^/admin/productos/(\d+)/imagenes/(\d+)/eliminar$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminarImagen'], true],
+    ['GET',  '#^/admin/productos/(\d+)/editar/?$#', [\RedTec\Admin\ProductoAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/productos/(\d+)/?$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/productos/(\d+)/baja/?$#', [\RedTec\Admin\ProductoAdminController::class, 'cambiarEstado'], true],
+    ['POST', '#^/admin/productos/(\d+)/stock/?$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizarStockAjax'], true],
+    ['POST', '#^/admin/productos/(\d+)/imagenes/subir/?$#', [\RedTec\Admin\ProductoAdminController::class, 'subirImagen'], true],
+    ['POST', '#^/admin/productos/(\d+)/imagenes/(\d+)/eliminar/?$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminarImagen'], true],
 
     // CRUD Servicios
     ['GET',  '/admin/servicios', [\RedTec\Admin\ServicioAdminController::class, 'index']],
     ['GET',  '/admin/servicios/nuevo', [\RedTec\Admin\ServicioAdminController::class, 'crearForm']],
     ['POST', '/admin/servicios', [\RedTec\Admin\ServicioAdminController::class, 'guardar']],
-    ['GET',  '#^/admin/servicios/(\d+)/editar$#', [\RedTec\Admin\ServicioAdminController::class, 'editarForm'], true],
-    ['POST', '#^/admin/servicios/(\d+)$#', [\RedTec\Admin\ServicioAdminController::class, 'actualizar'], true],
-    ['POST', '#^/admin/servicios/(\d+)/baja$#', [\RedTec\Admin\ServicioAdminController::class, 'cambiarEstado'], true],
+    ['GET',  '#^/admin/servicios/(\d+)/editar/?$#', [\RedTec\Admin\ServicioAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/servicios/(\d+)/?$#', [\RedTec\Admin\ServicioAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/servicios/(\d+)/baja/?$#', [\RedTec\Admin\ServicioAdminController::class, 'cambiarEstado'], true],
 
     // CRUD Planes Corporativos
     ['GET',  '/admin/planes', [\RedTec\Admin\ServicioPackageAdminController::class, 'index']],
     ['GET',  '/admin/planes/nuevo', [\RedTec\Admin\ServicioPackageAdminController::class, 'crearForm']],
     ['POST', '/admin/planes', [\RedTec\Admin\ServicioPackageAdminController::class, 'guardar']],
-    ['GET',  '#^/admin/planes/(\d+)/editar$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'editarForm'], true],
-    ['POST', '#^/admin/planes/(\d+)$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'actualizar'], true],
-    ['POST', '#^/admin/planes/(\d+)/baja$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'cambiarEstado'], true],
+    ['GET',  '#^/admin/planes/(\d+)/editar/?$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'editarForm'], true],
+    ['POST', '#^/admin/planes/(\d+)/?$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'actualizar'], true],
+    ['POST', '#^/admin/planes/(\d+)/baja/?$#', [\RedTec\Admin\ServicioPackageAdminController::class, 'cambiarEstado'], true],
 ];
 
 // Resolución de Rutas
