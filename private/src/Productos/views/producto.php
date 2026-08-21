@@ -73,7 +73,7 @@ $content = function() use ($product) {
               <?= $pCat ?>
             </span>
             <span style="font-size: 0.85rem; font-weight: 600; color: var(--color-text-muted);">
-              Código / SKU: <strong style="color: var(--color-dark);"><?= $pCode ?></strong>
+              Código: <strong style="color: var(--color-dark);"><?= $pCode ?></strong>
             </span>
           </div>
 
@@ -111,6 +111,12 @@ $content = function() use ($product) {
             <button type="button" 
                     id="btnAddToCartDetail"
                     class="btn btn-primary btn-lg" 
+                    data-id="<?= $pId ?>"
+                    data-code="<?= $pCode ?>"
+                    data-name="<?= $pName ?>"
+                    data-price="<?= (float)$product['price'] ?>"
+                    data-image="<?= $mainImg ?>"
+                    data-stock="<?= (int)($product['stock'] ?? 99) ?>"
                     style="flex: 1 1 220px;"
                     <?= !$inStock ? 'disabled' : '' ?>>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>

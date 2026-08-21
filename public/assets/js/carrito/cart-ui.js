@@ -62,6 +62,43 @@
         self.render();
       });
 
+      // Listener delegado universal para botones de Agregar al Carrito (.btn-add-cart y #btnAddToCartDetail)
+      document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-add-cart, #btnAddToCartDetail');
+        if (!btn) return;
+        e.preventDefault();
+
+        const id = btn.dataset.id || btn.getAttribute('data-id');
+        if (!id) return;
+
+        const code  = btn.dataset.code || '';
+        const name  = btn.dataset.name || 'Producto';
+        const price = parseFloat(btn.dataset.price || 0);
+        const image = btn.dataset.image || '';
+        const stock = btn.dataset.stock !== undefined ? parseInt(btn.dataset.stock, 10) : 999;
+
+        const qtyInput = document.getElementById('prodQty');
+        const qty = qtyInput ? (parseInt(qtyInput.value, 10) || 1) : 1;
+
+        if (window.CartService) {
+          const res = window.CartService.addItem({
+            id: id,
+            code: code,
+            name: name,
+            price: price,
+            image_url: image,
+            stock: stock
+          }, qty);
+
+          if (res.success && window.CartUI) {
+            window.CartUI.showToast(res.message, 'success');
+            window.CartUI.openDrawer();
+          } else if (window.CartUI) {
+            window.CartUI.showToast(res.message || 'No se pudo agregar el producto.', 'warning');
+          }
+        }
+      });
+
       // Cerrar con la tecla ESC
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && self.drawer && self.drawer.classList.contains('is-open')) {

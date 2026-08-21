@@ -4,10 +4,12 @@
 (function(window) {
   'use strict';
 
+  const PHONE_NUMBER = "59891633699";
+
   const WhatsAppMessageBuilder = {
     /**
      * Construye el texto formateado del pedido para WhatsApp.
-     * @param {Object} customerData Objeto con {name, phone, address}
+     * @param {Object} customerData Objeto con {name, phone, address, notes}
      * @param {Array} cartItems Lista de items del carrito
      * @param {number} subtotal Subtotal total del pedido
      * @returns {string}
@@ -32,7 +34,25 @@
         
       msg += `• *Dirección de Entrega:* ${addressStr}\n`;
 
+      if (customerData.notes && customerData.notes.trim() !== '') {
+        msg += `• *Notas:* ${customerData.notes.trim()}\n`;
+      }
+
       return msg;
+    },
+
+    /**
+     * Genera la URL completa de WhatsApp (wa.me) lista para abrir.
+     * @param {Object} data Objeto con {name, phone, address, notes, items, total}
+     * @returns {string}
+     */
+    buildUrl: function(data) {
+      const text = this.build(
+        { name: data.name, phone: data.phone, address: data.address, notes: data.notes },
+        data.items || [],
+        data.total || 0
+      );
+      return 'https://wa.me/' + PHONE_NUMBER + '?text=' + encodeURIComponent(text);
     }
   };
 

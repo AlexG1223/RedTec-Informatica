@@ -56,8 +56,10 @@
      * @returns {Object} Resultado {success: boolean, message: string, capped: boolean}
      */
     addItem: function(product, quantity) {
-      quantity = parseInt(quantity, 10) || 1;
-      const stock = parseInt(product.stock, 10) || 0;
+      let stock = parseInt(product.stock, 10);
+      if (isNaN(stock)) {
+        stock = 999;
+      }
 
       if (stock <= 0) {
         return { success: false, message: 'Producto sin stock disponible.', capped: false };
