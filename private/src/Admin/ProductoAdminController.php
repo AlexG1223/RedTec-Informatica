@@ -335,7 +335,7 @@ class ProductoAdminController
         ];
         $ext = $extensions[$mimeType] ?? 'jpg';
 
-        $uploadDir = __DIR__ . '/../../public/assets/uploads/productos/';
+        $uploadDir = REDTEC_PRIVATE_DIR . '/../public/assets/uploads/productos/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }

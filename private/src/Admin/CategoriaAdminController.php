@@ -232,7 +232,7 @@ class CategoriaAdminController
         ];
         $ext = $extensions[$mimeType] ?? 'jpg';
 
-        $uploadDir = __DIR__ . '/../../public/assets/uploads/categorias/';
+        $uploadDir = REDTEC_PRIVATE_DIR . '/../public/assets/uploads/categorias/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
