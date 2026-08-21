@@ -37,6 +37,54 @@ $content = function() use ($products, $categories, $activeCategory, $buscar) {
   <section class="section-padding">
     <div class="container">
       
+      <!-- GRILLA DE TARJETAS DE CATEGORÍAS CON OVERLAY (ESTILO SEGUNDA CAPTURA) -->
+      <?php if (!$activeCategory && empty($buscar)): ?>
+        <div style="margin-bottom: 2.5rem;">
+          <h2 style="font-size: 1.3rem; font-family: var(--font-heading); font-weight: 800; color: var(--color-dark); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Explorar Categorías Destacadas
+          </h2>
+
+          <div class="category-overlay-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem;">
+            <?php foreach ($categories as $cat): ?>
+              <?php 
+                $catId   = (int)$cat['id'];
+                $catName = mb_strtoupper(htmlspecialchars($cat['name']), 'UTF-8');
+                
+                $rawImg = !empty($cat['image_url']) ? $cat['image_url'] : null;
+                if (!$rawImg) {
+                    $lower = mb_strtolower($cat['name'], 'UTF-8');
+                    if (strpos($lower, 'notebook') !== false || strpos($lower, 'equipo') !== false || strpos($lower, 'pc') !== false) {
+                        $rawImg = '/assets/img/categories/notebooks.jpg';
+                    } elseif (strpos($lower, 'red') !== false || strpos($lower, 'wifi') !== false || strpos($lower, 'wi-fi') !== false || strpos($lower, 'conectividad') !== false) {
+                        $rawImg = '/assets/img/categories/redes.jpg';
+                    } elseif (strpos($lower, 'cámara') !== false || strpos($lower, 'camara') !== false || strpos($lower, 'cctv') !== false || strpos($lower, 'seguridad') !== false) {
+                        $rawImg = '/assets/img/categories/camaras.jpg';
+                    } elseif (strpos($lower, 'accesorio') !== false) {
+                        $rawImg = '/assets/img/categories/accesorios.jpg';
+                    } else {
+                        $rawImg = '/assets/img/categories/notebooks.jpg';
+                    }
+                }
+                $catImg  = strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg);
+                $catLink = url('/tienda?categoria=' . $catId);
+              ?>
+              <a href="<?= $catLink ?>" class="category-overlay-card" style="height: 150px; border-radius: var(--radius-lg); overflow: hidden; position: relative; display: flex; align-items: flex-end; padding: 1.25rem; text-decoration: none; box-shadow: var(--shadow-md); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+                <img src="<?= $catImg ?>" alt="<?= $catName ?>" class="category-overlay-bg" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65) contrast(1.15); transition: transform 0.3s ease;" onerror="this.src='<?= $fallbackImg ?>';">
+                <div class="category-overlay-gradient" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 65%, transparent 100%);"></div>
+                <div class="category-overlay-content" style="position: relative; z-index: 2; width: 100%;">
+                  <h3 class="category-overlay-title" style="color: #FFFFFF; font-family: var(--font-heading); font-size: 1.05rem; font-weight: 900; margin-bottom: 0.25rem; text-shadow: 0 2px 4px rgba(0,0,0,0.7); line-height: 1.25; tracking: 0.02em;"><?= $catName ?></h3>
+                  <span class="category-overlay-subtitle" style="color: var(--color-primary); font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 0.25rem;">
+                    VER EQUIPOS 
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
+                  </span>
+                </div>
+              </a>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endif; ?>
+
       <!-- BARRA DE BÚSQUEDA Y FILTROS RÁPIDOS -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; background: #FFFFFF; padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-sm);">
         

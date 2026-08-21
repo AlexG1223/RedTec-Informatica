@@ -127,14 +127,14 @@ $logoUrl     = url('/assets/img/Logotipo PNG.png');
                   $lower = mb_strtolower($c['name'], 'UTF-8');
                   if (strpos($lower, 'notebook') !== false || strpos($lower, 'equipo') !== false || strpos($lower, 'pc') !== false) {
                       $rawImg = '/assets/img/categories/notebooks.jpg';
-                  } elseif (strpos($lower, 'red') !== false || strpos($lower, 'wifi') !== false || strpos($lower, 'wi-fi') !== false) {
+                  } elseif (strpos($lower, 'red') !== false || strpos($lower, 'wifi') !== false || strpos($lower, 'wi-fi') !== false || strpos($lower, 'conectividad') !== false) {
                       $rawImg = '/assets/img/categories/redes.jpg';
                   } elseif (strpos($lower, 'cámara') !== false || strpos($lower, 'camara') !== false || strpos($lower, 'cctv') !== false || strpos($lower, 'seguridad') !== false) {
                       $rawImg = '/assets/img/categories/camaras.jpg';
                   } elseif (strpos($lower, 'accesorio') !== false) {
                       $rawImg = '/assets/img/categories/accesorios.jpg';
                   } else {
-                      $rawImg = '/assets/img/redtec.jpeg';
+                      $rawImg = '/assets/img/categories/notebooks.jpg';
                   }
               }
               $imgUrl = strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg);
@@ -153,12 +153,12 @@ $logoUrl     = url('/assets/img/Logotipo PNG.png');
     <?php if (!empty($headerCategoriesList)): ?>
       <div class="nav-categories-bar">
         <div class="container">
-          <ul class="nav-categories-list">
+          <ul class="nav-categories-list" style="padding: 0.75rem 0;">
             <?php foreach ($headerCategoriesList as $hCat): ?>
               <li>
-                <a href="<?= $hCat['url'] ?>" class="nav-category-item" style="display: flex; align-items: center; gap: 0.5rem;">
-                  <img src="<?= $hCat['image'] ?>" alt="<?= $hCat['name'] ?>" style="width: 22px; height: 22px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.25);" onerror="this.style.display='none';">
-                  <span><?= $hCat['name'] ?></span>
+                <a href="<?= $hCat['url'] ?>" class="nav-category-item" style="display: flex; align-items: center; gap: 0.65rem; padding: 0.4rem 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                  <img src="<?= $hCat['image'] ?>" alt="<?= $hCat['name'] ?>" style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.4);" onerror="this.style.display='none';">
+                  <span style="font-weight: 700; font-size: 0.82rem; tracking: 0.03em;"><?= $hCat['name'] ?></span>
                 </a>
               </li>
             <?php endforeach; ?>
