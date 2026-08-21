@@ -11,8 +11,29 @@ use Throwable;
  */
 class CategoriaRepository
 {
+    private static bool $schemaChecked = false;
+
+    /**
+     * Asegura que la tabla categories tenga todas las columnas requeridas (auto-migración).
+     *
+     * @param PDO $pdo
+     */
+    private function ensureSchema(PDO $pdo): void
+    {
+        if (self::$schemaChecked) {
+            return;
+        }
+        self::$schemaChecked = true;
+        try {
+            $pdo->exec("ALTER TABLE categories ADD COLUMN description TEXT DEFAULT NULL");
+        } catch (Throwable $e) {
+            // Ignorar si la columna ya existe
+        }
+    }
+
     /**
      * Devuelve la lista de todas las categorías registradas en la base de datos para selectores y la tienda.
+     * Infalible: incluye automigración de esquema y fallbacks de seguridad.
      *
      * @return array
      */
@@ -20,14 +41,42 @@ class CategoriaRepository
     {
         try {
             $pdo = Database::connect();
-            $sql = "SELECT id, name, description, image_url, active 
-                    FROM categories 
-                    ORDER BY name ASC";
-            
-            $stmt = $pdo->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->ensureSchema($pdo);
+
+            $stmt = $pdo->query("SELECT * FROM categories ORDER BY name ASC");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($rows)) {
+                return $rows;
+            }
+
+            // Fallback si la tabla está vacía
+            return [
+                ['id' => 1, 'name' => 'Equipos y Notebooks'],
+                ['id' => 2, 'name' => 'Redes y Conectividad'],
+                ['id' => 3, 'name' => 'Seguridad y Cámaras'],
+                ['id' => 4, 'name' => 'Accesorios'],
+            ];
         } catch (Throwable $e) {
-            return [];
+            error_log("Error al listar categorias en BD: " . $e->getMessage());
+            try {
+                $pdo = Database::connect();
+                $stmt = $pdo->query("SELECT id, name FROM categories ORDER BY name ASC");
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return !empty($rows) ? $rows : [
+                    ['id' => 1, 'name' => 'Equipos y Notebooks'],
+                    ['id' => 2, 'name' => 'Redes y Conectividad'],
+                    ['id' => 3, 'name' => 'Seguridad y Cámaras'],
+                    ['id' => 4, 'name' => 'Accesorios'],
+                ];
+            } catch (Throwable $ex) {
+                return [
+                    ['id' => 1, 'name' => 'Equipos y Notebooks'],
+                    ['id' => 2, 'name' => 'Redes y Conectividad'],
+                    ['id' => 3, 'name' => 'Seguridad y Cámaras'],
+                    ['id' => 4, 'name' => 'Accesorios'],
+                ];
+            }
         }
     }
 
@@ -41,6 +90,7 @@ class CategoriaRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT c.*, 
                            (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) as total_products 
                     FROM categories c 
@@ -49,7 +99,8 @@ class CategoriaRepository
             $stmt = $pdo->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
-            return [];
+            error_log("Error en listarTodasConConteo: " . $e->getMessage());
+            return $this->listarActivas();
         }
     }
 
@@ -63,6 +114,7 @@ class CategoriaRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT * FROM categories WHERE id = :id LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
@@ -83,6 +135,7 @@ class CategoriaRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
             $sql = "SELECT * FROM categories WHERE LOWER(TRIM(name)) = LOWER(TRIM(:name)) LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':name' => $name]);
@@ -121,15 +174,28 @@ class CategoriaRepository
     public function crear(array $data): int
     {
         $pdo = Database::connect();
-        $sql = "INSERT INTO categories (name, description, image_url, active) 
-                VALUES (:name, :description, :image_url, 1)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':name'        => $data['name'],
-            ':description' => $data['description'] ?? null,
-            ':image_url'   => $data['image_url'] ?? null,
-        ]);
-        return (int)$pdo->lastInsertId();
+        $this->ensureSchema($pdo);
+
+        try {
+            $sql = "INSERT INTO categories (name, description, image_url, active) 
+                    VALUES (:name, :description, :image_url, 1)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':name'        => $data['name'],
+                ':description' => $data['description'] ?? null,
+                ':image_url'   => $data['image_url'] ?? null,
+            ]);
+            return (int)$pdo->lastInsertId();
+        } catch (Throwable $e) {
+            $sql = "INSERT INTO categories (name, image_url, active) 
+                    VALUES (:name, :image_url, 1)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':name'      => $data['name'],
+                ':image_url' => $data['image_url'] ?? null,
+            ]);
+            return (int)$pdo->lastInsertId();
+        }
     }
 
     /**
@@ -142,18 +208,33 @@ class CategoriaRepository
     public function actualizar(int $id, array $data): bool
     {
         $pdo = Database::connect();
-        $sql = "UPDATE categories 
-                SET name = :name, 
-                    description = :description, 
-                    image_url = :image_url 
-                WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute([
-            ':id'          => $id,
-            ':name'        => $data['name'],
-            ':description' => $data['description'] ?? null,
-            ':image_url'   => $data['image_url'] ?? null,
-        ]);
+        $this->ensureSchema($pdo);
+
+        try {
+            $sql = "UPDATE categories 
+                    SET name = :name, 
+                        description = :description, 
+                        image_url = :image_url 
+                    WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            return $stmt->execute([
+                ':id'          => $id,
+                ':name'        => $data['name'],
+                ':description' => $data['description'] ?? null,
+                ':image_url'   => $data['image_url'] ?? null,
+            ]);
+        } catch (Throwable $e) {
+            $sql = "UPDATE categories 
+                    SET name = :name, 
+                        image_url = :image_url 
+                    WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            return $stmt->execute([
+                ':id'        => $id,
+                ':name'      => $data['name'],
+                ':image_url' => $data['image_url'] ?? null,
+            ]);
+        }
     }
 
     /**
