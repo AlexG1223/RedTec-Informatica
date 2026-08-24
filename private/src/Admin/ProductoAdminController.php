@@ -430,4 +430,43 @@ class ProductoAdminController
         header('Location: ' . url("/admin/productos/{$idNum}/editar"));
         exit;
     }
+
+    /**
+     * Procesa acciones masivas (baja, reactivar, eliminar) para productos seleccionados.
+     */
+    public function accionMasiva(): void
+    {
+        AdminGuard::check();
+
+        if (!AdminGuard::verifyCsrf($_POST['csrf_token'] ?? null)) {
+            $_SESSION['flash_error'] = 'Token CSRF inválido.';
+            header('Location: ' . url('/admin/productos'));
+            exit;
+        }
+
+        $action = $_POST['action'] ?? '';
+        $ids    = $_POST['product_ids'] ?? [];
+
+        if (!is_array($ids) || empty($ids)) {
+            $_SESSION['flash_error'] = 'No seleccionaste ningún producto para realizar la acción.';
+            header('Location: ' . url('/admin/productos'));
+            exit;
+        }
+
+        if ($action === 'baja') {
+            $updated = $this->productoRepository->cambiarEstadoMasivo($ids, false);
+            $_SESSION['flash_success'] = "Se dieron de baja {$updated} producto(s) correctamente.";
+        } elseif ($action === 'reactivar') {
+            $updated = $this->productoRepository->cambiarEstadoMasivo($ids, true);
+            $_SESSION['flash_success'] = "Se reactivaron {$updated} producto(s) correctamente.";
+        } elseif ($action === 'eliminar') {
+            $deleted = $this->productoRepository->eliminarMasivo($ids);
+            $_SESSION['flash_success'] = "Se eliminaron permanentemente {$deleted} producto(s).";
+        } else {
+            $_SESSION['flash_error'] = 'Acción masiva no válida.';
+        }
+
+        header('Location: ' . url('/admin/productos'));
+        exit;
+    }
 }

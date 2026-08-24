@@ -409,4 +409,52 @@ class ProductoRepository
             return false;
         }
     }
+
+    /**
+     * Cambia el estado de activación en lote para una lista de IDs de productos.
+     *
+     * @param array $ids
+     * @param bool $active
+     * @return int Cantidad de filas afectadas
+     */
+    public function cambiarEstadoMasivo(array $ids, bool $active): int
+    {
+        $ids = array_map('intval', array_filter($ids));
+        if (empty($ids)) {
+            return 0;
+        }
+
+        $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "UPDATE products SET active = ?, updated_at = NOW() WHERE id IN ($placeholders)";
+        
+        $params = array_merge([$active ? 1 : 0], $ids);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Elimina permanentemente en lote una lista de productos y sus imágenes.
+     *
+     * @param array $ids
+     * @return int Cantidad de productos eliminados
+     */
+    public function eliminarMasivo(array $ids): int
+    {
+        $ids = array_map('intval', array_filter($ids));
+        if (empty($ids)) {
+            return 0;
+        }
+
+        $count = 0;
+        foreach ($ids as $id) {
+            if ($this->eliminar($id)) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 }

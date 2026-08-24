@@ -109,6 +109,7 @@ $routes = [
     ['POST', '#^/admin/productos/(\d+)/?$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizar'], true],
     ['POST', '#^/admin/productos/(\d+)/baja/?$#', [\RedTec\Admin\ProductoAdminController::class, 'cambiarEstado'], true],
     ['POST', '#^/admin/productos/(\d+)/stock/?$#', [\RedTec\Admin\ProductoAdminController::class, 'actualizarStockAjax'], true],
+    ['POST', '/admin/productos/accion-masiva', [\RedTec\Admin\ProductoAdminController::class, 'accionMasiva']],
     ['POST', '#^/admin/productos/(\d+)/eliminar/?$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminar'], true],
     ['POST', '#^/admin/productos/(\d+)/imagenes/subir/?$#', [\RedTec\Admin\ProductoAdminController::class, 'subirImagen'], true],
     ['POST', '#^/admin/productos/(\d+)/imagenes/(\d+)/eliminar/?$#', [\RedTec\Admin\ProductoAdminController::class, 'eliminarImagen'], true],
