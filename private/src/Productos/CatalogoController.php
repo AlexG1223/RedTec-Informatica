@@ -44,7 +44,8 @@ class CatalogoController
 
         if ($activeCategory) {
             $breadcrumbItems[] = [
-                ['name' => $activeCategory['name'], 'url' => '/tienda?categoria=' . $activeCategory['id']]
+                'name' => $activeCategory['name'],
+                'url'  => '/tienda?categoria=' . $activeCategory['id']
             ];
         }
 

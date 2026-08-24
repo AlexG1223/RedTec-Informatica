@@ -107,12 +107,25 @@ class StructuredDataBuilder
     public static function buildBreadcrumbList(array $items): array
     {
         $list = [];
-        foreach ($items as $idx => $item) {
+        $position = 1;
+
+        foreach ($items as $item) {
+            if (isset($item[0]) && is_array($item[0])) {
+                $item = $item[0];
+            }
+
+            $name = $item['name'] ?? null;
+            $url  = $item['url'] ?? null;
+
+            if (empty($name) || empty($url)) {
+                continue;
+            }
+
             $list[] = [
                 '@type'    => 'ListItem',
-                'position' => $idx + 1,
-                'name'     => $item['name'],
-                'item'     => absolute_url($item['url'])
+                'position' => $position++,
+                'name'     => $name,
+                'item'     => absolute_url($url)
             ];
         }
 
