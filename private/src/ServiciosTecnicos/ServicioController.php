@@ -21,11 +21,11 @@ class ServicioController
      */
     public function index(): void
     {
-        $services = $this->servicioRepository->listarActivos();
+        $servicios = $this->servicioRepository->listarActivos();
 
         // Fallback en caso de que la BD no tenga datos iniciales
-        if (empty($services)) {
-            $services = [
+        if (empty($servicios)) {
+            $servicios = [
                 [
                     'id' => 1,
                     'name' => 'Instalación de Cámaras de Seguridad (CCTV)',

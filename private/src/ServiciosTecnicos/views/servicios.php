@@ -34,12 +34,12 @@ $content = function() use ($servicios) {
         <div class="grid grid-3" style="gap: 2rem;">
           <?php foreach ($servicios as $s): ?>
             <?php 
-              $sTitle = htmlspecialchars($s['title']);
-              $sDesc  = nl2br(htmlspecialchars($s['description']));
+              $sTitle = htmlspecialchars($s['name'] ?? $s['title'] ?? '');
+              $sDesc  = nl2br(htmlspecialchars($s['description'] ?? ''));
               $sPrice = !empty($s['price']) ? '$ ' . number_format((float)$s['price'], 2, '.', ',') : 'Consultar Presupuesto';
               $rawImg = !empty($s['image_url']) ? $s['image_url'] : null;
               $sImg   = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : $fallbackImg;
-              $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode("Hola RedTec, quisiera consultar por el servicio: " . $s['title']);
+              $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode("Hola RedTec, quisiera consultar por el servicio: " . ($s['name'] ?? $s['title'] ?? ''));
             ?>
             <div style="background: #FFFFFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: transform var(--transition-normal), box-shadow var(--transition-normal);"
                  onmouseenter="this.style.transform='translateY(-6px)'; this.style.boxShadow='var(--shadow-lg)'; this.style.borderColor='var(--color-primary)';"
