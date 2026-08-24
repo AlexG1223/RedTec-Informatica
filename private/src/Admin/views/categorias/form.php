@@ -93,6 +93,14 @@ $content = function() use ($categoria, $isEdit, $formTitle, $actionUrl, $csrfTok
         </div>
       </div>
 
+      <!-- Categoría Destacada -->
+      <div style="margin-bottom: 1.5rem; background: #FFF; padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-light);">
+        <label style="display: flex; align-items: center; gap: 0.65rem; cursor: pointer; font-family: var(--font-heading); font-size: 0.9rem; font-weight: 700; color: var(--color-dark);">
+          <input type="checkbox" name="is_featured" value="1" <?= !isset($categoria) || !empty($categoria['is_featured']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--color-primary);">
+          <span>★ Categoría Destacada (Mostrar en la grilla visual de portada de la Tienda)</span>
+        </label>
+      </div>
+
       <button type="submit" class="btn btn-primary btn-block btn-lg">
         <?= $isEdit ? 'Guardar Cambios' : 'Crear Categoría' ?>
       </button>

@@ -8,8 +8,9 @@
  * @var string $buscar Término de búsqueda (si aplica).
  */
 
-$content = function() use ($products, $categories, $activeCategory, $buscar) {
+$content = function() use ($products, $categories, $featuredCategories, $activeCategory, $buscar) {
     $fallbackImg = url('/assets/img/redtec.jpeg');
+    $displayFeatured = !empty($featuredCategories) ? $featuredCategories : $categories;
 ?>
   <!-- CABECERA DE SECCIÓN Y BREADCRUMB -->
   <div style="background-color: var(--color-dark); color: #FFFFFF; padding: 2.5rem 0; border-bottom: 3px solid var(--color-primary);">
@@ -46,7 +47,7 @@ $content = function() use ($products, $categories, $activeCategory, $buscar) {
           </h2>
 
           <div class="category-overlay-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem;">
-            <?php foreach ($categories as $cat): ?>
+            <?php foreach ($displayFeatured as $cat): ?>
               <?php 
                 $catId   = (int)$cat['id'];
                 $catName = mb_strtoupper(htmlspecialchars($cat['name']), 'UTF-8');

@@ -29,6 +29,11 @@ class CategoriaRepository
         } catch (Throwable $e) {
             // Ignorar si la columna ya existe
         }
+        try {
+            $pdo->exec("ALTER TABLE categories ADD COLUMN is_featured TINYINT(1) DEFAULT 1");
+        } catch (Throwable $e) {
+            // Ignorar si la columna ya existe
+        }
     }
 
     /**
@@ -166,6 +171,30 @@ class CategoriaRepository
     }
 
     /**
+     * Devuelve las categorías marcadas como destacadas para las tarjetas visuales de la tienda.
+     *
+     * @return array
+     */
+    public function listarDestacadas(): array
+    {
+        try {
+            $pdo = Database::connect();
+            $this->ensureSchema($pdo);
+
+            $stmt = $pdo->query("SELECT * FROM categories WHERE is_featured = 1 ORDER BY name ASC");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($rows)) {
+                return $rows;
+            }
+
+            return $this->listarActivas();
+        } catch (Throwable $e) {
+            return $this->listarActivas();
+        }
+    }
+
+    /**
      * Inserta una nueva categoría en la base de datos.
      *
      * @param array $data
@@ -176,14 +205,17 @@ class CategoriaRepository
         $pdo = Database::connect();
         $this->ensureSchema($pdo);
 
+        $isFeatured = isset($data['is_featured']) ? (int)$data['is_featured'] : 1;
+
         try {
-            $sql = "INSERT INTO categories (name, description, image_url, active) 
-                    VALUES (:name, :description, :image_url, 1)";
+            $sql = "INSERT INTO categories (name, description, image_url, is_featured, active) 
+                    VALUES (:name, :description, :image_url, :is_featured, 1)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':name'        => $data['name'],
                 ':description' => $data['description'] ?? null,
                 ':image_url'   => $data['image_url'] ?? null,
+                ':is_featured' => $isFeatured,
             ]);
             return (int)$pdo->lastInsertId();
         } catch (Throwable $e) {
@@ -210,11 +242,14 @@ class CategoriaRepository
         $pdo = Database::connect();
         $this->ensureSchema($pdo);
 
+        $isFeatured = isset($data['is_featured']) ? (int)$data['is_featured'] : 1;
+
         try {
             $sql = "UPDATE categories 
                     SET name = :name, 
                         description = :description, 
-                        image_url = :image_url 
+                        image_url = :image_url,
+                        is_featured = :is_featured 
                     WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             return $stmt->execute([
@@ -222,6 +257,7 @@ class CategoriaRepository
                 ':name'        => $data['name'],
                 ':description' => $data['description'] ?? null,
                 ':image_url'   => $data['image_url'] ?? null,
+                ':is_featured' => $isFeatured,
             ]);
         } catch (Throwable $e) {
             $sql = "UPDATE categories 

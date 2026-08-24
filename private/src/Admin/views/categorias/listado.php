@@ -31,6 +31,7 @@ $content = function() use ($categorias, $csrfToken) {
             <th style="padding: 1rem; width: 60px;">Imagen</th>
             <th style="padding: 1rem;">Nombre de Categoría</th>
             <th style="padding: 1rem;">Descripción</th>
+            <th style="padding: 1rem; text-align: center;">Destacada</th>
             <th style="padding: 1rem; text-align: center;">Productos Asociados</th>
             <th style="padding: 1rem; text-align: right;">Acciones</th>
           </tr>
@@ -73,6 +74,15 @@ $content = function() use ($categorias, $csrfToken) {
                 </td>
                 <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary); max-width: 350px;">
                   <?= $cDesc ?>
+                </td>
+                <td style="padding: 0.75rem 1rem; text-align: center;">
+                  <?php if (!empty($c['is_featured'])): ?>
+                    <span class="badge-stock" style="background: #FEF3C7; color: #D97706; font-weight: 800; border: 1px solid #F59E0B; font-size: 0.75rem; padding: 0.2rem 0.5rem;">
+                      ★ Destacada
+                    </span>
+                  <?php else: ?>
+                    <span style="color: var(--color-text-muted); font-size: 0.8rem;">-</span>
+                  <?php endif; ?>
                 </td>
                 <td style="padding: 0.75rem 1rem; text-align: center;">
                   <span class="badge-stock" style="background: <?= $productCount > 0 ? '#E0F2FE' : '#F3F4F6' ?>; color: <?= $productCount > 0 ? '#0369A1' : '#6B7280' ?>; font-weight: 700;">

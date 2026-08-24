@@ -63,6 +63,7 @@ class CategoriaAdminController
         $name        = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
         $imageUrl    = trim($_POST['image_url'] ?? '');
+        $isFeatured  = !empty($_POST['is_featured']) ? 1 : 0;
 
         if (empty($name)) {
             $_SESSION['flash_error'] = 'El nombre de la categoría es obligatorio.';
@@ -81,6 +82,7 @@ class CategoriaAdminController
                 'name'        => $name,
                 'description' => $description,
                 'image_url'   => !empty($imageUrl) ? $imageUrl : null,
+                'is_featured' => $isFeatured,
             ]);
 
             $_SESSION['flash_success'] = "Categoría '{$name}' creada correctamente.";
@@ -133,6 +135,7 @@ class CategoriaAdminController
         $name        = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
         $imageUrl    = trim($_POST['image_url'] ?? '');
+        $isFeatured  = !empty($_POST['is_featured']) ? 1 : 0;
 
         if (empty($name)) {
             $_SESSION['flash_error'] = 'El nombre de la categoría es obligatorio.';
@@ -151,6 +154,7 @@ class CategoriaAdminController
                 'name'        => $name,
                 'description' => $description,
                 'image_url'   => !empty($imageUrl) ? $imageUrl : null,
+                'is_featured' => $isFeatured,
             ]);
 
             $_SESSION['flash_success'] = "Categoría '{$name}' actualizada exitosamente.";

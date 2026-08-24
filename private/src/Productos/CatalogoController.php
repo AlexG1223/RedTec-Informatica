@@ -28,8 +28,9 @@ class CatalogoController
         $categoriaId = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
         $buscar      = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-        $products   = $this->productoRepository->listar(['categoria' => $categoriaId, 'buscar' => $buscar]);
-        $categories = $this->categoriaRepository->listarActivas();
+        $products           = $this->productoRepository->listar(['categoria' => $categoriaId, 'buscar' => $buscar]);
+        $categories         = $this->categoriaRepository->listarActivas();
+        $featuredCategories = $this->categoriaRepository->listarDestacadas();
 
         $activeCategory = null;
         if ($categoriaId > 0) {
