@@ -17,42 +17,7 @@ $content = function() use ($totalProductos, $totalCategorias, $totalServicios, $
     </p>
   </div>
 
-  <!-- TARJETAS DE ESTADÍSTICAS -->
-  <div class="grid grid-4" style="gap: 1.5rem; margin-bottom: 2.5rem;">
-    
-    <div class="admin-card" style="border-left: 4px solid var(--color-primary);">
-      <div style="font-size: 0.8rem; font-weight: 800; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em;">Productos Activos</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
-        <?= (int)$totalProductos ?>
-      </div>
-      <a href="<?= url('/admin/productos') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar productos &rarr;</a>
-    </div>
 
-    <div class="admin-card" style="border-left: 4px solid #0D9488;">
-      <div style="font-size: 0.8rem; font-weight: 800; color: #0D9488; text-transform: uppercase; letter-spacing: 0.05em;">Categorías</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
-        <?= (int)$totalCategorias ?>
-      </div>
-      <a href="<?= url('/admin/categorias') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar categorías &rarr;</a>
-    </div>
-
-    <div class="admin-card" style="border-left: 4px solid #3B82F6;">
-      <div style="font-size: 0.8rem; font-weight: 800; color: #3B82F6; text-transform: uppercase; letter-spacing: 0.05em;">Servicios Técnicos</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
-        <?= (int)$totalServicios ?>
-      </div>
-      <a href="<?= url('/admin/servicios') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar servicios &rarr;</a>
-    </div>
-
-    <div class="admin-card" style="border-left: 4px solid #8B5CF6;">
-      <div style="font-size: 0.8rem; font-weight: 800; color: #8B5CF6; text-transform: uppercase; letter-spacing: 0.05em;">Planes PyME</div>
-      <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; color: var(--color-dark); margin-top: 0.25rem;">
-        <?= (int)$totalPlanes ?>
-      </div>
-      <a href="<?= url('/admin/planes') ?>" style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; display: inline-block; margin-top: 0.5rem;">Gestionar planes &rarr;</a>
-    </div>
-
-  </div>
 
   <!-- TARJETAS DE ACCESOS RÁPIDOS -->
   <div class="admin-card">
