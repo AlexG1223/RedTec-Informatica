@@ -270,7 +270,10 @@ $content = function() use ($categories, $faqs) {
               <strong>Dirección:</strong> Atlántida, Departamento de Canelones, Uruguay.
             </p>
             <p style="margin-bottom: 0.5rem;">
-              <strong>Teléfono / WhatsApp:</strong> <a href="<?= REDTEC_WHATSAPP_LINK ?>" style="font-weight: 700; color: var(--color-dark);">+598 91 633 699</a>
+              <strong>WhatsApp:</strong> <a href="<?= REDTEC_WHATSAPP_LINK ?>" target="_blank" rel="noopener noreferrer" style="font-weight: 700; color: var(--color-dark);"><?= REDTEC_WHATSAPP_DISPLAY ?></a>
+            </p>
+            <p style="margin-bottom: 0.5rem;">
+              <strong>Teléfono Fijo:</strong> <a href="<?= REDTEC_PHONE_FIJO_LINK ?>" style="font-weight: 700; color: var(--color-dark);"><?= REDTEC_PHONE_FIJO ?></a>
             </p>
             <p style="margin-bottom: 0;">
               <strong>Horarios:</strong> Lunes a Viernes de 09:00 a 19:00 hs &bull; Sábados de 09:00 a 13:00 hs.

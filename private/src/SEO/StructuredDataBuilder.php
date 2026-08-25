@@ -52,7 +52,9 @@ class StructuredDataBuilder
                 ]
             ],
             'sameAs' => [
-                'https://wa.me/' . REDTEC_WHATSAPP_NUMBER
+                REDTEC_WHATSAPP_LINK,
+                REDTEC_INSTAGRAM_URL,
+                REDTEC_THREADS_URL
             ]
         ];
     }

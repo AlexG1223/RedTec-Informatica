@@ -49,13 +49,35 @@ if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
 }
 
-// Número y Enlace de WhatsApp Centralizado de RedTec Informática
+// Número y Enlace de WhatsApp Centralizado (099 372 649 -> 59899372649)
 if (!defined('REDTEC_WHATSAPP_NUMBER')) {
-    define('REDTEC_WHATSAPP_NUMBER', '59891633699');
+    define('REDTEC_WHATSAPP_NUMBER', '59899372649');
+}
+
+if (!defined('REDTEC_WHATSAPP_DISPLAY')) {
+    define('REDTEC_WHATSAPP_DISPLAY', '099 372 649');
 }
 
 if (!defined('REDTEC_WHATSAPP_LINK')) {
     define('REDTEC_WHATSAPP_LINK', 'https://wa.me/' . REDTEC_WHATSAPP_NUMBER);
+}
+
+// Teléfono Fijo Oficial (4371 6456)
+if (!defined('REDTEC_PHONE_FIJO')) {
+    define('REDTEC_PHONE_FIJO', '4371 6456');
+}
+
+if (!defined('REDTEC_PHONE_FIJO_LINK')) {
+    define('REDTEC_PHONE_FIJO_LINK', 'tel:43716456');
+}
+
+// Redes Sociales Oficiales (Instagram y Threads)
+if (!defined('REDTEC_INSTAGRAM_URL')) {
+    define('REDTEC_INSTAGRAM_URL', 'https://www.instagram.com/redtec_atlantida/');
+}
+
+if (!defined('REDTEC_THREADS_URL')) {
+    define('REDTEC_THREADS_URL', 'https://www.threads.com/@redtec_atlantida?xmt=AQG03DkuYO9-ubC6GdZPbaFjmF_4GDHd7rEP55gFRuuH9-I');
 }
 
 /**

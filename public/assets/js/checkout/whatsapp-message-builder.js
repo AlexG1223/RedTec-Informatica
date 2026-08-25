@@ -4,7 +4,7 @@
 (function(window) {
   'use strict';
 
-  const PHONE_NUMBER = "59891633699";
+  const PHONE_NUMBER = "59899372649";
 
   const WhatsAppMessageBuilder = {
     /**
