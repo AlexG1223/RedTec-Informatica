@@ -515,9 +515,9 @@ ul, ol {
 }
 
 .social-link svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
+  width: 19px;
+  height: 19px;
+  display: block;
 }
 
 .social-link:hover {
