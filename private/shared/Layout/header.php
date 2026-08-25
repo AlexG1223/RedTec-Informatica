@@ -17,23 +17,10 @@ $logoUrl     = url('/assets/img/Logotipo PNG.png');
   <div class="container">
     <div class="header-top-bar">
       
-      <!-- Logotipo -->
+      <!-- Logotipo Alineado a la Izquierda -->
       <a href="<?= url('/') ?>" class="site-logo" title="RedTec Informática - Inicio">
-        <img src="<?= $logoUrl ?>" alt="RedTec Informática" width="180" height="48">
+        <img src="<?= $logoUrl ?>" alt="RedTec Informática" style="height: 58px; max-height: 64px; width: auto; object-fit: contain;">
       </a>
-
-      <!-- Buscador Integrado estilo DK Computers -->
-      <form action="<?= url('/tienda') ?>" method="GET" class="header-search-form" role="search">
-        <svg class="header-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" 
-               name="buscar" 
-               class="header-search-input" 
-               placeholder="Buscar productos, marcas, periféricos..." 
-               value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>"
-               aria-label="Buscar productos en el catálogo">
-      </form>
 
       <!-- Navegación Principal Estructurada (Sin Modificar Rutas ni Ítems) -->
       <nav class="site-nav" id="siteNav" aria-label="Navegación principal">
