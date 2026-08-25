@@ -169,9 +169,10 @@
         }
 
         itemEl.innerHTML = `
+          <button type="button" class="cart-item-remove-btn" data-id="${item.id}" title="Quitar este producto del carrito" aria-label="Quitar producto">&times;</button>
           <img src="${imgSrc}" alt="${self.escapeHtml(item.name)}" class="cart-item-img" onerror="this.src='${fallbackImg}';">
           <div class="cart-item-info">
-            <div class="cart-item-title">${self.escapeHtml(item.name)}</div>
+            <div class="cart-item-title" style="padding-right: 1.5rem;">${self.escapeHtml(item.name)}</div>
             <div class="cart-item-price">$${parseFloat(item.price).toFixed(2)}</div>
             <div class="cart-item-controls">
               <div class="cart-qty-wrapper">
@@ -179,15 +180,11 @@
                 <input type="text" class="cart-qty-input" value="${item.quantity}" readonly>
                 <button type="button" class="cart-qty-btn qty-plus" data-id="${item.id}" ${item.quantity >= item.stock ? 'disabled' : ''}>+</button>
               </div>
-              <button type="button" class="cart-item-remove" data-id="${item.id}" title="Eliminar producto">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-              </button>
             </div>
           </div>
         `;
 
-
-        // Eventos de botones (- / + / borrar)
+        // Eventos de botones (- / + / X)
         itemEl.querySelector('.qty-minus').addEventListener('click', function() {
           window.CartService.updateQuantity(item.id, item.quantity - 1);
         });
@@ -200,7 +197,7 @@
           }
         });
 
-        itemEl.querySelector('.cart-item-remove').addEventListener('click', function() {
+        itemEl.querySelector('.cart-item-remove-btn').addEventListener('click', function() {
           window.CartService.removeItem(item.id);
           self.showToast('Producto eliminado del carrito.', 'info');
         });
