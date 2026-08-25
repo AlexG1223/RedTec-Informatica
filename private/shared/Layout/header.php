@@ -50,7 +50,12 @@ $logoUrl     = url('/assets/img/Logotipo PNG.png');
           </li>
           <li>
             <a href="<?= url('/servicios') ?>" class="nav-link <?= $currentPage === 'servicios' ? 'active' : '' ?>">
-              Servicios
+              Servicios Técnicos
+            </a>
+          </li>
+          <li>
+            <a href="<?= url('/servicios-corporativos') ?>" class="nav-link <?= $currentPage === 'corporativos' ? 'active' : '' ?>">
+              Planes Corporativos
             </a>
           </li>
           <li>

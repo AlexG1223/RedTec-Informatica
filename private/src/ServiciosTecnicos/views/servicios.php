@@ -114,6 +114,18 @@ $content = function() use ($servicios) {
         </div>
       <?php endif; ?>
 
+      <!-- BANNER DIRECTO A PLANES CORPORATIVOS -->
+      <div style="margin-top: 3rem; background: linear-gradient(135deg, var(--color-dark) 0%, #2A1D1A 100%); color: #FFF; padding: 2.5rem; border-radius: var(--radius-lg); border-left: 5px solid var(--color-primary); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+        <div>
+          <span style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--color-primary); letter-spacing: 0.08em;">¿Buscás mantenimiento informático para tu empresa?</span>
+          <h3 style="font-size: 1.5rem; margin: 0.25rem 0 0.5rem 0; color: #FFF; font-weight: 800;">Conocé nuestros Planes de Soporte Corporativo para PyMEs</h3>
+          <p style="margin: 0; color: #D2D2D2; font-size: 0.95rem; max-width: 600px;">Abonos mensuales con asistencia técnica prioritaria, soporte in-situ y mantenimiento preventivo.</p>
+        </div>
+        <a href="<?= url('/servicios-corporativos') ?>" class="btn btn-primary btn-lg" style="white-space: nowrap;">
+          Ver Planes Corporativos &rarr;
+        </a>
+      </div>
+
     </div>
   </section>
 <?php

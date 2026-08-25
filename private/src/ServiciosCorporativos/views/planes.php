@@ -6,6 +6,31 @@
  */
 
 $content = function() use ($planes) {
+    if (empty($planes)) {
+        $planes = [
+            [
+                'id'          => 1,
+                'name'        => 'Esencial',
+                'description' => 'Soporte técnico reactivo remoto y presencial con tiempo de respuesta estándar para pequeñas oficinas y negocios (hasta 5 equipos).',
+                'price'       => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 2,
+                'name'        => 'Empresarial',
+                'description' => 'Soporte prioritario, mantenimiento preventivo mensual, monitoreo de infraestructura y asistencia in-situ para PyMEs (hasta 15 equipos).',
+                'price'       => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 3,
+                'name'        => 'Premium',
+                'description' => 'Soporte prioritario 24/7, servidor y red monitoreados en tiempo real, tiempo de respuesta SLA garantizado y técnico dedicado.',
+                'price'       => null,
+                'active'      => 1
+            ]
+        ];
+    }
 ?>
   <!-- CABECERA -->
   <div style="background-color: var(--color-dark); color: #FFFFFF; padding: 3rem 0; border-bottom: 3px solid var(--color-primary);">

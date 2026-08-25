@@ -21,11 +21,11 @@ class ServicioPackageController
      */
     public function index(): void
     {
-        $packages = $this->packageRepository->listarActivos();
+        $planes = $this->packageRepository->listarActivos();
 
         // Fallback en caso de que la BD esté en proceso de configuración
-        if (empty($packages)) {
-            $packages = [
+        if (empty($planes)) {
+            $planes = [
                 [
                     'id' => 1,
                     'name' => 'Esencial',

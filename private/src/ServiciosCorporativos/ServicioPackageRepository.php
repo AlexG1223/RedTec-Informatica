@@ -11,6 +11,52 @@ use Throwable;
  */
 class ServicioPackageRepository
 {
+    private static bool $schemaChecked = false;
+
+    /**
+     * Asegura que la tabla service_packages exista y tenga registros por defecto (auto-migración).
+     *
+     * @param PDO $pdo
+     */
+    private function ensureSchema(PDO $pdo): void
+    {
+        if (self::$schemaChecked) {
+            return;
+        }
+        self::$schemaChecked = true;
+
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS service_packages (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                description TEXT DEFAULT NULL,
+                price DECIMAL(10,2) DEFAULT NULL,
+                active TINYINT(1) DEFAULT 1,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+            $pdo->exec($sql);
+
+            // Verificar si la tabla está vacía y sembrar registros por defecto
+            $stmt = $pdo->query("SELECT COUNT(*) FROM service_packages");
+            $count = (int)$stmt->fetchColumn();
+
+            if ($count === 0) {
+                $samples = $this->getInitialSamplePackages();
+                $insertStmt = $pdo->prepare("INSERT INTO service_packages (name, description, price, active) VALUES (:name, :description, :price, 1)");
+                foreach ($samples as $s) {
+                    $insertStmt->execute([
+                        ':name'        => $s['name'],
+                        ':description' => $s['description'],
+                        ':price'       => $s['price'],
+                    ]);
+                }
+            }
+        } catch (Throwable $e) {
+            error_log("Error en ensureSchema de service_packages: " . $e->getMessage());
+        }
+    }
+
     /**
      * Devuelve la lista de paquetes/planes corporativos activos para el sitio público.
      *
@@ -20,15 +66,27 @@ class ServicioPackageRepository
     {
         try {
             $pdo = Database::connect();
-            $sql = "SELECT id, name, description, price, active 
-                    FROM service_packages 
-                    WHERE active = 1 
-                    ORDER BY id ASC";
+            $this->ensureSchema($pdo);
 
+            $sql = "SELECT * FROM service_packages WHERE active = 1 OR active IS NULL ORDER BY id ASC";
             $stmt = $pdo->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($rows)) {
+                return $rows;
+            }
+
+            // Fallback: Si no hay ninguno con active = 1, traer todos los existentes
+            $stmtAll = $pdo->query("SELECT * FROM service_packages ORDER BY id ASC");
+            $allRows = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
+            if (!empty($allRows)) {
+                return $allRows;
+            }
+
+            return $this->getInitialSamplePackages();
         } catch (Throwable $e) {
-            return [];
+            error_log("Error en ServicioPackageRepository::listarActivos: " . $e->getMessage());
+            return $this->getInitialSamplePackages();
         }
     }
 
@@ -41,11 +99,20 @@ class ServicioPackageRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
+
             $sql = "SELECT * FROM service_packages ORDER BY id DESC";
             $stmt = $pdo->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($rows)) {
+                return $rows;
+            }
+
+            return $this->getInitialSamplePackages();
         } catch (Throwable $e) {
-            return [];
+            error_log("Error en ServicioPackageRepository::listarTodos: " . $e->getMessage());
+            return $this->getInitialSamplePackages();
         }
     }
 
@@ -59,6 +126,8 @@ class ServicioPackageRepository
     {
         try {
             $pdo = Database::connect();
+            $this->ensureSchema($pdo);
+
             $sql = "SELECT * FROM service_packages WHERE id = :id LIMIT 1";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
@@ -78,6 +147,8 @@ class ServicioPackageRepository
     public function crear(array $data): int
     {
         $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
         $sql = "INSERT INTO service_packages (name, description, price, active) 
                 VALUES (:name, :description, :price, 1)";
         $stmt = $pdo->prepare($sql);
@@ -99,6 +170,8 @@ class ServicioPackageRepository
     public function actualizar(int $id, array $data): bool
     {
         $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
         $sql = "UPDATE service_packages 
                 SET name = :name, 
                     description = :description, 
@@ -123,11 +196,45 @@ class ServicioPackageRepository
     public function cambiarEstado(int $id, int $activo): bool
     {
         $pdo = Database::connect();
+        $this->ensureSchema($pdo);
+
         $sql = "UPDATE service_packages SET active = :active WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([
             ':id'     => $id,
             ':active' => $activo ? 1 : 0
         ]);
+    }
+
+    /**
+     * Devuelve la lista inicial de planes muestra en caso de fallback.
+     *
+     * @return array
+     */
+    private function getInitialSamplePackages(): array
+    {
+        return [
+            [
+                'id'          => 1,
+                'name'        => 'Esencial',
+                'description' => 'Soporte técnico reactivo remoto y presencial con tiempo de respuesta estándar para pequeñas oficinas y negocios (hasta 5 equipos).',
+                'price'       => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 2,
+                'name'        => 'Empresarial',
+                'description' => 'Soporte prioritario, mantenimiento preventivo mensual, monitoreo de infraestructura y asistencia in-situ para PyMEs (hasta 15 equipos).',
+                'price'       => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 3,
+                'name'        => 'Premium',
+                'description' => 'Soporte prioritario 24/7, servidor y red monitoreados en tiempo real, tiempo de respuesta SLA garantizado y técnico dedicado.',
+                'price'       => null,
+                'active'      => 1
+            ]
+        ];
     }
 }
