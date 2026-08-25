@@ -7,6 +7,45 @@
 
 $content = function() use ($servicios) {
     $fallbackImg = url('/assets/img/redtec.jpeg');
+    if (empty($servicios)) {
+        $servicios = [
+            [
+                'id'          => 1,
+                'name'        => 'Seguridad Informática y Resguardos',
+                'description' => 'Implementación de firewalls de red, antivirus corporativo administrado y planes de copia de seguridad.',
+                'image_url'   => '/assets/img/redtec.jpeg',
+                'active'      => 1
+            ],
+            [
+                'id'          => 2,
+                'name'        => 'Mantenimiento y Soporte Técnico In-Situ',
+                'description' => 'Reparación de hardware, mantenimiento preventivo de equipamiento, limpieza técnica y asistencia presencial.',
+                'image_url'   => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 3,
+                'name'        => 'Redes y Conectividad',
+                'description' => 'Cableado estructurado Cat6, certificación de puntos de red, armado de racks y despliegue de redes Wi-Fi empresariales Mesh.',
+                'image_url'   => '/assets/img/redtec.jpeg',
+                'active'      => 1
+            ],
+            [
+                'id'          => 4,
+                'name'        => 'Armado y Configuración de Servidores',
+                'description' => 'Implementación de servidores de archivos, Active Directory, virtualización y sistemas de respaldo automatizados en unidades NAS.',
+                'image_url'   => null,
+                'active'      => 1
+            ],
+            [
+                'id'          => 5,
+                'name'        => 'Instalación de Cámaras de Seguridad (CCTV)',
+                'description' => 'Diseño e instalación de sistemas de videovigilancia IP y analógicas HD para empresas y residencias con monitoreo remoto.',
+                'image_url'   => '/assets/img/redtec.jpeg',
+                'active'      => 1
+            ]
+        ];
+    }
 ?>
   <!-- CABECERA -->
   <div style="background-color: var(--color-dark); color: #FFFFFF; padding: 3rem 0; border-bottom: 3px solid var(--color-primary);">
