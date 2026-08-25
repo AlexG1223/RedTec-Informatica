@@ -36,7 +36,7 @@ $content = function() use ($categories, $faqs) {
     <div class="hero-carousel-slides" id="carouselSlides">
       
       <!-- SLIDE 1: TECNOLOGÍA & EQUIPOS -->
-      <div class="hero-slide">
+      <div class="hero-slide" style="background: linear-gradient(90deg, rgba(16, 10, 8, 0.94) 0%, rgba(16, 10, 8, 0.82) 45%, rgba(16, 10, 8, 0.35) 100%), url('<?= url('/assets/img/hero_slide_tech.jpg') ?>') center center / cover no-repeat;">
         <div class="container">
           <div style="max-width: 780px;">
             <span class="hero-spotlight-badge">
@@ -70,7 +70,7 @@ $content = function() use ($categories, $faqs) {
       </div>
 
       <!-- SLIDE 2: SEGURIDAD & CÁMARAS CCTV -->
-      <div class="hero-slide">
+      <div class="hero-slide" style="background: linear-gradient(90deg, rgba(10, 16, 28, 0.94) 0%, rgba(10, 16, 28, 0.82) 45%, rgba(10, 16, 28, 0.35) 100%), url('<?= url('/assets/img/hero_slide_cctv.jpg') ?>') center center / cover no-repeat;">
         <div class="container">
           <div style="max-width: 780px;">
             <span class="hero-spotlight-badge" style="color: #60A5FA; background: rgba(59, 130, 246, 0.2); border-color: rgba(96, 165, 250, 0.3);">
@@ -103,7 +103,7 @@ $content = function() use ($categories, $faqs) {
       </div>
 
       <!-- SLIDE 3: REDES & SOPORTE CORPORATIVO -->
-      <div class="hero-slide">
+      <div class="hero-slide" style="background: linear-gradient(90deg, rgba(18, 12, 28, 0.94) 0%, rgba(18, 12, 28, 0.82) 45%, rgba(18, 12, 28, 0.35) 100%), url('<?= url('/assets/img/hero_slide_redes.jpg') ?>') center center / cover no-repeat;">
         <div class="container">
           <div style="max-width: 780px;">
             <span class="hero-spotlight-badge" style="color: #A78BFA; background: rgba(139, 92, 246, 0.2); border-color: rgba(167, 139, 250, 0.3);">
