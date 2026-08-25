@@ -1,6 +1,7 @@
 <?php
 /**
  * RedTec Informática - Vista del Catálogo de Productos (Tienda)
+ * Con Buscador en Tiempo Real por Categoría y Coincidencia Instantánea
  * 
  * @var array $products Lista de productos filtrados traídos del repositorio.
  * @var array $categories Lista de categorías activas para el filtro.
@@ -38,7 +39,7 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
   <section class="section-padding">
     <div class="container">
       
-      <!-- GRILLA DE TARJETAS DE CATEGORÍAS CON OVERLAY (ESTILO SEGUNDA CAPTURA) -->
+      <!-- GRILLA DE TARJETAS DE CATEGORÍAS CON OVERLAY -->
       <?php if (!$activeCategory && empty($buscar)): ?>
         <div style="margin-bottom: 2.5rem;">
           <h2 style="font-size: 1.3rem; font-family: var(--font-heading); font-weight: 800; color: var(--color-dark); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -86,28 +87,33 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
         </div>
       <?php endif; ?>
 
-      <!-- BARRA DE BÚSQUEDA Y FILTROS RÁPIDOS -->
+      <!-- BARRA DE BÚSQUEDA EN TIEMPO REAL -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; background: #FFFFFF; padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-sm);">
         
-        <!-- Formulario de Búsqueda -->
-        <form action="<?= url('/tienda') ?>" method="GET" style="display: flex; gap: 0.5rem; flex: 1 1 300px;">
+        <!-- Formulario e Input de Búsqueda Instantánea -->
+        <form id="searchForm" action="<?= url('/tienda') ?>" method="GET" style="display: flex; gap: 0.5rem; flex: 1 1 300px; position: relative;">
           <?php if ($activeCategory): ?>
             <input type="hidden" name="categoria" value="<?= (int)$activeCategory['id'] ?>">
           <?php endif; ?>
           <div style="position: relative; width: 100%;">
             <input type="text" 
+                   id="searchInput"
                    name="buscar" 
                    value="<?= htmlspecialchars($buscar) ?>" 
-                   placeholder="Buscar en el catálogo..." 
-                   style="width: 100%; padding: 0.65rem 1rem 0.65rem 2.4rem; border: 1px solid var(--color-border-metallic); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.9rem;">
+                   placeholder="Buscar en <?= $activeCategory ? htmlspecialchars($activeCategory['name']) : 'el catálogo' ?>..." 
+                   autocomplete="off"
+                   style="width: 100%; padding: 0.65rem 2.4rem 0.65rem 2.4rem; border: 1px solid var(--color-border-metallic); border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.9rem;">
+            
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            
+            <button type="button" id="clearSearchBtn" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #999; cursor: pointer; font-size: 1.2rem; line-height: 1; padding: 2px 6px;" title="Limpiar búsqueda">&times;</button>
           </div>
           <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
         </form>
 
-        <!-- Contador de Resultados -->
+        <!-- Contador Dinámico de Resultados -->
         <div style="font-size: 0.88rem; color: var(--color-text-secondary); font-weight: 600;">
-          Mostrando <span style="color: var(--color-dark); font-weight: 700;"><?= count($products) ?></span> producto(s)
+          Mostrando <span id="productCountNumber" style="color: var(--color-dark); font-weight: 700;"><?= count($products) ?></span> producto(s)
         </div>
       </div>
 
@@ -138,17 +144,18 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
           </ul>
         </aside>
 
-        <!-- GRILLA DE PRODUCTOS -->
+        <!-- CONTENEDOR PRINCIPAL DE PRODUCTOS -->
         <div>
-          <?php if (empty($products)): ?>
-            <div style="background: #FFFFFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: 3rem; text-align: center;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-text-muted); margin-bottom: 1rem;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <h3 style="margin-bottom: 0.5rem; color: var(--color-dark);">No se encontraron productos</h3>
-              <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Intenta con otros términos de búsqueda o selecciona otra categoría.</p>
-              <a href="<?= url('/tienda') ?>" class="btn btn-outline-dark btn-sm">Ver Todo el Catálogo</a>
-            </div>
-          <?php else: ?>
-            <div class="grid grid-3" style="gap: 1.5rem;">
+          <!-- Mensaje Sin Resultados en Tiempo Real -->
+          <div id="noResultsMessage" style="display: <?= empty($products) ? 'block' : 'none' ?>; background: #FFFFFF; border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: 3rem; text-align: center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-text-muted); margin-bottom: 1rem;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3 style="margin-bottom: 0.5rem; color: var(--color-dark);">No se encontraron productos</h3>
+            <p id="noResultsText" style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Intenta con otros términos de búsqueda o selecciona otra categoría.</p>
+            <button type="button" id="resetSearchBtn" class="btn btn-outline-dark btn-sm">Ver Todo en <?= $activeCategory ? htmlspecialchars($activeCategory['name']) : 'el Catálogo' ?></button>
+          </div>
+
+          <?php if (!empty($products)): ?>
+            <div id="productGridContainer" class="grid grid-3" style="gap: 1.5rem;">
               <?php foreach ($products as $p): ?>
                 <?php 
                   $pId        = (int)$p['id'];
@@ -162,7 +169,11 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
                   $pImg       = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : $fallbackImg;
                   $pLink      = url('/producto/' . $pId);
                 ?>
-                <div class="product-card">
+                <div class="product-card product-card-item" 
+                     data-name="<?= htmlspecialchars(mb_strtolower($p['name'], 'UTF-8')) ?>" 
+                     data-code="<?= htmlspecialchars(mb_strtolower($p['code'] ?? '', 'UTF-8')) ?>" 
+                     data-category="<?= htmlspecialchars(mb_strtolower($p['category_name'] ?? '', 'UTF-8')) ?>"
+                     data-description="<?= htmlspecialchars(mb_strtolower(strip_tags($p['description'] ?? ''), 'UTF-8')) ?>">
                   <div class="product-card-img-wrap">
                     <span class="product-card-code"><?= $pCode ?></span>
                     <a href="<?= $pLink ?>">
@@ -212,6 +223,113 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
 
     </div>
   </section>
+
+  <!-- LÓGICA DE BÚSQUEDA EN TIEMPO REAL -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput    = document.getElementById('searchInput');
+    const searchForm     = document.getElementById('searchForm');
+    const clearBtn       = document.getElementById('clearSearchBtn');
+    const countSpan      = document.getElementById('productCountNumber');
+    const productGrid    = document.getElementById('productGridContainer');
+    const noResultsDiv   = document.getElementById('noResultsMessage');
+    const noResultsText  = document.getElementById('noResultsText');
+    const resetBtn       = document.getElementById('resetSearchBtn');
+    const productCards   = document.querySelectorAll('.product-card-item');
+
+    function removeAccents(str) {
+      return String(str || '')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function filterProducts() {
+      const rawQuery = searchInput ? searchInput.value : '';
+      const query = removeAccents(rawQuery);
+
+      if (clearBtn) {
+        clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+      }
+
+      let visibleCount = 0;
+
+      productCards.forEach(function(card) {
+        const name        = removeAccents(card.dataset.name);
+        const code        = removeAccents(card.dataset.code);
+        const category    = removeAccents(card.dataset.category);
+        const description = removeAccents(card.dataset.description);
+
+        const matches = query === '' || 
+                        name.includes(query) || 
+                        code.includes(query) || 
+                        category.includes(query) ||
+                        description.includes(query);
+
+        if (matches) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (countSpan) {
+        countSpan.textContent = visibleCount;
+      }
+
+      if (noResultsDiv) {
+        if (visibleCount === 0 && productCards.length > 0) {
+          if (productGrid) productGrid.style.display = 'none';
+          noResultsDiv.style.display = 'block';
+          if (noResultsText) {
+            noResultsText.textContent = `No se encontraron productos coincidentes para "${rawQuery}".`;
+          }
+        } else if (visibleCount > 0) {
+          if (productGrid) productGrid.style.display = 'grid';
+          noResultsDiv.style.display = 'none';
+        }
+      }
+    }
+
+    if (searchInput) {
+      // Filtrado instantáneo en vivo en cada pulsación de tecla
+      searchInput.addEventListener('input', filterProducts);
+      searchInput.addEventListener('keyup', filterProducts);
+      
+      if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          filterProducts();
+        });
+      }
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.focus();
+          filterProducts();
+        }
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.focus();
+          filterProducts();
+        }
+      });
+    }
+
+    // Ejecutar filtro inicial si el input ya contenía texto
+    filterProducts();
+  });
+  </script>
 
   <style>
   @media (max-width: 991px) {

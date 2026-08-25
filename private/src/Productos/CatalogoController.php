@@ -28,7 +28,9 @@ class CatalogoController
         $categoriaId = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
         $buscar      = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-        $products           = $this->productoRepository->listar(['categoria' => $categoriaId, 'buscar' => $buscar]);
+        // Obtenemos los productos de la categoría seleccionada (o todos si categoriaId es 0)
+        // para habilitar el filtrado instantáneo en tiempo real (0ms) en el navegador
+        $products           = $this->productoRepository->listar(['categoria' => $categoriaId]);
         $categories         = $this->categoriaRepository->listarActivas();
         $featuredCategories = $this->categoriaRepository->listarDestacadas();
 
