@@ -194,7 +194,7 @@ $csrfToken  = \RedTec\Admin\AdminGuard::csrfToken();
   <!-- SIDEBAR LATERAL DE NAVEGACIÓN -->
   <aside class="admin-sidebar">
     <div class="sidebar-brand">
-      <img src="<?= url('/assets/img/Logotipo PNG.png') ?>" alt="RedTec">
+      <img src="<?= url('/assets/img/redtecfondonegro.png') ?>" alt="RedTec" style="height: 42px; max-height: 48px; width: auto; object-fit: contain;">
     </div>
 
     <nav style="flex-grow: 1;">
@@ -203,6 +203,12 @@ $csrfToken  = \RedTec\Admin\AdminGuard::csrfToken();
           <a href="<?= url('/admin') ?>" class="sidebar-link <?= $activeMenu === 'dashboard' ? 'active' : '' ?>">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="<?= url('/admin/pedidos') ?>" class="sidebar-link <?= $activeMenu === 'pedidos' ? 'active' : '' ?>">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-4-9 4 9 4 9-4z"/><path d="M3 8v10l9 4 9-4V8"/><path d="M12 12v10"/></svg>
+            Pedidos
           </a>
         </li>
         <li>

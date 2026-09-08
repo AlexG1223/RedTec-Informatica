@@ -8,7 +8,7 @@
 
 $currentPage = $currentPage ?? '';
 $cartCount   = $cartCount ?? 0;
-$logoUrl     = url('/assets/img/Logotipo PNG.png');
+$logoUrl     = url('/assets/img/redtecfondonegro.png');
 
 ?>
 <header class="site-header">

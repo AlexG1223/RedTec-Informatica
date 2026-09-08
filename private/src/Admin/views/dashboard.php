@@ -26,6 +26,10 @@ $content = function() use ($totalProductos, $totalCategorias, $totalServicios, $
     </h3>
 
     <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
+      <a href="<?= url('/admin/pedidos') ?>" class="btn btn-primary" style="padding: 1.25rem; justify-content: flex-start; text-align: left;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-4-9 4 9 4 9-4z"/><path d="M3 8v10l9 4 9-4V8"/><path d="M12 12v10"/></svg>
+        <span>📦 Gestión de Pedidos</span>
+      </a>
       <a href="<?= url('/admin/productos/nuevo') ?>" class="btn btn-outline-dark" style="padding: 1.25rem; justify-content: flex-start; text-align: left;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>+ Nuevo Producto</span>

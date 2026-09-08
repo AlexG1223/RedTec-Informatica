@@ -68,6 +68,11 @@ $routes = [
     ['GET',  '/index.php', [\RedTec\Home\HomeController::class, 'index']],
     ['GET',  '/tienda', [\RedTec\Productos\CatalogoController::class, 'index']],
     ['GET',  '/checkout', [\RedTec\Checkout\CheckoutController::class, 'index']],
+    ['POST', '/checkout/crear-preferencia', [\RedTec\Checkout\CheckoutController::class, 'crearPreferencia']],
+    ['POST', '/checkout/crear-pedido-whatsapp', [\RedTec\Checkout\CheckoutController::class, 'crearPedidoWhatsapp']],
+    ['GET',  '/checkout/resultado', [\RedTec\Checkout\CheckoutController::class, 'resultado']],
+    ['POST', '/pagos/webhook-mercadopago', [\RedTec\Checkout\WebhookController::class, 'procesar']],
+    ['GET',  '/pagos/webhook-mercadopago', [\RedTec\Checkout\WebhookController::class, 'procesar']],
     ['GET',  '/contacto', [\RedTec\Contacto\ContactoController::class, 'index']],
     ['POST', '/contacto', [\RedTec\Contacto\ContactoController::class, 'enviar']],
     ['GET',  '/servicios', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
@@ -84,6 +89,11 @@ $routes = [
 
     // --- RUTAS DEL PANEL DE ADMINISTRACIÓN ---
     ['GET',  '/admin', [\RedTec\Admin\DashboardController::class, 'index']],
+
+    // Gestión de Pedidos
+    ['GET',  '/admin/pedidos', [\RedTec\Admin\PedidoAdminController::class, 'index']],
+    ['POST', '#^/admin/pedidos/(\d+)/estado/?$#', [\RedTec\Admin\PedidoAdminController::class, 'cambiarEstado'], true],
+    ['POST', '#^/admin/pedidos/(\d+)/eliminar/?$#', [\RedTec\Admin\PedidoAdminController::class, 'eliminar'], true],
 
     // CRUD Categorías
     ['GET',  '/admin/categorias', [\RedTec\Admin\CategoriaAdminController::class, 'index']],

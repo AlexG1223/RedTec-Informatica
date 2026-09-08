@@ -28,7 +28,8 @@ $content = function() use ($planes, $csrfToken) {
         <thead>
           <tr style="background-color: var(--color-dark); color: #FFFFFF; font-family: var(--font-heading); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em;">
             <th style="padding: 1rem;">Nombre del Plan</th>
-            <th style="padding: 1rem;">Descripción / Cobertura</th>
+            <th style="padding: 1rem;">Descripción</th>
+            <th style="padding: 1rem;">Lo que Incluye</th>
             <th style="padding: 1rem; text-align: right;">Precio Mensual</th>
             <th style="padding: 1rem; text-align: center;">Estado</th>
             <th style="padding: 1rem; text-align: right;">Acciones</th>
@@ -37,7 +38,7 @@ $content = function() use ($planes, $csrfToken) {
         <tbody>
           <?php if (empty($planes)): ?>
             <tr>
-              <td colspan="5" style="padding: 2.5rem; text-align: center; color: var(--color-text-muted);">
+              <td colspan="6" style="padding: 2.5rem; text-align: center; color: var(--color-text-muted);">
                 No hay planes corporativos registrados. <a href="<?= url('/admin/planes/nuevo') ?>">Crear el primero</a>.
               </td>
             </tr>
@@ -46,7 +47,11 @@ $content = function() use ($planes, $csrfToken) {
               <?php 
                 $pId      = (int)$p['id'];
                 $pName    = htmlspecialchars($p['name']);
-                $pDesc    = htmlspecialchars(substr($p['description'] ?? '', 0, 90)) . (strlen($p['description'] ?? '') > 90 ? '...' : '');
+                $pDesc    = htmlspecialchars(substr($p['description'] ?? '', 0, 70)) . (strlen($p['description'] ?? '') > 70 ? '...' : '');
+                $pInc     = htmlspecialchars(substr($p['includes'] ?? '', 0, 70)) . (strlen($p['includes'] ?? '') > 70 ? '...' : '');
+                if (empty($pInc)) {
+                  $pInc = '<em style="color: var(--color-text-muted);">Sin ítems especificados</em>';
+                }
                 $pPrice   = (!empty($p['price']) && (float)$p['price'] > 0) ? '$ ' . number_format((float)$p['price'], 2, '.', ',') : '<em style="color: var(--color-text-muted);">Consultar</em>';
                 $isActive = (bool)$p['active'];
               ?>
@@ -54,8 +59,11 @@ $content = function() use ($planes, $csrfToken) {
                 <td style="padding: 0.75rem 1rem; font-family: var(--font-heading); font-weight: 700; color: var(--color-dark);">
                   <?= $pName ?>
                 </td>
-                <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary); max-width: 380px;">
+                <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary); max-width: 250px;">
                   <?= $pDesc ?>
+                </td>
+                <td style="padding: 0.75rem 1rem; color: var(--color-text-secondary); max-width: 250px; font-size: 0.85rem;">
+                  <?= $pInc ?>
                 </td>
                 <td style="padding: 0.75rem 1rem; text-align: right; font-family: var(--font-heading); font-weight: 700; color: var(--color-primary);">
                   <?= $pPrice ?>

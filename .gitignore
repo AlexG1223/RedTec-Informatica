@@ -1,5 +1,6 @@
 # Archivos de entorno y configuración sensible local (Ruta Privada)
 private/config/database.php
+private/config/mercadopago.php
 config/database.php
 .env
 .env.local

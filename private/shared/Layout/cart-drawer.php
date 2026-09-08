@@ -44,10 +44,6 @@
 
   <!-- Pie del Drawer (Subtotal y Checkout) -->
   <div class="cart-drawer-footer" id="cartDrawerFooter" style="display: none;">
-    
-    <div class="cart-notice">
-      <strong>Información de envío:</strong> El costo de envío y el método de pago se coordinan directamente por WhatsApp al finalizar el pedido.
-    </div>
 
     <div class="cart-summary-row">
       <span style="font-weight: 600; color: var(--color-dark);">Subtotal estimado:</span>

@@ -16,7 +16,7 @@ if (!defined('REDTEC_SHARED_DIR')) {
 // Detección de Entorno
 if (!defined('IS_LOCAL')) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    $isLocal = (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false);
+    $isLocal = (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false || php_sapi_name() === 'cli');
     define('IS_LOCAL', $isLocal);
     define('APP_ENV', IS_LOCAL ? 'local' : 'production');
 }

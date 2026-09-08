@@ -43,12 +43,8 @@ class Database
         $charset = $config['charset'] ?? 'utf8mb4';
 
         if (!defined('IS_LOCAL') || !IS_LOCAL) {
-            if ($user === 'root' || empty($user)) {
-                $user = 'c064ao1q8_redtec';
-                if (empty($pass)) {
-                    $pass = 'redtec1234';
-                }
-            }
+            $user = 'c064ao1q8_redtec';
+            $pass = 'redtec1234';
         }
 
         $options = [

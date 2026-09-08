@@ -60,8 +60,12 @@ class ServicioPackageAdminController
             exit;
         }
 
+        $badge       = trim($_POST['badge'] ?? 'PLAN');
         $name        = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $banner      = trim($_POST['banner'] ?? '');
+        $includesTag = trim($_POST['includes_tag'] ?? 'INCLUYE:');
+        $includes    = trim($_POST['includes'] ?? '');
         $priceInput  = trim($_POST['price'] ?? '');
 
         if (empty($name)) {
@@ -74,9 +78,13 @@ class ServicioPackageAdminController
 
         try {
             $this->packageRepository->crear([
-                'name'        => $name,
-                'description' => $description,
-                'price'       => $price,
+                'badge'        => $badge,
+                'name'         => $name,
+                'description'  => $description,
+                'banner'       => $banner,
+                'includes_tag' => $includesTag,
+                'includes'     => $includes,
+                'price'        => $price,
             ]);
 
             $_SESSION['flash_success'] = "Plan corporativo '{$name}' creado exitosamente.";
@@ -126,8 +134,12 @@ class ServicioPackageAdminController
             exit;
         }
 
+        $badge       = trim($_POST['badge'] ?? 'PLAN');
         $name        = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $banner      = trim($_POST['banner'] ?? '');
+        $includesTag = trim($_POST['includes_tag'] ?? 'INCLUYE:');
+        $includes    = trim($_POST['includes'] ?? '');
         $priceInput  = trim($_POST['price'] ?? '');
 
         if (empty($name)) {
@@ -140,9 +152,13 @@ class ServicioPackageAdminController
 
         try {
             $this->packageRepository->actualizar($idNum, [
-                'name'        => $name,
-                'description' => $description,
-                'price'       => $price,
+                'badge'        => $badge,
+                'name'         => $name,
+                'description'  => $description,
+                'banner'       => $banner,
+                'includes_tag' => $includesTag,
+                'includes'     => $includes,
+                'price'        => $price,
             ]);
 
             $_SESSION['flash_success'] = "Plan '{$name}' actualizado correctamente.";

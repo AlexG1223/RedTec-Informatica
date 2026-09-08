@@ -9,7 +9,7 @@
       
       <!-- Columna 1: Info e Isotipo -->
       <div class="footer-brand">
-        <img src="<?= url('/assets/img/Logotipo PNG.png') ?>" alt="RedTec Informática" width="160" height="42">
+        <img src="<?= url('/assets/img/redtecfondonegro.png') ?>" alt="RedTec Informática" style="height: 48px; max-height: 56px; width: auto; object-fit: contain;">
         <p>
           Soluciones integrales de informática en Uruguay. Venta de equipamiento, instalación de infraestructura de red, sistemas de videovigilancia y soporte corporativo especializado.
         </p>
