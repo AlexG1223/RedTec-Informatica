@@ -141,7 +141,7 @@ $isoUrl   = url('/assets/img/Iso PNG.png');
              id="email" 
              name="email" 
              required 
-             placeholder="admin@redtecinformatica.com" 
+             placeholder="correo@ejemplo.com" 
              value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
              autocomplete="email">
     </div>
