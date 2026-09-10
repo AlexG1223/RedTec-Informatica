@@ -125,10 +125,19 @@ $content = function() use ($product) {
           </div>
 
           <!-- DESCRIPCIÓN DETALLADA -->
-          <div style="border-top: 1px solid var(--color-border-light); padding-top: 1.5rem;">
-            <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--color-dark);">Especificaciones & Detalle</h3>
             <div style="font-size: 0.95rem; color: var(--color-text-main); line-height: 1.7;">
               <?= $pDesc ?>
+            </div>
+
+            <!-- ENLAZADO INTERNO SEO CONTEXTUAL -->
+            <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px dashed var(--color-border-light); font-size: 0.88rem; color: var(--color-text-secondary);">
+              <strong>Categorías & Repuestos Relacionados:</strong>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <a href="<?= url('/tienda') ?>" class="btn btn-outline-dark btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Memorias RAM y Repuestos</a>
+                <a href="<?= url('/guias/cartuchos-de-impresora') ?>" class="btn btn-outline-dark btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Cartuchos de Impresora</a>
+                <a href="<?= url('/guias/notebook-lenta-que-hacer') ?>" class="btn btn-outline-dark btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Optimización SSD & RAM</a>
+                <a href="<?= url('/servicios') ?>" class="btn btn-outline-dark btn-sm" style="font-size: 0.78rem; padding: 0.25rem 0.6rem;">Service de PC Atlántida</a>
+              </div>
             </div>
           </div>
 

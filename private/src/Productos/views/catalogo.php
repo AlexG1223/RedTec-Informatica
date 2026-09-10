@@ -26,10 +26,10 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
         </div>
 
         <h1 style="color: #FFFFFF; margin-bottom: 0; font-weight: 800;">
-          <?= $activeCategory ? htmlspecialchars($activeCategory['name']) : 'Catálogo de Productos' ?>
+          <?= $activeCategory ? htmlspecialchars($activeCategory['name']) . ' en Atlántida, Canelones' : 'Memorias RAM, Discos SSD y Tienda de Informática' ?>
         </h1>
         <p style="color: #D2D2D2; margin-bottom: 0; font-size: 0.95rem;">
-          Explorá equipamiento informático, notebooks, redes y cámaras de seguridad al mejor precio.
+          Explorá memorias RAM, discos SSD, notebooks HP y Lenovo, cartuchos de impresora e insumos en Atlántida y todo Uruguay.
         </p>
       </div>
     </div>

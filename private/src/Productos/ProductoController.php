@@ -83,8 +83,15 @@ class ProductoController
         $rawImg  = !empty($product['images'][0]['image_url']) ? $product['images'][0]['image_url'] : '/assets/img/Logotipo PNG.png';
         $ogImage = (strpos($rawImg, 'http') === 0) ? $rawImg : absolute_url($rawImg);
 
-        $pageTitle       = "{$product['name']} — RedTec Informática";
-        $pageDescription = !empty($product['description']) ? strip_tags(substr($product['description'], 0, 155)) : "Comprá {$product['name']} al mejor precio en RedTec Informática, Atlántida, Uruguay.";
+        $prodNameClean   = htmlspecialchars($product['name']);
+        $pageTitle       = mb_strlen($prodNameClean) > 42 ? mb_substr($prodNameClean, 0, 42) . '... — RedTec' : "{$prodNameClean} — RedTec Atlántida";
+        
+        $descBase        = !empty($product['description']) ? strip_tags($product['description']) : "Comprá {$product['name']} al mejor precio en RedTec Informática.";
+        $pageDescription = "Comprá {$product['name']} en RedTec Informática, Atlántida, Canelones. Envíos a todo Uruguay. " . mb_substr($descBase, 0, 80);
+        if (mb_strlen($pageDescription) > 155) {
+            $pageDescription = mb_substr($pageDescription, 0, 152) . '...';
+        }
+
         $currentPage     = "tienda";
         $canonicalUrl    = absolute_url('/producto/' . $product['id']);
         $ogTitle         = $pageTitle;

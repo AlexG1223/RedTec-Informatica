@@ -79,6 +79,8 @@ $routes = [
     ['GET',  '/servicios-tecnicos', [\RedTec\ServiciosTecnicos\ServicioController::class, 'index']],
     ['GET',  '/servicios-corporativos', [\RedTec\ServiciosCorporativos\ServicioPackageController::class, 'index']],
     ['GET',  '/sitemap.xml', [\RedTec\SEO\SitemapGenerator::class, 'generate']],
+    ['GET',  '/guias', [\RedTec\SEO\GuiaController::class, 'index']],
+    ['GET',  '#^/guias/([a-z0-9\-]+)/?$#', [\RedTec\SEO\GuiaController::class, 'show'], true],
     ['GET',  '#^/producto/(\d+)/?$#', [\RedTec\Productos\ProductoController::class, 'show'], true],
 
     // --- RUTAS DE AUTENTICACIÓN ADMIN ---

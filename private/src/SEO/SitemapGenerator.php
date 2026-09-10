@@ -40,9 +40,39 @@ class SitemapGenerator
                 'priority'   => '0.8'
             ],
             [
-                'loc'        => absolute_url('/servicios-corporativos'),
+                'loc'        => absolute_url('/contacto'),
+                'lastmod'    => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority'   => '0.8'
+            ],
+            [
+                'loc'        => absolute_url('/guias'),
                 'lastmod'    => date('Y-m-d'),
                 'changefreq' => 'weekly',
+                'priority'   => '0.8'
+            ],
+            [
+                'loc'        => absolute_url('/guias/mi-computadora-no-enciende'),
+                'lastmod'    => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority'   => '0.7'
+            ],
+            [
+                'loc'        => absolute_url('/guias/notebook-lenta-que-hacer'),
+                'lastmod'    => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority'   => '0.7'
+            ],
+            [
+                'loc'        => absolute_url('/guias/armar-pc-a-medida'),
+                'lastmod'    => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority'   => '0.7'
+            ],
+            [
+                'loc'        => absolute_url('/guias/cartuchos-de-impresora'),
+                'lastmod'    => date('Y-m-d'),
+                'changefreq' => 'monthly',
                 'priority'   => '0.8'
             ],
         ];

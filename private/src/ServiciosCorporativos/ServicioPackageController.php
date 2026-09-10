@@ -50,8 +50,8 @@ class ServicioPackageController
             ];
         }
 
-        $pageTitle       = "Planes de Soporte Técnico para Empresas — RedTec Informática";
-        $pageDescription = "Planes de mantenimiento informático y soporte técnico mensual para PyMEs y empresas en Atlántida y Uruguay. Asistencia remota e in-situ.";
+        $pageTitle       = "Computadoras para Empresas y Mantenimiento de PC — RedTec";
+        $pageDescription = "Planes de mantenimiento de PC, soporte técnico mensual y computadoras para empresas y oficinas en Atlántida, Canelones y todo el territorio uruguayo.";
         $currentPage     = 'corporativos';
 
         require __DIR__ . '/views/planes.php';

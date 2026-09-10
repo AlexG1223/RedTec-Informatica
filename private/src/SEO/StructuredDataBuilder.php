@@ -16,27 +16,30 @@ class StructuredDataBuilder
     {
         return [
             '@context'    => 'https://schema.org',
-            '@type'       => 'LocalBusiness',
+            '@type'       => 'Store',
             '@id'         => absolute_url('/#organization'),
             'name'        => 'RedTec Informática',
-            'alternateName' => 'RedTec',
+            'alternateName' => 'RedTec Atlántida',
             'url'         => absolute_url('/'),
             'logo'        => absolute_url('/assets/img/Logotipo PNG.png'),
             'image'       => absolute_url('/assets/img/Logotipo PNG.png'),
-            'description' => 'Venta de productos informáticos, cámaras de seguridad CCTV, servidores, redes y soporte técnico corporativo en Atlántida, Canelones y todo Uruguay.',
+            'description' => 'Venta de memorias RAM, discos SSD, notebooks, cartuchos de impresora, accesorios de computación y reparación de PC en Atlántida, Canelones y todo Uruguay.',
             'telephone'   => '+' . REDTEC_WHATSAPP_NUMBER,
             'priceRange'  => '$$',
             'address'     => [
                 '@type'           => 'PostalAddress',
+                'streetAddress'   => 'Atlántida',
                 'addressLocality' => 'Atlántida',
                 'addressRegion'   => 'Canelones',
+                'postalCode'      => '15200',
                 'addressCountry'  => 'UY'
             ],
             'geo'         => [
                 '@type'     => 'GeoCoordinates',
-                'latitude'  => '-34.7725', // Coordenadas de referencia de Atlántida, Canelones
-                'longitude' => '-55.7583'
+                'latitude'  => '-34.774475',
+                'longitude' => '-55.7614383'
             ],
+            'hasMap'      => 'https://maps.google.com/maps?q=-34.774475,-55.7614383',
             'openingHoursSpecification' => [
                 [
                     '@type'     => 'OpeningHoursSpecification',
@@ -162,6 +165,40 @@ class StructuredDataBuilder
             '@context'   => 'https://schema.org',
             '@type'      => 'FAQPage',
             'mainEntity' => $entities
+        ];
+    }
+
+    /**
+     * Genera el bloque JSON-LD de tipo Article para páginas de guías y soporte técnico.
+     * 
+     * @param string $title
+     * @param string $description
+     * @param string $url
+     * @return array
+     */
+    public static function buildArticle(string $title, string $description, string $url): array
+    {
+        return [
+            '@context'         => 'https://schema.org',
+            '@type'            => 'Article',
+            'headline'         => $title,
+            'description'      => $description,
+            'url'              => absolute_url($url),
+            'mainEntityOfPage' => absolute_url($url),
+            'author'           => [
+                '@type' => 'Organization',
+                'name'  => 'RedTec Informática',
+                'url'   => absolute_url('/')
+            ],
+            'publisher'        => [
+                '@type' => 'Organization',
+                'name'  => 'RedTec Informática',
+                'logo'  => [
+                    '@type' => 'ImageObject',
+                    'url'   => absolute_url('/assets/img/Logotipo PNG.png')
+                ]
+            ],
+            'inLanguage'       => 'es-UY'
         ];
     }
 

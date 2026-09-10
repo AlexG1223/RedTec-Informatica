@@ -64,8 +64,8 @@ class HomeController
             StructuredDataBuilder::buildFAQPage($faqs)
         ];
 
-        $pageTitle       = "RedTec Informática — Tienda de Tecnología y Servicios en Atlántida, Uruguay";
-        $pageDescription = "Tienda online de productos informáticos, cámaras de seguridad CCTV, servidores, redes y soporte técnico corporativo en Atlántida y todo Uruguay.";
+        $pageTitle       = "Memorias RAM y Tienda de Informática en Atlántida — RedTec";
+        $pageDescription = "Comprá memorias RAM, discos SSD, notebooks HP y Lenovo, cartuchos de impresora y accesorios de computación con envío en Atlántida, Canelones y todo Uruguay.";
         $currentPage     = "inicio";
         $canonicalUrl    = absolute_url('/');
 

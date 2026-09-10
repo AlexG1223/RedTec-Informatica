@@ -12,8 +12,8 @@ class ContactoController
      */
     public function index(): void
     {
-        $pageTitle       = "Contacto — RedTec Informática en Atlántida";
-        $pageDescription = "Comunicate con RedTec Informática. Local comercial en Atlántida, Canelones, Uruguay. Asesoramiento técnico y cotizaciones por WhatsApp.";
+        $pageTitle       = "Contacto RedTec Informática — Local en Atlántida";
+        $pageDescription = "Venta de computadoras y service técnico en Atlántida, Canelones, Uruguay. Consultá por WhatsApp o visitá nuestro local comercial en la Costa de Oro.";
         $currentPage     = "contacto";
         $canonicalUrl    = absolute_url('/contacto');
 

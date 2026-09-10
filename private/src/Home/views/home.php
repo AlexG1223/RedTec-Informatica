@@ -45,11 +45,11 @@ $content = function() use ($categories, $faqs) {
             </span>
             
             <h1 class="hero-title-dk">
-              TECNOLOGÍA Y EQUIPAMIENTO <span class="hero-title-highlight">DISEÑADOS PARA DESTACAR</span>
+              REDTEC INFORMÁTICA: MEMORIAS RAM Y <span class="hero-title-highlight">EQUIPAMIENTO EN ATLÁNTIDA</span>
             </h1>
 
             <p class="hero-subtitle-dk">
-              Notebooks de alto rendimiento, Mini PCs y periféricos corporativos de primeras marcas con garantía oficial y soporte personalizado en Atlántida.
+              Memorias RAM, discos SSD, cartuchos de impresora, notebooks HP y Lenovo con garantía oficial y soporte personalizado en Atlántida, Canelones.
             </p>
 
             <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
@@ -78,9 +78,9 @@ $content = function() use ($categories, $faqs) {
               Seguridad & Videovigilancia IP
             </span>
             
-            <h1 class="hero-title-dk">
+            <div class="hero-title-dk">
               PROTEGÉ LO QUE MÁS IMPORTA CON <span class="hero-title-highlight" style="background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CÁMARAS CCTV HD</span>
-            </h1>
+            </div>
 
             <p class="hero-subtitle-dk">
               Diseño, instalación y mantenimiento de sistemas de videovigilancia con visión nocturna y monitoreo en vivo desde tu celular en todo Canelones.
@@ -111,9 +111,9 @@ $content = function() use ($categories, $faqs) {
               Infraestructura & Abonos PyME
             </span>
             
-            <h1 class="hero-title-dk">
+            <div class="hero-title-dk">
               INFRAESTRUCTURA DE RED Y <span class="hero-title-highlight" style="background: linear-gradient(135deg, #8B5CF6 0%, #C4B5FD 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SOPORTE TÉCNICO PYME</span>
-            </h1>
+            </div>
 
             <p class="hero-subtitle-dk">
               Cableado estructurado Cat6, servidores de datos NAS, Wi-Fi Mesh empresarial y abonos de mantenimiento técnico preventivo para comercios y PyMEs.

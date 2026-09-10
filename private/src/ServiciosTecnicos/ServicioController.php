@@ -50,8 +50,8 @@ class ServicioController
             ];
         }
 
-        $pageTitle       = "Servicios Técnicos e Infraestructura — RedTec Informática";
-        $pageDescription = "Instalación de cámaras de seguridad, servidores, redes y soporte técnico informático a domicilio en Atlántida y todo Uruguay.";
+        $pageTitle       = "Reparación de PC y Service de Computadoras — RedTec";
+        $pageDescription = "Reparación de PC, service de computadoras, instalación de cámaras CCTV y mantenimiento informático a domicilio en Atlántida, Canelones y Uruguay.";
         $currentPage     = 'servicios';
 
         require __DIR__ . '/views/servicios.php';

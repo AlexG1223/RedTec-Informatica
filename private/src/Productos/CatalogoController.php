@@ -59,11 +59,25 @@ class CatalogoController
         // Canonicalización: siempre apunta a /tienda sin parámetros para evitar contenido duplicado
         $canonicalUrl = absolute_url('/tienda');
 
-        $pageTitle = $activeCategory 
-            ? "Catálogo de {$activeCategory['name']} — RedTec Informática" 
-            : "Catálogo de Productos Informáticos — RedTec Informática";
-            
-        $pageDescription = "Explorá nuestro catálogo de equipamiento informático, notebooks, redes, cámaras de seguridad CCTV y repuestos en Atlántida y todo Uruguay.";
+        if ($activeCategory) {
+            $catNameLower = mb_strtolower($activeCategory['name'], 'UTF-8');
+            if (strpos($catNameLower, 'ram') !== false || strpos($catNameLower, 'insumo') !== false || strpos($catNameLower, 'repuesto') !== false) {
+                $pageTitle       = "Memorias RAM y Repuestos de PC en Uruguay — RedTec";
+                $pageDescription = "Comprá memorias RAM DDR4 y DDR5, fuentes de PC y repuestos en Atlántida, Canelones. Envíos a todo Uruguay.";
+            } elseif (strpos($catNameLower, 'notebook') !== false || strpos($catNameLower, 'equipo') !== false) {
+                $pageTitle       = "Notebooks HP y Lenovo en Atlántida — RedTec Informática";
+                $pageDescription = "Notebooks HP y Lenovo de alta performance, fuentes de PC y equipamiento con garantía oficial en Atlántida, Canelones.";
+            } elseif (strpos($catNameLower, 'cartucho') !== false || strpos($catNameLower, 'impresora') !== false) {
+                $pageTitle       = "Cartuchos de Impresora e Insumos en Atlántida — RedTec";
+                $pageDescription = "Venta de cartuchos de impresora multifunción e insumos informáticos con envío rápido a Atlántida, Canelones y todo Uruguay.";
+            } else {
+                $pageTitle       = "{$activeCategory['name']} en Atlántida, Canelones — RedTec";
+                $pageDescription = "Explorá nuestro catálogo de {$activeCategory['name']}, accesorios de computación y periféricos en RedTec Informática, Atlántida.";
+            }
+        } else {
+            $pageTitle       = "Memorias RAM, Discos SSD y Notebooks — Tienda RedTec";
+            $pageDescription = "Venta online de memorias RAM, discos SSD, notebooks HP y Lenovo, cartuchos de impresora y accesorios de computación en Atlántida, Canelones y Uruguay.";
+        }
         $currentPage = "tienda";
 
         require __DIR__ . '/views/catalogo.php';

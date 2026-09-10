@@ -55,9 +55,11 @@ $content = function () use ($servicios) {
         <span style="color: var(--color-primary); font-weight: 700;">Servicios Técnicos</span>
       </div>
       <h1 style="color: #FFFFFF; margin-bottom: 0.5rem; font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.2rem);">
-        Servicios Técnicos e Infraestructura
+        Reparación de PC y Service de Computadoras en Atlántida
       </h1>
       <p style="color: #D2D2D2; margin-bottom: 0; font-size: 1rem; max-width: 700px; line-height: 1.5;">
+        Service de computadoras, reparación de PC, instalación de cámaras CCTV, redes y mantenimiento informático en Atlántida, Canelones.
+      </p>
         Instalación de cámaras de seguridad, servidores, redes informáticas y soporte especializado.
       </p>
     </div>

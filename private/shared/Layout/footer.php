@@ -40,22 +40,22 @@
         <h4 class="footer-title">Navegación</h4>
         <div class="footer-links">
           <a href="<?= url('/') ?>">Inicio</a>
-          <a href="<?= url('/tienda') ?>">Catálogo de Productos</a>
-          <a href="<?= url('/servicios-tecnicos') ?>">Servicios Técnicos</a>
-          <a href="<?= url('/servicios-corporativos') ?>">Planes Corporativos</a>
-          <a href="<?= url('/contacto') ?>">Contacto</a>
+          <a href="<?= url('/tienda') ?>">Memorias RAM & Tienda</a>
+          <a href="<?= url('/servicios-tecnicos') ?>">Reparación de PC & Service</a>
+          <a href="<?= url('/guias') ?>">Guías de Ayuda SEO</a>
+          <a href="<?= url('/contacto') ?>">Contacto en Atlántida</a>
         </div>
       </div>
 
-      <!-- Columna 3: Servicios -->
+      <!-- Columna 3: Servicios & Guías -->
       <div>
-        <h4 class="footer-title">Servicios</h4>
+        <h4 class="footer-title">Servicios & Guías</h4>
         <div class="footer-links">
+          <a href="<?= url('/guias/mi-computadora-no-enciende') ?>">Mi PC No Enciende</a>
+          <a href="<?= url('/guias/notebook-lenta-que-hacer') ?>">Notebook Lenta ¿Qué Hacer?</a>
+          <a href="<?= url('/guias/armar-pc-a-medida') ?>">Armar PC a Medida</a>
+          <a href="<?= url('/guias/cartuchos-de-impresora') ?>">Cartuchos de Impresora</a>
           <a href="<?= url('/servicios-tecnicos#cctv') ?>">Cámaras de Seguridad</a>
-          <a href="<?= url('/servicios-tecnicos#redes') ?>">Cableado Estructurado</a>
-          <a href="<?= url('/servicios-tecnicos#servidores') ?>">Servidores y NAS</a>
-          <a href="<?= url('/servicios-corporativos') ?>">Abonos Mensuales PYME</a>
-          <a href="<?= url('/admin/login') ?>">Acceso Administración</a>
         </div>
       </div>
 
