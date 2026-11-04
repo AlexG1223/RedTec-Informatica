@@ -105,6 +105,20 @@
       }
 
       this._saveItems(items);
+
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'add_to_cart', {
+          currency: 'UYU',
+          value: (parseFloat(product.price) || 0) * (quantity || 1),
+          items: [{
+            item_id: String(product.id),
+            item_name: product.name || 'Producto',
+            price: parseFloat(product.price) || 0,
+            quantity: quantity || 1
+          }]
+        });
+      }
+
       return { success: true, message: message, capped: isCapped };
     },
 

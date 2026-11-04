@@ -52,6 +52,14 @@
         data.items || [],
         data.total || 0
       );
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_lead', {
+          currency: 'UYU',
+          value: parseFloat(data.total) || 0,
+          event_category: 'whatsapp_checkout'
+        });
+      }
+
       return 'https://wa.me/' + PHONE_NUMBER + '?text=' + encodeURIComponent(text);
     }
   };

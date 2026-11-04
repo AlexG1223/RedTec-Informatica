@@ -194,23 +194,34 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
                       </div>
                       <?php if ($inStock): ?>
                         <span class="badge-stock in-stock">En Stock</span>
-                      <?php else: ?>
-                        <span class="badge-stock out-of-stock">Agotado</span>
                       <?php endif; ?>
                     </div>
 
                     <div class="product-card-actions">
                       <a href="<?= $pLink ?>" class="btn btn-outline-dark btn-sm">Detalles</a>
-                      <button type="button" 
-                              class="btn btn-primary btn-sm btn-add-cart" 
-                              data-id="<?= $pId ?>" 
-                              data-code="<?= $pCode ?>" 
-                              data-name="<?= $pName ?>" 
-                              data-price="<?= (float)$p['price'] ?>" 
-                              data-image="<?= $pImg ?>"
-                              <?= !$inStock ? 'disabled' : '' ?>>
-                        <?= $inStock ? '+ Agregar' : 'Sin Stock' ?>
-                      </button>
+                      <?php if ($inStock): ?>
+                        <button type="button" 
+                                class="btn btn-primary btn-sm btn-add-cart" 
+                                data-id="<?= $pId ?>" 
+                                data-code="<?= $pCode ?>" 
+                                data-name="<?= $pName ?>" 
+                                data-price="<?= (float)$p['price'] ?>" 
+                                data-image="<?= $pImg ?>">
+                          + Agregar
+                        </button>
+                      <?php else: ?>
+                        <?php
+                          $waMsg = "Hola RedTec, quisiera consultar stock del producto: " . $p['name'] . (!empty($p['code']) ? " (Código: " . $p['code'] . ")" : "");
+                          $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode($waMsg);
+                        ?>
+                        <a href="<?= $waLink ?>" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           class="btn btn-primary btn-sm"
+                           style="background-color: var(--color-whatsapp); border-color: var(--color-whatsapp); padding: 0.45rem 0.5rem; font-size: 0.76rem;">
+                          Consultar Stock
+                        </a>
+                      <?php endif; ?>
                     </div>
                   </div>
                 </div>

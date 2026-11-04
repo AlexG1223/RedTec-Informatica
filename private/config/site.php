@@ -44,9 +44,13 @@ if (!defined('LOW_STOCK_THRESHOLD')) {
     define('LOW_STOCK_THRESHOLD', 5);
 }
 
-// Google Search Console
+// Google Search Console & Google Analytics
 if (!defined('GOOGLE_SITE_VERIFICATION')) {
     define('GOOGLE_SITE_VERIFICATION', '');
+}
+
+if (!defined('GOOGLE_ANALYTICS_ID')) {
+    define('GOOGLE_ANALYTICS_ID', 'G-Y5BZ73X5BF');
 }
 
 // Número y Enlace de WhatsApp Centralizado (099 372 649 -> 59899372649)

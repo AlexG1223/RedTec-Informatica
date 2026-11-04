@@ -91,37 +91,49 @@ $content = function() use ($product) {
               </span>
             </div>
 
-            <div>
-              <?php if ($inStock): ?>
+            <?php if ($inStock): ?>
+              <div>
                 <span class="badge-stock in-stock" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">En Stock Disponible</span>
-              <?php else: ?>
-                <span class="badge-stock out-of-stock" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">Agotado</span>
-              <?php endif; ?>
-            </div>
+              </div>
+            <?php endif; ?>
           </div>
 
-          <!-- SELECTOR DE CANTIDAD Y BOTÓN AGREGAR -->
+          <!-- SELECTOR DE CANTIDAD Y BOTÓN AGREGAR / CONSULTAR STOCK -->
           <div style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; border: 1px solid var(--color-border-metallic); border-radius: var(--radius-md); overflow: hidden; background: #FFF;">
-              <button type="button" onclick="const input = document.getElementById('prodQty'); if(input.value > 1) input.value--;" style="width: 40px; height: 44px; border: none; background: #F1F3F5; font-weight: bold; cursor: pointer;">-</button>
-              <input type="number" id="prodQty" value="1" min="1" max="99" style="width: 50px; height: 44px; border: none; text-align: center; font-family: var(--font-heading); font-weight: bold; font-size: 1rem;">
-              <button type="button" onclick="const input = document.getElementById('prodQty'); input.value++;" style="width: 40px; height: 44px; border: none; background: #F1F3F5; font-weight: bold; cursor: pointer;">+</button>
-            </div>
+            <?php if ($inStock): ?>
+              <div style="display: flex; align-items: center; border: 1px solid var(--color-border-metallic); border-radius: var(--radius-md); overflow: hidden; background: #FFF;">
+                <button type="button" onclick="const input = document.getElementById('prodQty'); if(input.value > 1) input.value--;" style="width: 40px; height: 44px; border: none; background: #F1F3F5; font-weight: bold; cursor: pointer;">-</button>
+                <input type="number" id="prodQty" value="1" min="1" max="99" style="width: 50px; height: 44px; border: none; text-align: center; font-family: var(--font-heading); font-weight: bold; font-size: 1rem;">
+                <button type="button" onclick="const input = document.getElementById('prodQty'); input.value++;" style="width: 40px; height: 44px; border: none; background: #F1F3F5; font-weight: bold; cursor: pointer;">+</button>
+              </div>
 
-            <button type="button" 
-                    id="btnAddToCartDetail"
-                    class="btn btn-primary btn-lg" 
-                    data-id="<?= $pId ?>"
-                    data-code="<?= $pCode ?>"
-                    data-name="<?= $pName ?>"
-                    data-price="<?= (float)$product['price'] ?>"
-                    data-image="<?= $mainImg ?>"
-                    data-stock="<?= (int)($product['stock'] ?? 99) ?>"
-                    style="flex: 1 1 220px;"
-                    <?= !$inStock ? 'disabled' : '' ?>>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              <?= $inStock ? 'Agregar al Carrito' : 'Agotado' ?>
-            </button>
+              <button type="button" 
+                      id="btnAddToCartDetail"
+                      class="btn btn-primary btn-lg" 
+                      data-id="<?= $pId ?>"
+                      data-code="<?= $pCode ?>"
+                      data-name="<?= $pName ?>"
+                      data-price="<?= (float)$product['price'] ?>"
+                      data-image="<?= $mainImg ?>"
+                      data-stock="<?= (int)($product['stock'] ?? 99) ?>"
+                      style="flex: 1 1 220px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Agregar al Carrito
+              </button>
+            <?php else: ?>
+              <?php
+                $waMsg = "Hola RedTec, quisiera consultar stock del producto: " . $product['name'] . (!empty($product['code']) ? " (Código: " . $product['code'] . ")" : "");
+                $waLink = REDTEC_WHATSAPP_LINK . '?text=' . urlencode($waMsg);
+              ?>
+              <a href="<?= $waLink ?>" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="btn btn-primary btn-lg"
+                 style="flex: 1 1 220px; background-color: var(--color-whatsapp); border-color: var(--color-whatsapp);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662a11.87 11.87 0 005.71 1.455h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+                Consultar Stock
+              </a>
+            <?php endif; ?>
           </div>
 
           <!-- DESCRIPCIÓN DETALLADA -->

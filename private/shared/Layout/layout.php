@@ -39,6 +39,18 @@ $ogType          = $ogType ?? 'website';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <?php if (defined('GOOGLE_ANALYTICS_ID') && !empty(GOOGLE_ANALYTICS_ID)): ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= htmlspecialchars(GOOGLE_ANALYTICS_ID) ?>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '<?= htmlspecialchars(GOOGLE_ANALYTICS_ID) ?>');
+    </script>
+  <?php endif; ?>
   
   <!-- Título y Meta Descripción -->
   <title><?= htmlspecialchars($pageTitle) ?></title>
