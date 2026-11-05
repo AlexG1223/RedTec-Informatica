@@ -51,7 +51,7 @@ class ProductoRepository
             $this->ensureSchema($pdo);
             
             $sql = "SELECT p.*, c.name as category_name,
-                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY id ASC LIMIT 1) as primary_image
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     WHERE p.active = 1";
@@ -64,7 +64,7 @@ class ProductoRepository
             }
 
             if (!empty($filtros['buscar'])) {
-                $sql .= " AND (p.name LIKE :buscar OR p.code LIKE :buscar OR p.description LIKE :buscar)";
+                $sql .= " AND (p.name LIKE :buscar OR p.code LIKE :buscar)";
                 $params[':buscar'] = '%' . trim($filtros['buscar']) . '%';
             }
 
@@ -90,7 +90,7 @@ class ProductoRepository
             $pdo = Database::connect();
             $this->ensureSchema($pdo);
             $sql = "SELECT p.*, c.name as category_name,
-                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY id ASC LIMIT 1) as primary_image
+                           (SELECT image_url FROM product_images pi WHERE pi.product_id = p.id ORDER BY is_primary DESC, id ASC LIMIT 1) as primary_image
                     FROM products p
                     LEFT JOIN categories c ON p.category_id = c.id
                     ORDER BY p.name ASC, p.id DESC";
@@ -164,7 +164,7 @@ class ProductoRepository
     }
 
     /**
-     * Lista todas las imágenes asociadas a un producto.
+     * Lista todas las imágenes asociadas a un producto, priorizando la imagen principal.
      *
      * @param int $productoId
      * @return array
@@ -174,16 +174,27 @@ class ProductoRepository
         try {
             $pdo = Database::connect();
             $this->ensureSchema($pdo);
-            $sql = "SELECT id, product_id, image_url 
+            $sql = "SELECT id, product_id, image_url, is_primary 
                     FROM product_images 
                     WHERE product_id = :product_id 
-                    ORDER BY id ASC";
+                    ORDER BY is_primary DESC, id ASC";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':product_id' => $productoId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
-            return [];
+            try {
+                $pdo = Database::connect();
+                $sql = "SELECT id, product_id, image_url 
+                        FROM product_images 
+                        WHERE product_id = :product_id 
+                        ORDER BY id ASC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([':product_id' => $productoId]);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Throwable $e2) {
+                return [];
+            }
         }
     }
 
@@ -316,6 +327,14 @@ class ProductoRepository
         $pdo = Database::connect();
         $this->ensureSchema($pdo);
         try {
+            if ($isPrimary === 0) {
+                $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM product_images WHERE product_id = :product_id AND is_primary = 1");
+                $checkStmt->execute([':product_id' => $productoId]);
+                if ((int)$checkStmt->fetchColumn() === 0) {
+                    $isPrimary = 1;
+                }
+            }
+
             $sql = "INSERT INTO product_images (product_id, image_url, is_primary) VALUES (:product_id, :image_url, :is_primary)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([

@@ -165,15 +165,14 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
                   $pPrice     = number_format((float)$p['price'], 2, '.', ',');
                   $inStock    = ((int)($p['stock'] ?? 0)) > 0;
                   
-                  $rawImg     = !empty($p['images'][0]['image_url']) ? $p['images'][0]['image_url'] : null;
+                  $rawImg     = !empty($p['primary_image']) ? $p['primary_image'] : (!empty($p['images'][0]['image_url']) ? $p['images'][0]['image_url'] : null);
                   $pImg       = $rawImg ? (strpos($rawImg, 'http') === 0 ? htmlspecialchars($rawImg) : url($rawImg)) : $fallbackImg;
                   $pLink      = url('/producto/' . $pId);
                 ?>
                 <div class="product-card product-card-item" 
                      data-name="<?= htmlspecialchars(mb_strtolower($p['name'], 'UTF-8')) ?>" 
                      data-code="<?= htmlspecialchars(mb_strtolower($p['code'] ?? '', 'UTF-8')) ?>" 
-                     data-category="<?= htmlspecialchars(mb_strtolower($p['category_name'] ?? '', 'UTF-8')) ?>"
-                     data-description="<?= htmlspecialchars(mb_strtolower(strip_tags($p['description'] ?? ''), 'UTF-8')) ?>">
+                     data-category="<?= htmlspecialchars(mb_strtolower($p['category_name'] ?? '', 'UTF-8')) ?>">
                   <div class="product-card-img-wrap">
                     <span class="product-card-code"><?= $pCode ?></span>
                     <a href="<?= $pLink ?>">
@@ -246,7 +245,12 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
     const noResultsDiv   = document.getElementById('noResultsMessage');
     const noResultsText  = document.getElementById('noResultsText');
     const resetBtn       = document.getElementById('resetSearchBtn');
-    const productCards   = document.querySelectorAll('.product-card-item');
+    const productCards   = Array.from(document.querySelectorAll('.product-card-item'));
+    const STOP_WORDS     = new Set(['de', 'del', 'la', 'las', 'el', 'los', 'en', 'con', 'para', 'por', 'un', 'una', 'y', 'o', 'a']);
+
+    productCards.forEach(function(card, idx) {
+      card.dataset.origIndex = idx;
+    });
 
     function removeAccents(str) {
       return String(str || '')
@@ -254,6 +258,90 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .trim();
+    }
+
+    function tokenize(str) {
+      return removeAccents(str)
+        .split(/[^a-z0-9.]+/)
+        .filter(Boolean);
+    }
+
+    function tokenMatchesWord(qToken, targetWord) {
+      if (targetWord === qToken || targetWord.startsWith(qToken)) {
+        return true;
+      }
+      // Coincidencia parcial para modelos alfanuméricos (ej: "1200" en "ac1200" o "45" en "rj45")
+      if (/\d/.test(qToken) && targetWord.includes(qToken)) {
+        return true;
+      }
+      // Manejo de plurales en español (ej: "cables" -> "cable", "adaptadores" -> "adaptador")
+      if (qToken.length > 3 && qToken.endsWith('s')) {
+        const singularS = qToken.slice(0, -1);
+        if (targetWord === singularS || targetWord.startsWith(singularS)) {
+          return true;
+        }
+        if (qToken.length > 4 && qToken.endsWith('es')) {
+          const singularEs = qToken.slice(0, -2);
+          if (targetWord === singularEs || targetWord.startsWith(singularEs)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function getMatchScore(card, rawQuery) {
+      const cleanQuery = removeAccents(rawQuery);
+      if (cleanQuery === '') {
+        return 1;
+      }
+
+      const code = removeAccents(card.dataset.code);
+      if (code && code.includes(cleanQuery)) {
+        return code === cleanQuery ? 120 : 95;
+      }
+
+      const allTokens = tokenize(cleanQuery);
+      const queryTokens = allTokens.length > 1
+        ? allTokens.filter(function(t) { return !STOP_WORDS.has(t); })
+        : allTokens;
+
+      if (queryTokens.length === 0) {
+        return 0;
+      }
+
+      const nameWords = tokenize(card.dataset.name);
+      if (nameWords.length === 0) {
+        return 0;
+      }
+
+      // Todos los términos buscados deben coincidir con palabras del nombre del producto
+      const allMatch = queryTokens.every(function(qToken) {
+        return nameWords.some(function(w) {
+          return tokenMatchesWord(qToken, w);
+        });
+      });
+
+      if (!allMatch) {
+        return 0;
+      }
+
+      let score = 50;
+
+      // Mayor relevancia si el nombre del producto comienza con la primera palabra buscada
+      if (tokenMatchesWord(queryTokens[0], nameWords[0])) {
+        score += 40;
+      }
+
+      // Bonus por coincidencias de palabra exacta en el título
+      queryTokens.forEach(function(qToken) {
+        const singularS = (qToken.length > 3 && qToken.endsWith('s')) ? qToken.slice(0, -1) : qToken;
+        if (nameWords.includes(qToken) || nameWords.includes(singularS)) {
+          score += 10;
+        }
+      });
+
+      return score;
     }
 
     function filterProducts() {
@@ -265,26 +353,33 @@ $content = function() use ($products, $categories, $featuredCategories, $activeC
       }
 
       let visibleCount = 0;
+      const scoredCards = [];
 
       productCards.forEach(function(card) {
-        const name        = removeAccents(card.dataset.name);
-        const code        = removeAccents(card.dataset.code);
-        const category    = removeAccents(card.dataset.category);
-        const description = removeAccents(card.dataset.description);
+        const score = getMatchScore(card, rawQuery);
 
-        const matches = query === '' || 
-                        name.includes(query) || 
-                        code.includes(query) || 
-                        category.includes(query) ||
-                        description.includes(query);
-
-        if (matches) {
+        if (score > 0) {
           card.style.display = 'flex';
           visibleCount++;
+          scoredCards.push({ card: card, score: score, origIndex: parseInt(card.dataset.origIndex, 10) });
         } else {
           card.style.display = 'none';
         }
       });
+
+      // Ordenar por relevancia cuando hay búsqueda activa, o restaurar orden original
+      if (productGrid && scoredCards.length > 0) {
+        scoredCards.sort(function(a, b) {
+          if (query !== '' && b.score !== a.score) {
+            return b.score - a.score;
+          }
+          return a.origIndex - b.origIndex;
+        });
+
+        scoredCards.forEach(function(item) {
+          productGrid.appendChild(item.card);
+        });
+      }
 
       if (countSpan) {
         countSpan.textContent = visibleCount;
